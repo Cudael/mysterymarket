@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DeleteIdeaDialog } from "@/components/delete-idea-dialog";
 import { getIdeasByCreator } from "@/actions/ideas";
 import { getConnectAccountStatus } from "@/actions/stripe-connect";
 import { formatPrice } from "@/lib/utils";
@@ -198,6 +199,9 @@ export default async function CreatorPage() {
                             <Pencil className="h-3 w-3" />
                           </Link>
                         </Button>
+                        {idea._count.purchases === 0 && (
+                          <DeleteIdeaDialog ideaId={idea.id} ideaTitle={idea.title} />
+                        )}
                       </div>
                     </td>
                   </tr>

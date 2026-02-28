@@ -4,10 +4,13 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function createCheckoutSession(ideaId: string) {
   const { userId: clerkId } = await auth();
   if (!clerkId) throw new Error("Unauthorized");
+
+  checkRateLimit(`createCheckout:${clerkId}`, { interval: 60_000, maxRequests: 10 });
 
   const user = await prisma.user.findUnique({ where: { clerkId } });
   if (!user) throw new Error("User not found");
@@ -59,8 +62,8 @@ export async function createCheckoutSession(ideaId: string) {
       },
     ],
     mode: "payment",
-    success_url: absoluteUrl(`/ideas/${ideaId}?purchased=true`),
-    cancel_url: absoluteUrl(`/ideas/${ideaId}`),
+    success_url: absoluteUrl("/checkout/success?session_id={CHECKOUT_SESSION_ID}"),
+    cancel_url: absoluteUrl("/checkout/cancel"),
     metadata: {
       ideaId: idea.id,
       buyerId: user.id,

@@ -4,6 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
+import { sanitizeHtml } from "@/lib/sanitize";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const createIdeaSchema = z.object({
   title: z.string().min(3).max(200),
@@ -21,17 +23,25 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
 
+  checkRateLimit(`createIdea:${userId}`, { interval: 60_000, maxRequests: 10 });
+
   const user = await prisma.user.findUnique({ where: { clerkId: userId } });
   if (!user) throw new Error("User not found");
   if (!user.stripeOnboarded) throw new Error("Please connect and complete your Stripe account setup before creating ideas.");
 
   const validated = createIdeaSchema.parse(input);
 
+  const sanitized = {
+    ...validated,
+    teaserText: validated.teaserText ? sanitizeHtml(validated.teaserText) : validated.teaserText,
+    hiddenContent: sanitizeHtml(validated.hiddenContent),
+  };
+
   const idea = await prisma.idea.create({
     data: {
-      ...validated,
-      teaserImageUrl: validated.teaserImageUrl || null,
-      tags: validated.tags ?? [],
+      ...sanitized,
+      teaserImageUrl: sanitized.teaserImageUrl || null,
+      tags: sanitized.tags ?? [],
       creatorId: user.id,
     },
   });
@@ -54,11 +64,17 @@ export async function updateIdea(
   const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
   if (!idea || idea.creatorId !== user.id) throw new Error("Idea not found or unauthorized");
 
+  const sanitizedInput = {
+    ...input,
+    ...(input.teaserText !== undefined && { teaserText: input.teaserText ? sanitizeHtml(input.teaserText) : input.teaserText }),
+    ...(input.hiddenContent !== undefined && { hiddenContent: sanitizeHtml(input.hiddenContent) }),
+  };
+
   const updated = await prisma.idea.update({
     where: { id: ideaId },
     data: {
-      ...input,
-      teaserImageUrl: input.teaserImageUrl !== undefined ? (input.teaserImageUrl || null) : undefined,
+      ...sanitizedInput,
+      teaserImageUrl: sanitizedInput.teaserImageUrl !== undefined ? (sanitizedInput.teaserImageUrl || null) : undefined,
     },
   });
 

@@ -4,10 +4,13 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function createConnectAccount() {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
+
+  checkRateLimit(`createConnect:${userId}`, { interval: 60_000, maxRequests: 5 });
 
   const user = await prisma.user.findUnique({ where: { clerkId: userId } });
   if (!user) throw new Error("User not found");
