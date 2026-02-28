@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
 import { IdeaForm } from "@/components/idea-form";
+import { DeleteIdeaDialog } from "@/components/delete-idea-dialog";
 import { getIdeaById, updateIdea } from "@/actions/ideas";
 
 export const metadata: Metadata = {
@@ -28,10 +29,17 @@ export default async function EditIdeaPage({
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold text-foreground">Edit Idea</h1>
-      <p className="mt-2 text-muted-foreground">
-        Update your idea details.
-      </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Edit Idea</h1>
+          <p className="mt-2 text-muted-foreground">
+            Update your idea details.
+          </p>
+        </div>
+        {idea._count.purchases === 0 && (
+          <DeleteIdeaDialog ideaId={id} ideaTitle={idea.title} />
+        )}
+      </div>
 
       <div className="mt-8">
         <IdeaForm
