@@ -21,7 +21,7 @@ export default function RootLayout({
     >
       <html lang="en" className="dark">
         <body
-          className={`bg-gray-950 text-white antialiased`}
+          className={`font-sans bg-gray-950 text-white antialiased`}
         >
           {children}
         </body>

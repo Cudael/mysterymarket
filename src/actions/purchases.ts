@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
@@ -19,8 +18,25 @@ export async function createCheckoutSession(ideaId: string) {
   });
   if (!idea) throw new Error("Idea not found");
 
+  if (idea.creatorId === user.id) throw new Error("Cannot buy your own idea");
+
   if (!idea.creator.stripeAccountId || !idea.creator.stripeOnboarded) {
     throw new Error("Creator payment account not set up");
+  }
+
+  // Check if already purchased
+  const existingPurchase = await prisma.purchase.findUnique({
+    where: { buyerId_ideaId: { buyerId: user.id, ideaId: idea.id } },
+  });
+  if (existingPurchase) throw new Error("Already purchased");
+
+  // Check exclusive availability
+  if (idea.unlockType === "EXCLUSIVE") {
+    const existingPurchaseCount = await prisma.purchase.count({
+      where: { ideaId: idea.id, status: "COMPLETED" },
+    });
+    if (existingPurchaseCount > 0)
+      throw new Error("This exclusive idea has already been claimed");
   }
 
   const platformFeePercent =
@@ -33,16 +49,24 @@ export async function createCheckoutSession(ideaId: string) {
       {
         price_data: {
           currency: idea.currency,
-          product_data: { name: idea.title },
+          product_data: {
+            name: idea.title,
+            description: idea.teaserText || "Unlock this idea",
+          },
           unit_amount: idea.priceInCents,
         },
         quantity: 1,
       },
     ],
     mode: "payment",
-    success_url: absoluteUrl(`/ideas/${ideaId}?success=1`),
+    success_url: absoluteUrl(`/ideas/${ideaId}?purchased=true`),
     cancel_url: absoluteUrl(`/ideas/${ideaId}`),
-    metadata: { ideaId, buyerId: user.id },
+    metadata: {
+      ideaId: idea.id,
+      buyerId: user.id,
+      amountInCents: idea.priceInCents.toString(),
+      platformFeeInCents: platformFeeAmount.toString(),
+    },
     payment_intent_data: {
       application_fee_amount: platformFeeAmount,
       transfer_data: {
@@ -62,9 +86,7 @@ export async function createCheckoutSession(ideaId: string) {
     },
   });
 
-  if (session.url) {
-    redirect(session.url);
-  }
+  return { url: session.url };
 }
 
 export async function verifyPurchase(ideaId: string) {
@@ -99,7 +121,8 @@ export async function getPurchasesByUser() {
           title: true,
           teaserText: true,
           hiddenContent: true,
-          creator: { select: { name: true } },
+          priceInCents: true,
+          creator: { select: { name: true, avatarUrl: true } },
         },
       },
     },

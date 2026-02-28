@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Lock, ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { ArrowLeft, Lock, Calendar, Users } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { UnlockButton } from "@/components/unlock-button";
+import prisma from "@/lib/prisma";
+import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Idea Details - MysteryIdea",
@@ -13,6 +20,42 @@ export default async function IdeaDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const { userId: clerkId } = await auth();
+
+  const idea = await prisma.idea.findUnique({
+    where: { id },
+    include: {
+      creator: { select: { id: true, name: true, avatarUrl: true } },
+      _count: { select: { purchases: true } },
+    },
+  });
+
+  if (!idea) notFound();
+
+  // Only show published ideas, or unpublished if the viewer is the creator
+  let currentUser = null;
+  if (clerkId) {
+    currentUser = await prisma.user.findUnique({ where: { clerkId } });
+  }
+
+  const isOwner = currentUser?.id === idea.creatorId;
+  if (!idea.published && !isOwner) notFound();
+
+  // Check if the current user has purchased
+  let isPurchased = false;
+  if (currentUser && !isOwner) {
+    const purchase = await prisma.purchase.findUnique({
+      where: { buyerId_ideaId: { buyerId: currentUser.id, ideaId: id } },
+    });
+    isPurchased = purchase?.status === "COMPLETED";
+  }
+
+  // Check if exclusive idea has already been claimed
+  const exclusiveClaimed =
+    idea.unlockType === "EXCLUSIVE" && idea._count.purchases > 0 && !isPurchased;
+
+  const showContent = isOwner || isPurchased;
+
   return (
     <div className="container mx-auto px-4 py-12">
       <Link
@@ -23,22 +66,151 @@ export default async function IdeaDetailPage({
         Back to Ideas
       </Link>
 
-      <div className="mx-auto max-w-2xl">
-        <div className="rounded-2xl border border-border bg-card p-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <Lock className="h-8 w-8 text-primary" />
+      <div className="mx-auto max-w-4xl">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {/* Main content */}
+          <div className="lg:col-span-2">
+            {/* Teaser image */}
+            {idea.teaserImageUrl && (
+              <div className="relative mb-6 h-64 w-full overflow-hidden rounded-xl">
+                <Image
+                  src={idea.teaserImageUrl}
+                  alt={idea.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
+
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <Badge variant={idea.unlockType === "EXCLUSIVE" ? "default" : "secondary"}>
+                {idea.unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
+              </Badge>
+              {idea.category && (
+                <Badge variant="outline">{idea.category}</Badge>
+              )}
+            </div>
+
+            <h1 className="text-3xl font-bold text-foreground">{idea.title}</h1>
+
+            {idea.teaserText && (
+              <p className="mt-4 text-muted-foreground leading-relaxed">
+                {idea.teaserText}
+              </p>
+            )}
+
+            <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Users className="h-4 w-4" />
+                {idea._count.purchases} purchase
+                {idea._count.purchases !== 1 ? "s" : ""}
+              </span>
+              <span className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                {new Date(idea.createdAt).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+
+            {/* Hidden content section */}
+            <div className="mt-8">
+              <h2 className="mb-3 text-lg font-semibold text-foreground">
+                The Idea
+              </h2>
+
+              {showContent ? (
+                <div className="rounded-xl border border-border bg-card p-6">
+                  <p className="whitespace-pre-wrap text-foreground leading-relaxed">
+                    {idea.hiddenContent}
+                  </p>
+                </div>
+              ) : (
+                <div className="relative overflow-hidden rounded-xl border border-border bg-card">
+                  {/* Blurred preview */}
+                  <div className="select-none blur-sm p-6 pointer-events-none">
+                    <p className="text-foreground leading-relaxed">
+                      {idea.hiddenContent.substring(0, 200)}
+                      {idea.hiddenContent.length > 200 ? "..." : ""}
+                    </p>
+                  </div>
+                  {/* Lock overlay */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-primary/30 bg-primary/10 mb-3">
+                      <Lock className="h-7 w-7 text-primary" />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {exclusiveClaimed
+                        ? "This idea has been claimed"
+                        : `Unlock to reveal the full idea`}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Idea Details</h1>
-          <p className="mt-3 text-muted-foreground">
-            Full idea detail page coming soon. This will show the teaser, price,
-            creator profile, and unlock button.
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Idea ID: <code className="text-primary">{id}</code>
-          </p>
-          <Button asChild className="mt-6">
-            <Link href="/ideas">Browse More Ideas</Link>
-          </Button>
+
+          {/* Sidebar */}
+          <div className="flex flex-col gap-4">
+            {/* Price & unlock card */}
+            <div className="rounded-xl border border-border bg-card p-6">
+              <div className="mb-4 text-center">
+                <span className="text-3xl font-bold text-foreground">
+                  {formatPrice(idea.priceInCents)}
+                </span>
+                {idea.unlockType === "EXCLUSIVE" && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    One-time exclusive unlock
+                  </p>
+                )}
+              </div>
+
+              <UnlockButton
+                ideaId={id}
+                priceInCents={idea.priceInCents}
+                isExclusive={idea.unlockType === "EXCLUSIVE"}
+                isPurchased={isPurchased}
+                isAuthenticated={!!clerkId}
+                isOwner={isOwner}
+                exclusiveClaimed={exclusiveClaimed}
+              />
+            </div>
+
+            {/* Creator card */}
+            <div className="rounded-xl border border-border bg-card p-6">
+              <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Creator
+              </h3>
+              <div className="flex items-center gap-3">
+                {idea.creator.avatarUrl ? (
+                  <Image
+                    src={idea.creator.avatarUrl}
+                    alt={idea.creator.name ?? "Creator"}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                ) : (
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-primary">
+                    {(idea.creator.name ?? "?")[0].toUpperCase()}
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium text-foreground">
+                    {idea.creator.name ?? "Anonymous"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {isOwner && (
+              <Button asChild variant="outline">
+                <Link href={`/creator/ideas/${id}/edit`}>Edit Idea</Link>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
