@@ -4,6 +4,14 @@ import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
 import "./globals.css";
 
+const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!clerkPublishableKey) {
+  throw new Error(
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is required. Configure it in your environment (see .env.example)."
+  );
+}
+
 export const metadata: Metadata = {
   title: {
     default: "MysteryIdea — Premium Idea Marketplace",
@@ -29,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "pk_test_ZXhhbXBsZS5jb20k"}
+      publishableKey={clerkPublishableKey}
       appearance={{ baseTheme: dark }}
     >
       <html lang="en" className="dark">
