@@ -19,6 +19,8 @@ model User {
   role             Role       @default(USER)
   ideas            Idea[]     @relation("CreatorIdeas")
   purchases        Purchase[]
+  reviews          Review[]   @relation("BuyerReviews")
+  reports          Report[]   @relation("ReporterReports")
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 }
@@ -45,6 +47,8 @@ model Idea {
   creator        User       @relation("CreatorIdeas", fields: [creatorId], references: [id])
   creatorId      String
   purchases      Purchase[]
+  reviews        Review[]
+  reports        Report[]
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
@@ -67,6 +71,7 @@ model Purchase {
   platformFeeInCents    Int
   stripePaymentIntentId String         @unique
   status                PurchaseStatus @default(PENDING)
+  refundRequest         RefundRequest?
   createdAt             DateTime       @default(now())
 
   @@unique([buyerId, ideaId])
@@ -78,4 +83,66 @@ enum PurchaseStatus {
   COMPLETED
   REFUNDED
   FAILED
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  buyer     User     @relation("BuyerReviews", fields: [buyerId], references: [id])
+  buyerId   String
+  idea      Idea     @relation(fields: [ideaId], references: [id])
+  ideaId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([buyerId, ideaId])
+  @@index([ideaId])
+}
+
+model Report {
+  id         String       @id @default(cuid())
+  reason     ReportReason
+  details    String?
+  reporter   User         @relation("ReporterReports", fields: [reporterId], references: [id])
+  reporterId String
+  idea       Idea         @relation(fields: [ideaId], references: [id])
+  ideaId     String
+  status     ReportStatus @default(PENDING)
+  createdAt  DateTime     @default(now())
+
+  @@unique([reporterId, ideaId])
+  @@index([ideaId])
+  @@index([status])
+}
+
+enum ReportReason {
+  MISLEADING
+  INAPPROPRIATE
+  SPAM
+  PLAGIARISM
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  DISMISSED
+  ACTION_TAKEN
+}
+
+model RefundRequest {
+  id         String              @id @default(cuid())
+  purchase   Purchase            @relation(fields: [purchaseId], references: [id])
+  purchaseId String              @unique
+  reason     String
+  status     RefundRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+}
+
+enum RefundRequestStatus {
+  PENDING
+  APPROVED
+  DENIED
 }
