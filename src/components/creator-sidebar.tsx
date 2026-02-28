@@ -8,12 +8,14 @@ import {
   PlusCircle,
   CreditCard,
   Settings,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "/creator", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/creator/ideas/new", label: "Create Idea", icon: PlusCircle, exact: true },
+  { href: "/creator/analytics", label: "Analytics", icon: BarChart3, exact: false },
   { href: "/creator/connect", label: "Stripe Connect", icon: CreditCard, exact: false },
   { href: "/settings", label: "Settings", icon: Settings, exact: false },
 ];
