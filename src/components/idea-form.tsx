@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -93,14 +94,19 @@ export function IdeaForm({
       });
 
       await onSubmit(data);
+      toast.success(submitLabel === "Publish Idea" ? "Idea published!" : "Idea updated!");
       router.push("/creator");
     } catch (err) {
       if (err instanceof z.ZodError) {
-        setError(err.errors[0]?.message ?? "Validation error");
+        const msg = err.errors[0]?.message ?? "Validation error";
+        setError(msg);
+        toast.error(msg);
       } else if (err instanceof Error) {
         setError(err.message);
+        toast.error(err.message);
       } else {
         setError("Something went wrong");
+        toast.error("Something went wrong");
       }
     } finally {
       setIsSubmitting(false);

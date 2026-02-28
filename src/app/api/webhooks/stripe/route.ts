@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { stripe } from "@/lib/stripe";
 import prisma from "@/lib/prisma";
+import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
+import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -33,11 +35,58 @@ export async function POST(req: Request) {
       const { ideaId, buyerId } = session.metadata ?? {};
 
       if (ideaId && buyerId && session.payment_intent) {
+        const paymentIntentId = session.payment_intent as string;
+
+        // Idempotency: skip if already COMPLETED
+        const existing = await prisma.purchase.findFirst({
+          where: { stripePaymentIntentId: paymentIntentId, status: "COMPLETED" },
+        });
+        if (existing) break;
+
         await prisma.purchase.updateMany({
-          where: {
-            stripePaymentIntentId: session.payment_intent as string,
-          },
+          where: { stripePaymentIntentId: paymentIntentId },
           data: { status: "COMPLETED" },
+        });
+
+        // Send emails
+        try {
+          const purchase = await prisma.purchase.findFirst({
+            where: { stripePaymentIntentId: paymentIntentId },
+            include: {
+              buyer: true,
+              idea: { include: { creator: true } },
+            },
+          });
+
+          if (purchase) {
+            await sendPurchaseConfirmationEmail(
+              purchase.buyer.email,
+              purchase.idea.title,
+              purchase.amountInCents,
+              purchase.ideaId
+            );
+            await sendSaleNotificationEmail(
+              purchase.idea.creator.email,
+              purchase.idea.title,
+              purchase.buyer.name ?? purchase.buyer.email,
+              purchase.amountInCents,
+              purchase.platformFeeInCents,
+              purchase.ideaId
+            );
+          }
+        } catch (emailErr) {
+          console.error("[stripe-webhook] Email send failed:", emailErr);
+        }
+      }
+      break;
+    }
+
+    case "charge.refunded": {
+      const charge = event.data.object;
+      if (charge.payment_intent) {
+        await prisma.purchase.updateMany({
+          where: { stripePaymentIntentId: charge.payment_intent as string },
+          data: { status: "REFUNDED" },
         });
       }
       break;

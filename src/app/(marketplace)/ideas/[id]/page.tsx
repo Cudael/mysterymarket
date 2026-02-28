@@ -9,10 +9,22 @@ import { Button } from "@/components/ui/button";
 import { UnlockButton } from "@/components/unlock-button";
 import prisma from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
+import { getIdeaById } from "@/actions/ideas";
 
-export const metadata: Metadata = {
-  title: "Idea Details - MysteryIdea",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const idea = await getIdeaById(id);
+  if (!idea) return { title: "Idea Not Found" };
+  return {
+    title: idea.title,
+    description:
+      idea.teaserText || `Unlock this idea for ${formatPrice(idea.priceInCents)}`,
+  };
+}
 
 export default async function IdeaDetailPage({
   params,
