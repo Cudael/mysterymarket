@@ -8,6 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { UnlockButton } from "@/components/unlock-button";
 import { ShareButtons } from "@/components/share-buttons";
+import { ReviewList } from "@/components/review-list";
+import { ReviewForm } from "@/components/review-form";
+import { ReportDialog } from "@/components/report-dialog";
 import prisma from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 import { getIdeaById } from "@/actions/ideas";
@@ -56,11 +59,18 @@ export default async function IdeaDetailPage({
 
   // Check if the current user has purchased
   let isPurchased = false;
+  let hasReviewed = false;
   if (currentUser && !isOwner) {
     const purchase = await prisma.purchase.findUnique({
       where: { buyerId_ideaId: { buyerId: currentUser.id, ideaId: id } },
     });
     isPurchased = purchase?.status === "COMPLETED";
+    if (isPurchased) {
+      const existing = await prisma.review.findUnique({
+        where: { buyerId_ideaId: { buyerId: currentUser.id, ideaId: id } },
+      });
+      hasReviewed = !!existing;
+    }
   }
 
   // Check if exclusive idea has already been claimed
@@ -111,6 +121,9 @@ export default async function IdeaDetailPage({
                 url={`${process.env.NEXT_PUBLIC_APP_URL}/ideas/${id}`}
                 title={idea.title}
               />
+              {clerkId && !isOwner && (
+                <ReportDialog ideaId={id} />
+              )}
             </div>
 
             {idea.teaserText && (
@@ -170,6 +183,10 @@ export default async function IdeaDetailPage({
                 </div>
               )}
             </div>
+
+            {/* Reviews section */}
+            <ReviewList ideaId={id} />
+            {isPurchased && !hasReviewed && <ReviewForm ideaId={id} />}
           </div>
 
           {/* Sidebar */}

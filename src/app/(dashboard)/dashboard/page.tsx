@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ShoppingBag, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getPurchasesByUser } from "@/actions/purchases";
+import { getRefundRequestsForUser } from "@/actions/refunds";
+import { RefundDialog } from "@/components/refund-dialog";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -11,11 +13,19 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   let purchases: Awaited<ReturnType<typeof getPurchasesByUser>> = [];
+  let refundRequests: Awaited<ReturnType<typeof getRefundRequestsForUser>> = [];
   try {
-    purchases = await getPurchasesByUser();
+    [purchases, refundRequests] = await Promise.all([
+      getPurchasesByUser(),
+      getRefundRequestsForUser(),
+    ]);
   } catch {
     // User not authenticated or not found — show empty state
   }
+
+  const refundByPurchaseId = new Map(
+    refundRequests.map((r) => [r.purchaseId, r.status as "PENDING" | "APPROVED" | "DENIED"])
+  );
 
   const totalSpent = purchases.reduce((sum, p) => sum + p.amountInCents, 0);
 
@@ -68,38 +78,48 @@ export default async function DashboardPage() {
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {purchases.map((purchase) => (
-            <Link
+            <div
               key={purchase.id}
-              href={`/ideas/${purchase.idea.id}`}
-              className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-md hover:shadow-primary/10"
+              className="flex flex-col rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/50 hover:shadow-md hover:shadow-primary/10"
             >
-              <h3 className="line-clamp-2 font-semibold text-foreground group-hover:text-primary">
-                {purchase.idea.title}
-              </h3>
-              {purchase.idea.teaserText && (
-                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                  {purchase.idea.teaserText}
-                </p>
-              )}
-              <div className="mt-auto pt-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">
-                    by {purchase.idea.creator.name ?? "Anonymous"}
-                  </span>
-                  <span className="font-semibold text-foreground">
-                    {formatPrice(purchase.amountInCents)}
-                  </span>
+              <Link
+                href={`/ideas/${purchase.idea.id}`}
+                className="group flex flex-col flex-1"
+              >
+                <h3 className="line-clamp-2 font-semibold text-foreground group-hover:text-primary">
+                  {purchase.idea.title}
+                </h3>
+                {purchase.idea.teaserText && (
+                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                    {purchase.idea.teaserText}
+                  </p>
+                )}
+                <div className="mt-auto pt-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      by {purchase.idea.creator.name ?? "Anonymous"}
+                    </span>
+                    <span className="font-semibold text-foreground">
+                      {formatPrice(purchase.amountInCents)}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Purchased{" "}
+                    {new Date(purchase.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Purchased{" "}
-                  {new Date(purchase.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </p>
+              </Link>
+              <div className="mt-3 pt-3 border-t border-border">
+                <RefundDialog
+                  purchaseId={purchase.id}
+                  existingStatus={refundByPurchaseId.get(purchase.id)}
+                />
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       )}
