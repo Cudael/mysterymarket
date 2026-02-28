@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MysteryIdea - Premium Idea Marketplace",
@@ -18,10 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "pk_test_ZXhhbXBsZS5jb20k"}
+      appearance={{ baseTheme: dark }}
+    >
       <html lang="en" className="dark">
         <body
-          className={`${inter.className} bg-gray-950 text-white antialiased`}
+          className={`bg-gray-950 text-white antialiased`}
         >
           {children}
         </body>

@@ -7,11 +7,12 @@ export const metadata: Metadata = {
   title: "Idea Details - MysteryIdea",
 };
 
-export default function IdeaDetailPage({
+export default async function IdeaDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   return (
     <div className="container mx-auto px-4 py-12">
       <Link
@@ -33,7 +34,7 @@ export default function IdeaDetailPage({
             creator profile, and unlock button.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Idea ID: <code className="text-primary">{params.id}</code>
+            Idea ID: <code className="text-primary">{id}</code>
           </p>
           <Button asChild className="mt-6">
             <Link href="/ideas">Browse More Ideas</Link>

@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { AlertCircle } from "lucide-react";
+import { IdeaForm } from "@/components/idea-form";
+import { createIdea } from "@/actions/ideas";
+import prisma from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Create Idea - MysteryIdea",
 };
 
-export default function NewIdeaPage() {
+export default async function NewIdeaPage() {
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
+
+  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="text-2xl font-bold text-foreground">Create New Idea</h1>
@@ -16,55 +24,30 @@ export default function NewIdeaPage() {
         Share your hidden insight with the world — on your terms.
       </p>
 
-      <form className="mt-8 space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            placeholder="Give your idea a compelling title..."
-            disabled
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="teaserText">Teaser Text</Label>
-          <Textarea
-            id="teaserText"
-            placeholder="What can buyers expect? (Don't reveal too much!)"
-            rows={3}
-            disabled
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="hiddenContent">Hidden Content</Label>
-          <Textarea
-            id="hiddenContent"
-            placeholder="Your full idea — only visible after purchase..."
-            rows={8}
-            disabled
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="price">Price (USD)</Label>
-            <Input id="price" type="number" placeholder="9.99" disabled />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="unlockType">Unlock Type</Label>
-            <Input id="unlockType" placeholder="Multi / Exclusive" disabled />
+      {!user?.stripeOnboarded && (
+        <div className="mt-4 flex items-start gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-500" />
+          <div>
+            <p className="text-sm font-medium text-foreground">
+              Stripe not connected
+            </p>
+            <p className="text-sm text-muted-foreground">
+              You need to{" "}
+              <Link
+                href="/creator/connect"
+                className="underline hover:text-foreground"
+              >
+                connect Stripe
+              </Link>{" "}
+              before you can publish ideas.
+            </p>
           </div>
         </div>
+      )}
 
-        <div className="rounded-lg border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
-          Full idea creation form coming in Phase 2.
-        </div>
-
-        <Button type="submit" className="w-full" disabled>
-          Publish Idea
-        </Button>
-      </form>
+      <div className="mt-8">
+        <IdeaForm onSubmit={createIdea} />
+      </div>
     </div>
   );
 }

@@ -6,27 +6,48 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 export async function syncUser() {
-  const { userId: clerkId } = await auth();
-  if (!clerkId) throw new Error("Unauthorized");
+  const user = await currentUser();
+  if (!user) throw new Error("Not authenticated");
 
-  const clerkUser = await currentUser();
-  if (!clerkUser) throw new Error("User not found in Clerk");
-
-  const email =
-    clerkUser.emailAddresses.find(
-      (e) => e.id === clerkUser.primaryEmailAddressId
-    )?.emailAddress ?? "";
-
-  const name =
-    [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || null;
-
-  const user = await prisma.user.upsert({
-    where: { clerkId },
-    update: { email, name, avatarUrl: clerkUser.imageUrl },
-    create: { clerkId, email, name, avatarUrl: clerkUser.imageUrl },
+  const existingUser = await prisma.user.findUnique({
+    where: { clerkId: user.id },
   });
 
-  return user;
+  if (existingUser) {
+    return await prisma.user.update({
+      where: { clerkId: user.id },
+      data: {
+        email: user.emailAddresses[0]?.emailAddress ?? existingUser.email,
+        name:
+          `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() ||
+          existingUser.name,
+        avatarUrl: user.imageUrl ?? existingUser.avatarUrl,
+      },
+    });
+  }
+
+  return await prisma.user.create({
+    data: {
+      clerkId: user.id,
+      email: user.emailAddresses[0]?.emailAddress ?? "",
+      name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || null,
+      avatarUrl: user.imageUrl ?? null,
+    },
+  });
+}
+
+export async function getUserByClerkId(clerkId?: string) {
+  const { userId } = await auth();
+  const id = clerkId ?? userId;
+  if (!id) return null;
+
+  return await prisma.user.findUnique({
+    where: { clerkId: id },
+    include: {
+      ideas: { include: { _count: { select: { purchases: true } } } },
+      purchases: true,
+    },
+  });
 }
 
 const updateProfileSchema = z.object({
@@ -37,27 +58,16 @@ const updateProfileSchema = z.object({
 export async function updateProfile(
   data: z.infer<typeof updateProfileSchema>
 ) {
-  const { userId: clerkId } = await auth();
-  if (!clerkId) throw new Error("Unauthorized");
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
 
   const validated = updateProfileSchema.parse(data);
 
   const user = await prisma.user.update({
-    where: { clerkId },
+    where: { clerkId: userId },
     data: validated,
   });
 
   revalidatePath("/settings");
   return user;
-}
-
-export async function getUserByClerkId(clerkId: string) {
-  return prisma.user.findUnique({
-    where: { clerkId },
-    include: {
-      _count: {
-        select: { ideas: true, purchases: true },
-      },
-    },
-  });
 }
