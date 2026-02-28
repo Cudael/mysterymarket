@@ -15,6 +15,7 @@ export function IdeaCard({
   priceInCents,
   unlockType,
   category,
+  creatorId,
   creatorName,
   purchaseCount,
   isOwner = false,
@@ -85,9 +86,19 @@ export function IdeaCard({
             {formatPrice(priceInCents)}
           </span>
           {creatorName && (
-            <span className="text-xs text-muted-foreground">
-              by {creatorName}
-            </span>
+            creatorId ? (
+              <Link
+                href={`/creators/${creatorId}`}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                by {creatorName}
+              </Link>
+            ) : (
+              <span className="text-xs text-muted-foreground">
+                by {creatorName}
+              </span>
+            )
           )}
         </div>
 

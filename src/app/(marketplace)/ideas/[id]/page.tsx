@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { UnlockButton } from "@/components/unlock-button";
+import { ShareButtons } from "@/components/share-buttons";
 import prisma from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 import { getIdeaById } from "@/actions/ideas";
@@ -105,6 +106,13 @@ export default async function IdeaDetailPage({
 
             <h1 className="text-3xl font-bold text-foreground">{idea.title}</h1>
 
+            <div className="mt-3 flex items-center gap-2">
+              <ShareButtons
+                url={`${process.env.NEXT_PUBLIC_APP_URL}/ideas/${id}`}
+                title={idea.title}
+              />
+            </div>
+
             {idea.teaserText && (
               <p className="mt-4 text-muted-foreground leading-relaxed">
                 {idea.teaserText}
@@ -195,7 +203,10 @@ export default async function IdeaDetailPage({
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Creator
               </h3>
-              <div className="flex items-center gap-3">
+              <Link
+                href={`/creators/${idea.creator.id}`}
+                className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+              >
                 {idea.creator.avatarUrl ? (
                   <Image
                     src={idea.creator.avatarUrl}
@@ -213,8 +224,9 @@ export default async function IdeaDetailPage({
                   <p className="font-medium text-foreground">
                     {idea.creator.name ?? "Anonymous"}
                   </p>
+                  <p className="text-xs text-muted-foreground">View profile →</p>
                 </div>
-              </div>
+              </Link>
             </div>
 
             {isOwner && (

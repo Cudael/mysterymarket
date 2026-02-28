@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { IdeaCard } from "@/components/idea-card";
 import { IdeaFilters } from "@/components/idea-filters";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Pagination } from "@/components/pagination";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 
@@ -52,7 +51,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
     prisma.idea.findMany({
       where,
       include: {
-        creator: { select: { name: true, avatarUrl: true } },
+        creator: { select: { id: true, name: true, avatarUrl: true } },
         _count: { select: { purchases: true } },
       },
       orderBy,
@@ -109,6 +108,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
               priceInCents={idea.priceInCents}
               unlockType={idea.unlockType}
               category={idea.category}
+              creatorId={idea.creator.id}
               creatorName={idea.creator.name}
               creatorAvatarUrl={idea.creator.avatarUrl}
               purchaseCount={idea._count.purchases}
@@ -118,43 +118,9 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
       )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-10 flex items-center justify-center gap-2">
-          {page > 1 && (
-            <Button asChild variant="outline" size="sm">
-              <Link
-                href={`/ideas?${new URLSearchParams({
-                  ...(search ? { search } : {}),
-                  ...(category ? { category } : {}),
-                  ...(unlockType ? { unlockType } : {}),
-                  ...(sortBy ? { sortBy } : {}),
-                  page: String(page - 1),
-                }).toString()}`}
-              >
-                Previous
-              </Link>
-            </Button>
-          )}
-          <span className="text-sm text-muted-foreground">
-            Page {page} of {totalPages}
-          </span>
-          {page < totalPages && (
-            <Button asChild variant="outline" size="sm">
-              <Link
-                href={`/ideas?${new URLSearchParams({
-                  ...(search ? { search } : {}),
-                  ...(category ? { category } : {}),
-                  ...(unlockType ? { unlockType } : {}),
-                  ...(sortBy ? { sortBy } : {}),
-                  page: String(page + 1),
-                }).toString()}`}
-              >
-                Next
-              </Link>
-            </Button>
-          )}
-        </div>
-      )}
+      <Suspense>
+        <Pagination currentPage={page} totalPages={totalPages} />
+      </Suspense>
     </div>
   );
 }

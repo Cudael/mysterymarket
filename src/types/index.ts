@@ -6,6 +6,7 @@ export interface IdeaCardProps {
   priceInCents: number;
   unlockType: "EXCLUSIVE" | "MULTI";
   category?: string | null;
+  creatorId?: string | null;
   creatorName?: string | null;
   creatorAvatarUrl?: string | null;
   purchaseCount?: number;
