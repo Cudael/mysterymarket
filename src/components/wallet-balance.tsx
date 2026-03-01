@@ -40,7 +40,7 @@ export function WalletBalance({
 
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-lg border border-border bg-muted/30 p-3">
-            <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+            <div className="flex items-center gap-2 text-green-600">
               <TrendingUp className="h-4 w-4" />
               <span className="text-xs font-medium uppercase tracking-wide">
                 Total Earned
@@ -51,7 +51,7 @@ export function WalletBalance({
             </p>
           </div>
           <div className="rounded-lg border border-border bg-muted/30 p-3">
-            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+            <div className="flex items-center gap-2 text-blue-600">
               <ArrowDownLeft className="h-4 w-4" />
               <span className="text-xs font-medium uppercase tracking-wide">
                 Total Withdrawn

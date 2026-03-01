@@ -77,6 +77,16 @@ export default async function IdeaDetailPage({
   const exclusiveClaimed =
     idea.unlockType === "EXCLUSIVE" && idea._count.purchases > 0 && !isPurchased;
 
+  // Fetch wallet balance for authenticated non-owner users
+  let walletBalance: number | null = null;
+  if (currentUser && !isOwner) {
+    const wallet = await prisma.wallet.findUnique({
+      where: { userId: currentUser.id },
+      select: { balanceInCents: true },
+    });
+    walletBalance = wallet?.balanceInCents ?? null;
+  }
+
   const showContent = isOwner || isPurchased;
 
   return (
@@ -212,6 +222,7 @@ export default async function IdeaDetailPage({
                 isAuthenticated={!!clerkId}
                 isOwner={isOwner}
                 exclusiveClaimed={exclusiveClaimed}
+                walletBalance={walletBalance}
               />
             </div>
 

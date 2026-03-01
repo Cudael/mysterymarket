@@ -179,6 +179,8 @@ enum WalletTransactionType {
   EARNING
   WITHDRAWAL
   REFUND_DEBIT
+  DEPOSIT
+  PURCHASE
 }
 
 model WithdrawalRequest {

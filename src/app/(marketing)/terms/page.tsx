@@ -111,7 +111,10 @@ export default function TermsPage() {
             by creators and displayed in USD. MysteryIdea charges a platform fee
             (currently 15%) on each transaction; the remainder is credited to
             the creator&apos;s in-app wallet. Creators can withdraw their wallet
-            balance to their bank account at any time via Stripe.
+            balance to their bank account at any time via Stripe. Buyers may
+            also deposit funds into their in-app wallet and use that balance to
+            purchase ideas instantly without a Stripe checkout redirect. Wallet
+            deposits are non-refundable except as part of a purchase refund.
           </p>
           <p className="mt-3 text-muted-foreground leading-relaxed">
             Refunds are handled on a case-by-case basis. Buyers may submit a

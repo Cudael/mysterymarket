@@ -4,6 +4,7 @@ import { stripe } from "@/lib/stripe";
 import prisma from "@/lib/prisma";
 import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
 import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
+import { creditWalletForDeposit } from "@/actions/wallet";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -32,6 +33,16 @@ export async function POST(req: Request) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;
+      const { type: metaType, userId: depositUserId, amountInCents: depositAmountMetadata } = session.metadata ?? {};
+
+      // Handle wallet deposit
+      if (metaType === "wallet_deposit" && depositUserId && depositAmountMetadata && session.payment_intent) {
+        const referenceId = session.payment_intent as string;
+        const depositAmount = parseInt(depositAmountMetadata, 10);
+        await creditWalletForDeposit(depositUserId, depositAmount, referenceId);
+        break;
+      }
+
       const { ideaId, buyerId } = session.metadata ?? {};
 
       if (ideaId && buyerId && session.payment_intent) {

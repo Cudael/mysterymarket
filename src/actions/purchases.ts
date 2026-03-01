@@ -5,6 +5,9 @@ import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { debitWalletForPurchase, creditWallet } from "@/actions/wallet";
+import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
+import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
 
 export async function createCheckoutSession(ideaId: string) {
   const { userId: clerkId } = await auth();
@@ -120,4 +123,99 @@ export async function getPurchasesByUser() {
     },
     orderBy: { createdAt: "desc" },
   });
+}
+
+export async function purchaseWithWallet(ideaId: string) {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) throw new Error("Unauthorized");
+
+  checkRateLimit(`purchaseWallet:${clerkId}`, { interval: 60_000, maxRequests: 10 });
+
+  const user = await prisma.user.findUnique({ where: { clerkId } });
+  if (!user) throw new Error("User not found");
+
+  const idea = await prisma.idea.findUnique({
+    where: { id: ideaId, published: true },
+    include: { creator: true },
+  });
+  if (!idea) throw new Error("Idea not found");
+
+  if (idea.creatorId === user.id) throw new Error("Cannot buy your own idea");
+
+  const existingPurchase = await prisma.purchase.findUnique({
+    where: { buyerId_ideaId: { buyerId: user.id, ideaId: idea.id } },
+  });
+  if (existingPurchase) throw new Error("Already purchased");
+
+  if (idea.unlockType === "EXCLUSIVE") {
+    const existingPurchaseCount = await prisma.purchase.count({
+      where: { ideaId: idea.id, status: "COMPLETED" },
+    });
+    if (existingPurchaseCount > 0)
+      throw new Error("This exclusive idea has already been claimed");
+  }
+
+  const wallet = await prisma.wallet.findUnique({ where: { userId: user.id } });
+  if (!wallet || wallet.balanceInCents < idea.priceInCents) {
+    throw new Error("Insufficient wallet balance");
+  }
+
+  const platformFeePercent =
+    parseInt(process.env.STRIPE_PLATFORM_FEE_PERCENT ?? "15", 10) / 100;
+  const platformFeeAmount = Math.round(idea.priceInCents * platformFeePercent);
+  const netEarnings = idea.priceInCents - platformFeeAmount;
+
+  const referenceId = `wallet_${crypto.randomUUID()}`;
+
+  // Debit buyer wallet
+  await debitWalletForPurchase(
+    user.id,
+    idea.priceInCents,
+    `Purchase: ${idea.title}`,
+    referenceId
+  );
+
+  // Credit creator wallet
+  await creditWallet(
+    idea.creatorId,
+    netEarnings,
+    `Sale: ${idea.title}`,
+    referenceId
+  );
+
+  // Create completed purchase record
+  const purchase = await prisma.purchase.create({
+    data: {
+      buyerId: user.id,
+      ideaId,
+      amountInCents: idea.priceInCents,
+      platformFeeInCents: platformFeeAmount,
+      stripePaymentIntentId: referenceId,
+      status: "COMPLETED",
+    },
+  });
+
+  // Send emails (non-blocking)
+  try {
+    await Promise.all([
+      sendPurchaseConfirmationEmail(
+        user.email,
+        idea.title,
+        idea.priceInCents,
+        idea.id
+      ),
+      sendSaleNotificationEmail(
+        idea.creator.email,
+        idea.title,
+        user.name ?? user.email,
+        idea.priceInCents,
+        platformFeeAmount,
+        idea.id
+      ),
+    ]);
+  } catch (err) {
+    console.error("[purchaseWithWallet] Email sending failed:", err);
+  }
+
+  return { purchaseId: purchase.id };
 }

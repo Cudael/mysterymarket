@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Lock, CheckCircle, Ban, ShieldOff } from "lucide-react";
+import { Lock, CheckCircle, Ban, ShieldOff, Wallet2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createCheckoutSession } from "@/actions/purchases";
+import { createCheckoutSession, purchaseWithWallet } from "@/actions/purchases";
 import { formatPrice } from "@/lib/utils";
 
 interface UnlockButtonProps {
@@ -15,6 +15,7 @@ interface UnlockButtonProps {
   isAuthenticated: boolean;
   isOwner: boolean;
   exclusiveClaimed: boolean;
+  walletBalance?: number | null;
 }
 
 export function UnlockButton({
@@ -25,9 +26,12 @@ export function UnlockButton({
   isAuthenticated,
   isOwner,
   exclusiveClaimed,
+  walletBalance,
 }: UnlockButtonProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<"stripe" | "wallet" | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const hasEnoughBalance = walletBalance != null && walletBalance >= priceInCents;
 
   if (!isAuthenticated) {
     return (
@@ -71,8 +75,8 @@ export function UnlockButton({
     );
   }
 
-  async function handleUnlock() {
-    setLoading(true);
+  async function handleStripeUnlock() {
+    setLoading("stripe");
     setError(null);
     try {
       const result = await createCheckoutSession(ideaId);
@@ -81,20 +85,48 @@ export function UnlockButton({
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
-      setLoading(false);
+      setLoading(null);
+    }
+  }
+
+  async function handleWalletUnlock() {
+    setLoading("wallet");
+    setError(null);
+    try {
+      await purchaseWithWallet(ideaId);
+      window.location.reload();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+      setLoading(null);
     }
   }
 
   return (
     <div className="flex flex-col gap-2">
+      {hasEnoughBalance && (
+        <Button
+          size="lg"
+          className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
+          onClick={handleWalletUnlock}
+          disabled={loading !== null}
+        >
+          <Wallet2 className="h-4 w-4" />
+          {loading === "wallet"
+            ? "Processing..."
+            : `Pay with Wallet (${formatPrice(walletBalance ?? 0)} available)`}
+        </Button>
+      )}
       <Button
         size="lg"
+        variant={hasEnoughBalance ? "outline" : "default"}
         className="w-full gap-2"
-        onClick={handleUnlock}
-        disabled={loading}
+        onClick={handleStripeUnlock}
+        disabled={loading !== null}
       >
         <Lock className="h-4 w-4" />
-        {loading ? "Redirecting..." : `Unlock for ${formatPrice(priceInCents)}`}
+        {loading === "stripe"
+          ? "Redirecting..."
+          : `Unlock for ${formatPrice(priceInCents)}`}
       </Button>
       {error && <p className="text-sm text-destructive text-center">{error}</p>}
     </div>
