@@ -28,7 +28,7 @@ export function CreatorSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden w-56 shrink-0 border-r border-border bg-card md:flex md:flex-col">
+      <aside className="hidden w-56 shrink-0 border-r border-border bg-gray-50/50 md:flex md:flex-col">
         <div className="flex items-center gap-2 border-b border-border px-4 py-3">
           <Lightbulb className="h-4 w-4 text-primary" />
           <span className="text-sm font-semibold text-foreground">

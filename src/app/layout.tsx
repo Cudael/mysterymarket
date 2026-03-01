@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -32,11 +31,10 @@ export default function RootLayout({
   return (
     <ClerkProvider
       publishableKey={clerkPublishableKey}
-      appearance={{ baseTheme: dark }}
     >
-      <html lang="en" className="dark">
+      <html lang="en">
         <body
-          className={`font-sans bg-gray-950 text-white antialiased`}
+          className="font-sans antialiased"
         >
           {children}
           <Toaster richColors position="bottom-right" />

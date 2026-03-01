@@ -53,7 +53,7 @@ export function UnlockButton({
     return (
       <Button
         size="lg"
-        className="w-full gap-2 bg-green-600 hover:bg-green-600 text-white"
+        className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white"
         disabled
       >
         <CheckCircle className="h-4 w-4" />
