@@ -31,4 +31,10 @@ describe('sanitizeHtml', () => {
   it('handles empty string', () => {
     expect(sanitizeHtml('')).toBe('');
   });
+
+  it('removes nested script tags', () => {
+    const result = sanitizeHtml('<script><script>alert(1)</script></script>');
+    expect(result).not.toContain('<script>');
+    expect(result).not.toContain('alert');
+  });
 });
