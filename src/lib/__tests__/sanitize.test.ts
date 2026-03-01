@@ -32,6 +32,14 @@ describe('sanitizeHtml', () => {
     expect(sanitizeHtml('')).toBe('');
   });
 
+  it('handles undefined input gracefully', () => {
+    expect(sanitizeHtml(undefined as unknown as string)).toBe('');
+  });
+
+  it('handles null input gracefully', () => {
+    expect(sanitizeHtml(null as unknown as string)).toBe('');
+  });
+
   it('removes nested script tags', () => {
     const result = sanitizeHtml('<script><script>alert(1)</script></script>');
     expect(result).not.toContain('<script>');

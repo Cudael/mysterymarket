@@ -4,13 +4,7 @@ import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-if (!clerkPublishableKey) {
-  throw new Error(
-    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is required. Configure it in your environment (see .env.example)."
-  );
-}
+const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 export const metadata: Metadata = {
   title: {
