@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Wallet2, TrendingUp } from "lucide-react";
+import { Wallet2, TrendingUp, ArrowDownLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
@@ -52,7 +52,7 @@ export function WalletBalance({
           </div>
           <div className="rounded-lg border border-border bg-muted/30 p-3">
             <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-              <TrendingUp className="h-4 w-4" />
+              <ArrowDownLeft className="h-4 w-4" />
               <span className="text-xs font-medium uppercase tracking-wide">
                 Total Withdrawn
               </span>
