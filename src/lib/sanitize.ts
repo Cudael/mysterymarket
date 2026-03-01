@@ -1,5 +1,5 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitize from "sanitize-html";
 
 export function sanitizeHtml(dirty: string): string {
-  return DOMPurify.sanitize(dirty, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+  return sanitize(dirty, { allowedTags: [], allowedAttributes: {} });
 }
