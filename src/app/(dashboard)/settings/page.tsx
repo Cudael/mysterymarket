@@ -130,7 +130,7 @@ export default function SettingsPage() {
         <div className="mt-4 flex items-center gap-3">
           {dbUser?.stripeOnboarded ? (
             <>
-              <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+              <Badge className="bg-green-50 text-green-700 border-green-200">
                 Connected
               </Badge>
               <a
@@ -144,7 +144,7 @@ export default function SettingsPage() {
             </>
           ) : (
             <>
-              <Badge variant="outline" className="text-yellow-400 border-yellow-500/30">
+              <Badge variant="outline" className="text-yellow-700 border-yellow-300">
                 Not Connected
               </Badge>
               <a href="/creator/connect" className="text-sm text-primary hover:underline">
