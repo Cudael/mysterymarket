@@ -61,13 +61,10 @@ export async function POST(req: Request) {
   const name = [data.first_name, data.last_name].filter(Boolean).join(" ") || null;
 
   if (type === "user.created") {
-    await prisma.user.create({
-      data: {
-        clerkId: data.id,
-        email,
-        name,
-        avatarUrl: data.image_url,
-      },
+    await prisma.user.upsert({
+      where: { clerkId: data.id },
+      create: { clerkId: data.id, email, name, avatarUrl: data.image_url },
+      update: { email, name, avatarUrl: data.image_url },
     });
 
     try {

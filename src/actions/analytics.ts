@@ -2,13 +2,20 @@
 
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { syncUser } from "@/actions/users";
 
 export async function getCreatorAnalytics() {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
 
-  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (!user) throw new Error("User not found");
+  let user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  if (!user) {
+    try {
+      user = await syncUser();
+    } catch {
+      throw new Error("User not found");
+    }
+  }
 
   // Get all creator's ideas with purchases and reviews
   const ideas = await prisma.idea.findMany({
