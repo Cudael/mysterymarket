@@ -1,9 +1,9 @@
-import { ArrowUpRight, ArrowDownLeft, RotateCcw } from "lucide-react";
+import { ArrowUpRight, ArrowDownLeft, RotateCcw, ArrowDownCircle, ShoppingCart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
 
-type WalletTransactionType = "EARNING" | "WITHDRAWAL" | "REFUND_DEBIT";
+type WalletTransactionType = "EARNING" | "WITHDRAWAL" | "REFUND_DEBIT" | "DEPOSIT" | "PURCHASE";
 
 interface Transaction {
   id: string;
@@ -24,19 +24,31 @@ const TYPE_CONFIG: Record<
   EARNING: {
     icon: ArrowUpRight,
     label: "Earning",
-    color: "text-green-600 dark:text-green-400",
+    color: "text-green-600",
     sign: "+",
   },
   WITHDRAWAL: {
     icon: ArrowDownLeft,
     label: "Withdrawal",
-    color: "text-blue-600 dark:text-blue-400",
+    color: "text-blue-600",
     sign: "-",
   },
   REFUND_DEBIT: {
     icon: RotateCcw,
     label: "Refund",
-    color: "text-red-600 dark:text-red-400",
+    color: "text-red-600",
+    sign: "-",
+  },
+  DEPOSIT: {
+    icon: ArrowDownCircle,
+    label: "Deposit",
+    color: "text-green-600",
+    sign: "+",
+  },
+  PURCHASE: {
+    icon: ShoppingCart,
+    label: "Purchase",
+    color: "text-red-600",
     sign: "-",
   },
 };
@@ -71,7 +83,7 @@ export function WalletTransactions({ transactions }: WalletTransactionsProps) {
       <CardContent>
         {transactions.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No transactions yet. Earnings from sales will appear here.
+            No transactions yet.
           </p>
         ) : (
           <ul className="divide-y divide-border">

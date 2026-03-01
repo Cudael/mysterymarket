@@ -10,12 +10,15 @@ import {
   Settings,
   BarChart3,
   Wallet2,
+  ShoppingBag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { href: "/creator", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/creator/wallet", label: "Wallet", icon: Wallet2, exact: false },
+  { href: "/dashboard", label: "My Purchases", icon: ShoppingBag, exact: true },
+  { href: "/dashboard/wallet", label: "My Wallet", icon: Wallet2, exact: false },
+  { href: "/creator", label: "Creator Studio", icon: LayoutDashboard, exact: true },
+  { href: "/creator/wallet", label: "Earnings", icon: Wallet2, exact: false },
   { href: "/creator/ideas/new", label: "Create Idea", icon: PlusCircle, exact: true },
   { href: "/creator/analytics", label: "Analytics", icon: BarChart3, exact: false },
   { href: "/creator/connect", label: "Stripe Connect", icon: CreditCard, exact: false },
@@ -32,7 +35,7 @@ export function CreatorSidebar() {
         <div className="flex items-center gap-2 border-b border-border px-4 py-3">
           <Lightbulb className="h-4 w-4 text-primary" />
           <span className="text-sm font-semibold text-foreground">
-            Creator Studio
+            My Dashboard
           </span>
         </div>
         <nav className="flex flex-col gap-1 p-3">

@@ -63,7 +63,7 @@ export default function AboutPage() {
                 Secure Payments
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Stripe handles all payments securely. Creators earn to their wallet with a 15% platform fee.
+                Pay via Stripe checkout or use your in-app wallet for instant purchases. Creators earn to their wallet with a 15% platform fee.
               </p>
             </div>
           </div>

@@ -47,7 +47,7 @@ export function PayoutInfo({ connected, onboarded }: PayoutInfoProps) {
             {loading ? "Opening…" : "View Stripe Dashboard"}
           </Button>
         ) : (
-          <p className="text-sm text-yellow-600 dark:text-yellow-400">
+          <p className="text-sm text-yellow-600">
             Connect and complete your Stripe account to manage payouts.
           </p>
         )}
