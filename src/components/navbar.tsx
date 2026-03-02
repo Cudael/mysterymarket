@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Lightbulb, Menu } from "lucide-react";
+import { Sparkles, Menu } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
@@ -27,14 +27,15 @@ const NAV_LINKS = [
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="group flex items-center gap-2 transition-transform hover:scale-105">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-md shadow-primary/20 transition-colors group-hover:bg-primary/90">
-            <Lightbulb className="h-5 w-5" />
+    <header className="sticky top-0 z-50 w-full border-b border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+      <div className="container mx-auto flex h-16 items-center justify-between px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2 group">
+          {/* Subtle mystery touch: Golden Hint center inside Mystery Blue */}
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#3A5FCD] transition-colors group-hover:bg-[#6D7BE0]">
+            <Sparkles className="h-4 w-4 text-[#E8C26A]" />
           </div>
-          <span className="text-xl font-extrabold tracking-tight text-foreground">
-            MysteryIdea
+          <span className="text-[18px] font-semibold tracking-tight text-[#1A1A1A]">
+            MysteryMarket
           </span>
         </Link>
 
@@ -44,7 +45,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-bold text-muted-foreground transition-colors hover:text-primary"
+              className="text-[16px] font-medium text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]"
             >
               {link.label}
             </Link>
@@ -55,22 +56,16 @@ export function Navbar() {
         <div className="hidden items-center gap-4 md:flex">
           <SignedIn>
             <Link href="/dashboard">
-              <Button variant="ghost" className="font-bold">
-                Dashboard
-              </Button>
+              <Button variant="ghost">Dashboard</Button>
             </Link>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <Button variant="ghost" className="font-bold hover:text-primary">
-                Log in
-              </Button>
+              <Button variant="ghost">Sign In</Button>
             </SignInButton>
             <SignUpButton mode="modal">
-              <Button className="rounded-full px-6 font-bold shadow-md shadow-primary/20">
-                Start Selling
-              </Button>
+              <Button>Start Creating</Button>
             </SignUpButton>
           </SignedOut>
         </div>
@@ -82,17 +77,14 @@ export function Navbar() {
           </SignedIn>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open menu">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" className="text-[#1A1A1A]">
+                <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <SheetHeader className="border-b border-border pb-4">
-                <SheetTitle className="flex items-center gap-2 text-lg font-extrabold">
-                  <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-white">
-                    <Lightbulb className="h-4 w-4" />
-                  </div>
-                  MysteryIdea
+            <SheetContent side="right" className="w-[300px] border-l border-[#D9DCE3] bg-[#FFFFFF]">
+              <SheetHeader className="border-b border-[#D9DCE3] pb-4 text-left">
+                <SheetTitle className="text-[18px] font-semibold text-[#1A1A1A]">
+                  MysteryMarket
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-2 pt-6">
@@ -100,33 +92,19 @@ export function Navbar() {
                   <SheetClose asChild key={link.href}>
                     <Link
                       href={link.href}
-                      className="rounded-lg px-4 py-3 text-base font-bold text-slate-600 transition-colors hover:bg-primary/5 hover:text-primary"
+                      className="rounded-[8px] px-4 py-3 text-[16px] font-medium text-[#1A1A1A] transition-colors hover:bg-[#F5F6FA] hover:text-[#3A5FCD]"
                     >
                       {link.label}
                     </Link>
                   </SheetClose>
                 ))}
-                <SignedIn>
-                  <SheetClose asChild>
-                    <Link
-                      href="/dashboard"
-                      className="rounded-lg px-4 py-3 text-base font-bold text-slate-600 transition-colors hover:bg-primary/5 hover:text-primary"
-                    >
-                      Dashboard
-                    </Link>
-                  </SheetClose>
-                </SignedIn>
                 <SignedOut>
                   <div className="mt-8 flex flex-col gap-3">
                     <SignInButton mode="modal">
-                      <Button variant="outline" className="w-full justify-center h-12 text-base font-bold">
-                        Log in
-                      </Button>
+                      <Button variant="outline" className="w-full">Sign In</Button>
                     </SignInButton>
                     <SignUpButton mode="modal">
-                      <Button className="w-full justify-center h-12 text-base font-bold">
-                        Get Started
-                      </Button>
+                      <Button className="w-full">Start Creating</Button>
                     </SignUpButton>
                   </div>
                 </SignedOut>
