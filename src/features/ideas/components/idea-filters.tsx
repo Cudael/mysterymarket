@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, ChevronDown } from "lucide-react";
 import { CATEGORIES } from "@/lib/constants";
@@ -23,7 +23,10 @@ export function IdeaFilters() {
   const searchParams = useSearchParams();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const currentSearch = searchParams.get("search") ?? "";
+  // We use local state for the input so it feels snappy, while the URL is debounced
+  const currentSearchUrl = searchParams.get("search") ?? "";
+  const [localSearch, setLocalSearch] = useState(currentSearchUrl);
+
   const currentCategory = searchParams.get("category") ?? "";
   const currentUnlockType = searchParams.get("unlockType") ?? "";
   const currentSortBy = searchParams.get("sortBy") ?? "";
@@ -40,6 +43,7 @@ export function IdeaFilters() {
   }
 
   function handleSearchChange(value: string) {
+    setLocalSearch(value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => updateParam("search", value), 400);
   }
@@ -49,6 +53,11 @@ export function IdeaFilters() {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, []);
+
+  // Update local state if URL changes externally
+  useEffect(() => {
+    setLocalSearch(searchParams.get("search") ?? "");
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col gap-6 mb-8">
@@ -61,7 +70,7 @@ export function IdeaFilters() {
           <input
             type="search"
             placeholder="Search for hidden insights..."
-            defaultValue={currentSearch}
+            value={localSearch}
             className="h-10 w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-10 pr-4 text-[14px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/50 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
             onChange={(e) => handleSearchChange(e.target.value)}
           />
