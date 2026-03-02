@@ -39,11 +39,11 @@ export default async function CreatorPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Creator Studio</h1>
-          <p className="mt-1 text-muted-foreground">
-            Manage your ideas and track earnings.
+          <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">Creator Studio</h1>
+          <p className="mt-2 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+            Manage your ideas and track your earnings.
           </p>
         </div>
         <Button asChild>
@@ -55,126 +55,103 @@ export default async function CreatorPage() {
       </div>
 
       {/* Wallet summary */}
-      <div className="mt-6 flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
-        <Wallet2 className="h-5 w-5 shrink-0 text-primary" />
+      <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4 rounded-[12px] border border-[#3A5FCD]/20 bg-[#3A5FCD]/5 p-5">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[8px] bg-[#FFFFFF] border border-[#3A5FCD]/20">
+          <Wallet2 className="h-6 w-6 text-[#3A5FCD]" />
+        </div>
         <div className="flex-1">
-          <p className="text-sm font-medium text-foreground">
-            Wallet Balance:{" "}
-            <span className="text-primary">
+          <p className="text-[16px] font-medium text-[#1A1A1A]">
+            Available Balance:{" "}
+            <span className="text-[#3A5FCD] font-bold">
               {formatPrice(wallet.balanceInCents)}
             </span>
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-[#1A1A1A]/60 mt-1">
             Total earned: {formatPrice(wallet.totalEarnedInCents)}
           </p>
         </div>
-        <Button asChild size="sm" variant="outline">
-          <Link href="/creator/wallet">View Wallet</Link>
+        <Button asChild size="sm" variant="outline" className="bg-[#FFFFFF]">
+          <Link href="/creator/wallet">Manage Wallet</Link>
         </Button>
       </div>
 
       {/* Stats */}
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-border bg-card p-6">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Ideas</span>
-            <Lightbulb className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-[#1A1A1A]/60">Total Ideas</span>
+            <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
           </div>
-          <p className="mt-2 text-3xl font-bold text-foreground">
-            {ideas.length}
-          </p>
+          <p className="mt-4 text-3xl font-bold text-[#1A1A1A]">{ideas.length}</p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-6">
+        
+        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Revenue</span>
-            <DollarSign className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-[#1A1A1A]/60">Net Revenue</span>
+            <DollarSign className="h-4 w-4 text-[#3A5FCD]" />
           </div>
-          <p className="mt-2 text-3xl font-bold text-foreground">
-            {formatPrice(totalRevenue)}
-          </p>
+          <p className="mt-4 text-3xl font-bold text-[#1A1A1A]">{formatPrice(totalRevenue)}</p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-6">
+
+        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Sales</span>
-            <TrendingUp className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-[#1A1A1A]/60">Total Sales</span>
+            <TrendingUp className="h-4 w-4 text-[#3A5FCD]" />
           </div>
-          <p className="mt-2 text-3xl font-bold text-foreground">
-            {totalSales}
-          </p>
+          <p className="mt-4 text-3xl font-bold text-[#1A1A1A]">{totalSales}</p>
         </div>
       </div>
 
       {/* Ideas list */}
-      <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold text-foreground">
-          Your Ideas
-        </h2>
+      <div className="mt-12">
+        <h2 className="mb-6 text-xl font-semibold text-[#1A1A1A]">Your Ideas</h2>
+        
         {ideas.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border bg-card p-12 text-center">
-            <Lightbulb className="mx-auto h-10 w-10 text-muted-foreground" />
-            <p className="mt-3 text-muted-foreground">
-              You haven&apos;t posted any ideas yet.
+          <div className="rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#FFFFFF] p-16 text-center shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <Lightbulb className="mx-auto h-10 w-10 text-[#D9DCE3]" />
+            <p className="mt-4 text-[16px] text-[#1A1A1A]/70">
+              You haven&apos;t posted any ideas yet. Start monetizing your knowledge.
             </p>
-            <Button asChild className="mt-4">
+            <Button asChild className="mt-6">
               <Link href="/creator/ideas/new">Post Your First Idea</Link>
             </Button>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-xl border border-border">
+          <div className="overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
             <table className="w-full text-sm">
-              <thead className="border-b border-border bg-muted/50">
+              <thead className="border-b border-[#D9DCE3] bg-[#F8F9FC]">
                 <tr>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                    Title
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                    Price
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                    Type
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                    Status
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                    Sales
-                  </th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">
-                    Actions
-                  </th>
+                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">Title</th>
+                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">Price</th>
+                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">Type</th>
+                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">Status</th>
+                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">Sales</th>
+                  <th className="px-6 py-4 text-right font-semibold text-[#1A1A1A]/70">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-[#D9DCE3]">
                 {ideas.map((idea) => (
-                  <tr key={idea.id} className="bg-card">
-                    <td className="px-4 py-3 font-medium text-foreground">
-                      {idea.title}
+                  <tr key={idea.id} className="transition-colors hover:bg-[#F5F6FA]">
+                    <td className="px-6 py-4 font-medium text-[#1A1A1A]">{idea.title}</td>
+                    <td className="px-6 py-4 text-[#1A1A1A]/70">{formatPrice(idea.priceInCents)}</td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center rounded-[6px] bg-[#F5F6FA] px-2.5 py-1 text-xs font-medium border border-[#D9DCE3] text-[#1A1A1A]">
+                        {idea.unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi"}
+                      </span>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {formatPrice(idea.priceInCents)}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge variant="outline">
-                        {idea.unlockType === "EXCLUSIVE"
-                          ? "Exclusive"
-                          : "Multi"}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge
-                        variant={idea.published ? "default" : "secondary"}
-                      >
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center rounded-[6px] px-2.5 py-1 text-xs font-medium border ${
+                        idea.published ? 'bg-[#AEE5D8]/20 text-emerald-800 border-[#AEE5D8]/40' : 'bg-[#F5F6FA] text-[#1A1A1A]/60 border-[#D9DCE3]'
+                      }`}>
                         {idea.published ? "Published" : "Draft"}
-                      </Badge>
+                      </span>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      {idea._count.purchases}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <Button asChild size="sm" variant="outline">
+                    <td className="px-6 py-4 text-[#1A1A1A]/70">{idea._count.purchases}</td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button asChild size="sm" variant="outline" className="h-8">
                           <Link href={`/creator/ideas/${idea.id}/edit`}>
-                            <Pencil className="h-3 w-3" />
+                            <Pencil className="h-3 w-3 mr-1" /> Edit
                           </Link>
                         </Button>
                         {idea._count.purchases === 0 && (
