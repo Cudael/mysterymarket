@@ -1,74 +1,46 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden py-24 sm:py-32">
-      {/* Decorative gradient elements */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-      >
-        <div
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary to-purple-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-        />
-      </div>
-
-      <div className="container mx-auto px-4 text-center">
+    <section className="relative overflow-hidden bg-background py-24 sm:py-32 lg:pb-40">
+      {/* Subtle background grid pattern for depth without "vibes" */}
+      <div className="absolute inset-0 -z-10 h-full w-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            Premium Idea Marketplace
+          <div className="mb-8 flex justify-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-sm font-medium text-muted-foreground">
+              <Lightbulb className="h-4 w-4 text-foreground" />
+              <span className="text-foreground">Premium Idea Marketplace</span>
+            </span>
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-            Ideas Worth{" "}
-            <span className="bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
-              Paying For
-            </span>
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+            Ideas worth <span className="text-primary/70 underline decoration-border underline-offset-8">paying for.</span>
           </h1>
 
-          <p className="mt-6 text-lg leading-8 text-muted-foreground sm:text-xl">
-            Discover exclusive ideas from the world&apos;s best creators. Post
-            your hidden insights, set your price, and earn every time someone
-            unlocks your brilliance.
+          <p className="mt-8 text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            Discover exclusive insights from top creators. Post your hidden ideas, set your price, and earn every time someone unlocks your brilliance.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button asChild size="lg" className="gap-2">
+            <Button asChild size="lg" className="w-full sm:w-auto gap-2 h-12 px-8">
               <Link href="/ideas">
-                Browse Ideas
+                Browse Marketplace
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8">
               <Link href="/sign-up">Start Selling</Link>
             </Button>
           </div>
 
           <p className="mt-6 text-sm text-muted-foreground">
-            No subscription required. Pay only for what you unlock.
+            No subscriptions. Pay only for what you unlock.
           </p>
         </div>
-      </div>
-
-      {/* Bottom decorative gradient */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-      >
-        <div
-          className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-primary to-purple-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-        />
       </div>
     </section>
   );
