@@ -2,18 +2,17 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Search, ChevronDown } from "lucide-react";
 import { CATEGORIES } from "@/lib/constants";
 
 const UNLOCK_TYPES = [
   { label: "All Types", value: "" },
-  { label: "Exclusive", value: "EXCLUSIVE" },
+  { label: "Exclusive Only", value: "EXCLUSIVE" },
   { label: "Multi-unlock", value: "MULTI" },
 ];
 
 const SORT_OPTIONS = [
-  { label: "Newest", value: "" },
+  { label: "Newest Arrivals", value: "" },
   { label: "Price: Low to High", value: "price-low" },
   { label: "Price: High to Low", value: "price-high" },
   { label: "Most Popular", value: "most-purchased" },
@@ -52,27 +51,64 @@ export function IdeaFilters() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search ideas..."
-          defaultValue={currentSearch}
-          className="pl-10"
-          onChange={(e) => handleSearchChange(e.target.value)}
-        />
+    <div className="flex flex-col gap-6 mb-8">
+      {/* Top Row: Search & Dropdowns */}
+      <div className="flex flex-col sm:flex-row justify-between gap-4">
+        
+        {/* Search Input */}
+        <div className="relative w-full sm:max-w-md">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+          <input
+            type="search"
+            placeholder="Search for hidden insights..."
+            defaultValue={currentSearch}
+            className="h-10 w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-10 pr-4 text-[14px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/50 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+        </div>
+
+        {/* Filters & Sorts */}
+        <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-none">
+            <select
+              value={currentUnlockType}
+              onChange={(e) => updateParam("unlockType", e.target.value)}
+              className="h-10 w-full appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-3 pr-8 text-[14px] font-medium text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+            >
+              {UNLOCK_TYPES.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 pointer-events-none text-[#1A1A1A]/50" />
+          </div>
+
+          <div className="relative flex-1 sm:flex-none">
+            <select
+              value={currentSortBy}
+              onChange={(e) => updateParam("sortBy", e.target.value)}
+              className="h-10 w-full appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-3 pr-8 text-[14px] font-medium text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 pointer-events-none text-[#1A1A1A]/50" />
+          </div>
+        </div>
       </div>
 
-      {/* Category pills */}
+      {/* Bottom Row: Category Pills */}
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => updateParam("category", "")}
-          className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+          className={`rounded-[8px] border px-4 py-1.5 text-[14px] font-medium transition-all duration-200 ${
             !currentCategory
-              ? "border-primary bg-primary/10 text-primary"
-              : "border-border text-muted-foreground hover:border-primary hover:text-primary"
+              ? "border-[#3A5FCD] bg-[#3A5FCD] text-[#FFFFFF] shadow-[0_2px_8px_rgba(58,95,205,0.2)]"
+              : "border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A]/70 hover:border-[#6D7BE0]/50 hover:bg-[#F8F9FC] hover:text-[#1A1A1A]"
           }`}
         >
           All
@@ -83,42 +119,15 @@ export function IdeaFilters() {
             onClick={() =>
               updateParam("category", currentCategory === cat ? "" : cat)
             }
-            className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+            className={`rounded-[8px] border px-4 py-1.5 text-[14px] font-medium transition-all duration-200 ${
               currentCategory === cat
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border text-muted-foreground hover:border-primary hover:text-primary"
+                ? "border-[#3A5FCD] bg-[#3A5FCD] text-[#FFFFFF] shadow-[0_2px_8px_rgba(58,95,205,0.2)]"
+                : "border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A]/70 hover:border-[#6D7BE0]/50 hover:bg-[#F8F9FC] hover:text-[#1A1A1A]"
             }`}
           >
             {cat}
           </button>
         ))}
-      </div>
-
-      {/* Unlock type + Sort row */}
-      <div className="flex flex-wrap gap-3">
-        <select
-          value={currentUnlockType}
-          onChange={(e) => updateParam("unlockType", e.target.value)}
-          className="rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground"
-        >
-          {UNLOCK_TYPES.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={currentSortBy}
-          onChange={(e) => updateParam("sortBy", e.target.value)}
-          className="rounded-md border border-border bg-background px-3 py-1.5 text-sm text-foreground"
-        >
-          {SORT_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   );
