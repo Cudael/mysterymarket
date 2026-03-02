@@ -3,12 +3,12 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { BarChart3, Star, DollarSign, ShoppingCart, Lightbulb, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RevenueChart } from "@/components/revenue-chart";
-import { TopIdeasTable } from "@/components/top-ideas-table";
-import { RecentSales } from "@/components/recent-sales";
-import { PayoutInfo } from "@/components/payout-info";
-import { getCreatorAnalytics } from "@/actions/analytics";
-import { getConnectAccountStatus } from "@/actions/stripe-connect";
+import { RevenueChart } from "@/features/analytics/components/revenue-chart";
+import { TopIdeasTable } from "@/features/analytics/components/top-ideas-table";
+import { RecentSales } from "@/features/analytics/components/recent-sales";
+import { PayoutInfo } from "@/features/analytics/components/payout-info";
+import { getCreatorAnalytics } from "@/features/analytics/actions";
+import { getConnectAccountStatus } from "@/features/stripe/actions";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {

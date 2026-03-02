@@ -4,7 +4,7 @@ import { stripe } from "@/lib/stripe";
 import prisma from "@/lib/prisma";
 import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
 import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
-import { creditWalletForDeposit } from "@/actions/wallet";
+import { creditWalletForDeposit } from "@/features/wallet/actions";
 
 export async function POST(req: Request) {
   const body = await req.text();

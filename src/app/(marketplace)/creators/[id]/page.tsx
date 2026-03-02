@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Calendar, Lightbulb, ShoppingBag } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { IdeaCard } from "@/components/idea-card";
+import { IdeaCard } from "@/features/ideas/components/idea-card";
 import prisma from "@/lib/prisma";
 
 export async function generateMetadata({

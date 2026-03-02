@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { getWalletWithTransactions } from "@/actions/wallet";
-import { getConnectAccountStatus } from "@/actions/stripe-connect";
-import { WalletBalance } from "@/components/wallet-balance";
-import { WalletTransactions } from "@/components/wallet-transactions";
+import { getWalletWithTransactions } from "@/features/wallet/actions";
+import { getConnectAccountStatus } from "@/features/stripe/actions";
+import { WalletBalance } from "@/features/wallet/components/wallet-balance";
+import { WalletTransactions } from "@/features/wallet/components/wallet-transactions";
 
 export const metadata: Metadata = {
   title: "Wallet - MysteryIdea",

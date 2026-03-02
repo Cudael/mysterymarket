@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { IdeaCard } from "@/components/idea-card";
-import { IdeaFilters } from "@/components/idea-filters";
-import { Pagination } from "@/components/pagination";
+import { IdeaCard } from "@/features/ideas/components/idea-card";
+import { IdeaFilters } from "@/features/ideas/components/idea-filters";
+import { Pagination } from "@/components/shared/pagination";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 

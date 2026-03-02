@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DeleteIdeaDialog } from "@/components/delete-idea-dialog";
-import { getIdeasByCreator } from "@/actions/ideas";
-import { getWalletWithTransactions } from "@/actions/wallet";
+import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
+import { getIdeasByCreator } from "@/features/ideas/actions";
+import { getWalletWithTransactions } from "@/features/wallet/actions";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {

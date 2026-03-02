@@ -6,14 +6,14 @@ import { ArrowLeft, Lock, Calendar, Users } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { UnlockButton } from "@/components/unlock-button";
-import { ShareButtons } from "@/components/share-buttons";
-import { ReviewList } from "@/components/review-list";
-import { ReviewForm } from "@/components/review-form";
-import { ReportDialog } from "@/components/report-dialog";
+import { UnlockButton } from "@/features/purchases/components/unlock-button";
+import { ShareButtons } from "@/components/shared/share-buttons";
+import { ReviewList } from "@/features/reviews/components/review-list";
+import { ReviewForm } from "@/features/reviews/components/review-form";
+import { ReportDialog } from "@/features/reports/components/report-dialog";
 import prisma from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
-import { getIdeaById } from "@/actions/ideas";
+import { getIdeaById } from "@/features/ideas/actions";
 
 export async function generateMetadata({
   params,

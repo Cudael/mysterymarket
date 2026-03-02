@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ShoppingBag, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getPurchasesByUser } from "@/actions/purchases";
-import { getRefundRequestsForUser } from "@/actions/refunds";
-import { RefundDialog } from "@/components/refund-dialog";
+import { getPurchasesByUser } from "@/features/purchases/actions";
+import { getRefundRequestsForUser } from "@/features/refunds/actions";
+import { RefundDialog } from "@/features/refunds/components/refund-dialog";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {

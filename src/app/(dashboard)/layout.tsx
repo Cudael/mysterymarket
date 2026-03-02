@@ -1,5 +1,5 @@
-import { Navbar } from "@/components/navbar";
-import { CreatorSidebar } from "@/components/creator-sidebar";
+import { Navbar } from "@/components/layout/navbar";
+import { CreatorSidebar } from "@/components/layout/creator-sidebar";
 
 export const dynamic = "force-dynamic";
 

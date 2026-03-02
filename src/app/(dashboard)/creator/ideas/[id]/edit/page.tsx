@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
-import { IdeaForm } from "@/components/idea-form";
-import { DeleteIdeaDialog } from "@/components/delete-idea-dialog";
-import { getIdeaById, updateIdea } from "@/actions/ideas";
+import { IdeaForm } from "@/features/ideas/components/idea-form";
+import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
+import { getIdeaById, updateIdea } from "@/features/ideas/actions";
 
 export const metadata: Metadata = {
   title: "Edit Idea - MysteryIdea",

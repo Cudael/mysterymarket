@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { IdeaForm } from "@/components/idea-form";
-import { createIdea } from "@/actions/ideas";
+import { IdeaForm } from "@/features/ideas/components/idea-form";
+import { createIdea } from "@/features/ideas/actions";
 
 export const metadata: Metadata = {
   title: "Create Idea - MysteryIdea",

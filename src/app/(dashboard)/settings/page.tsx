@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { updateProfile, getUserByClerkId } from "@/actions/users";
+import { updateProfile, getUserByClerkId } from "@/features/users/actions";
 
 export default function SettingsPage() {
   const { user: clerkUser } = useUser();

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Lock, DollarSign, Wallet, Code, TrendingUp, Palette, Briefcase, Star, Quote } from "lucide-react";
-import { Hero } from "@/components/hero";
-import { IdeaCard } from "@/components/idea-card";
+import { Hero } from "@/components/layout/hero";
+import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 

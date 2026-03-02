@@ -17,7 +17,7 @@ import {
   getConnectAccountStatus,
   createAccountLink,
   createStripeDashboardLink,
-} from "@/actions/stripe-connect";
+} from "@/features/stripe/actions";
 
 type ConnectStatus = {
   connected: boolean;

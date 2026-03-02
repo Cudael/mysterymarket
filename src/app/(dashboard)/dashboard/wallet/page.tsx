@@ -3,9 +3,9 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Wallet2, ArrowDownCircle, ShoppingCart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getWalletWithTransactions } from "@/actions/wallet";
-import { WalletTransactions } from "@/components/wallet-transactions";
-import { DepositDialog } from "@/components/deposit-dialog";
+import { getWalletWithTransactions } from "@/features/wallet/actions";
+import { WalletTransactions } from "@/features/wallet/components/wallet-transactions";
+import { DepositDialog } from "@/features/wallet/components/deposit-dialog";
 import { formatPrice } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 
