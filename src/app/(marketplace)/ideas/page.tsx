@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+// 1. Direct import from the feature folder to avoid re-export issues
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters";
 import { Pagination } from "@/components/shared/pagination";
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
   description: "Browse and unlock premium ideas from top creators.",
 };
 
+// 2. Next.js 15 requires searchParams to be explicitly typed as a Promise
 interface IdeasPageProps {
   searchParams: Promise<{
     search?: string;
@@ -22,12 +24,14 @@ interface IdeasPageProps {
 }
 
 export default async function IdeasPage({ searchParams }: IdeasPageProps) {
+  // 3. Await the params before attempting to destructure or access keys
   const params = await searchParams;
-  const search = params.search ?? "";
-  const category = params.category ?? "";
-  const unlockType = params.unlockType ?? "";
-  const sortBy = params.sortBy ?? "";
-  const page = Math.max(1, parseInt(params.page ?? "1", 10));
+  
+  const search = params?.search ?? "";
+  const category = params?.category ?? "";
+  const unlockType = params?.unlockType ?? "";
+  const sortBy = params?.sortBy ?? "";
+  const page = Math.max(1, parseInt(params?.page ?? "1", 10));
 
   const where = {
     published: true,
@@ -84,7 +88,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
         </div>
 
         <div className="mb-10">
-          <Suspense>
+          <Suspense fallback={<div className="h-14 w-full animate-pulse rounded-[8px] bg-[#D9DCE3]/50"></div>}>
             <IdeaFilters />
           </Suspense>
         </div>
