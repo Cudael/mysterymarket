@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
-import { AlertCircle } from "lucide-react";
+import { ImagePlus, Info, Lock } from "lucide-react";
 
 const ideaFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(200),
@@ -126,71 +126,67 @@ export function IdeaForm({
 
   const isStripeError = error === "Please connect your Stripe account before creating ideas.";
 
+  // Shared classes for all inputs based on the design system
+  const inputClasses = "w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3 text-[15px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]";
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-8 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 sm:p-8 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
+      
       {isStripeError ? (
-        <div className="flex items-center gap-3 rounded-[8px] border border-[#E8C26A]/30 bg-[#E8C26A]/10 p-4 text-[14px] text-[#1A1A1A]">
-          <AlertCircle className="h-5 w-5 text-[#E8C26A]" />
-          <span>
-            {error}{" "}
-            <Link href="/creator/connect" className="font-semibold text-[#3A5FCD] hover:underline ml-1">
-              Set up Stripe Connect →
-            </Link>
-          </span>
+        <div className="rounded-[8px] border border-yellow-400/50 bg-yellow-50 p-4 text-sm text-yellow-800">
+          {error}{" "}
+          <Link href="/creator/connect" className="font-medium underline hover:text-yellow-900 transition-colors">
+            Set up Stripe Connect →
+          </Link>
         </div>
       ) : error ? (
-        <div className="flex items-center gap-3 rounded-[8px] border border-red-200 bg-red-50 p-4 text-[14px] text-red-700">
-          <AlertCircle className="h-5 w-5" />
-          <span>{error}</span>
+        <div className="rounded-[8px] border border-destructive/50 bg-destructive/10 p-4 text-sm font-medium text-destructive">
+          {error}
         </div>
       ) : null}
 
-      <div className="space-y-6 border-b border-[#D9DCE3] pb-8">
-        <h2 className="text-xl font-bold text-[#1A1A1A]">Basic Information</h2>
+      <div className="space-y-2">
+        <Label htmlFor="title" className="text-[14px] font-semibold text-[#1A1A1A]">Title *</Label>
+        <input
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Give your insight a compelling title..."
+          required
+          className={inputClasses}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="teaserText" className="text-[14px] font-semibold text-[#1A1A1A]">Teaser Text</Label>
+        <textarea
+          id="teaserText"
+          value={teaserText}
+          onChange={(e) => setTeaserText(e.target.value)}
+          placeholder="What can buyers expect? (Don't reveal too much!)"
+          rows={3}
+          className={`${inputClasses} resize-y min-h-[100px]`}
+        />
+        <div className="flex items-center gap-1.5 mt-1 text-xs text-[#1A1A1A]/60">
+          <Info className="h-3.5 w-3.5" />
+          <span>Optional. Visible to everyone before purchase.</span>
+        </div>
+      </div>
+
+      <div className="space-y-3 rounded-[8px] border border-[#D9DCE3] bg-[#F5F6FA] p-5">
+        <Label className="text-[14px] font-semibold text-[#1A1A1A]">Teaser Image</Label>
+        <p className="text-sm text-[#1A1A1A]/60">Add a visual hook to make your idea stand out in the marketplace.</p>
         
-        <div className="space-y-2">
-          <Label htmlFor="title" className="text-[#1A1A1A] font-semibold">Title *</Label>
-          <Input
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Give your idea a compelling, clear title..."
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="teaserText" className="text-[#1A1A1A] font-semibold">Teaser Text</Label>
-          <Textarea
-            id="teaserText"
-            value={teaserText}
-            onChange={(e) => setTeaserText(e.target.value)}
-            placeholder="What will buyers learn? (Hook them in without revealing the secret)"
-            rows={3}
-          />
-          <p className="text-[13px] text-[#1A1A1A]/60">
-            Visible to everyone on the marketplace. Max 500 characters.
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          <Label className="text-[#1A1A1A] font-semibold">Teaser Image</Label>
-          <div className="flex items-start gap-6">
-            {teaserImageUrl ? (
-              <div className="relative h-32 w-48 overflow-hidden rounded-[8px] border border-[#D9DCE3]">
-                <Image
-                  src={teaserImageUrl}
-                  alt="Teaser preview"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <div className="flex h-32 w-48 items-center justify-center rounded-[8px] border border-dashed border-[#D9DCE3] bg-[#F8F9FC]">
-                <span className="text-[13px] text-[#1A1A1A]/40">No image selected</span>
-              </div>
-            )}
-            <div className="flex-1">
+        {teaserImageUrl ? (
+          <div className="relative mt-3 group overflow-hidden rounded-[8px] border border-[#D9DCE3] w-fit">
+            <Image
+              src={teaserImageUrl}
+              alt="Teaser"
+              width={240}
+              height={160}
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-[#1A1A1A]/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <UploadButton
                 endpoint="teaserImageUploader"
                 onClientUploadComplete={(res) => {
@@ -198,123 +194,143 @@ export function IdeaForm({
                 }}
                 onUploadError={(error: Error) => setError(error.message)}
                 appearance={{
-                  button: "bg-[#FFFFFF] border border-[#D9DCE3] text-[#1A1A1A] hover:bg-[#F5F6FA] text-sm h-10 px-4",
-                  allowedContent: "text-[#1A1A1A]/60 text-xs mt-2"
+                  button: "bg-transparent text-white font-medium text-sm border border-white/50 hover:bg-white/20 px-3 py-1.5 rounded-[6px]",
+                  allowedContent: "hidden"
+                }}
+                content={{
+                  button({ ready }) {
+                    if (ready) return <div>Replace Image</div>;
+                    return "Loading...";
+                  },
                 }}
               />
             </div>
           </div>
+        ) : (
+          <div className="mt-4 flex flex-col items-start gap-4 rounded-[8px] border border-dashed border-[#D9DCE3] bg-[#FFFFFF] p-6 transition-colors hover:border-[#3A5FCD]/50">
+            <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#F8F9FC]">
+              <ImagePlus className="h-5 w-5 text-[#3A5FCD]" />
+            </div>
+            <div className="w-full text-left">
+              <UploadButton
+                endpoint="teaserImageUploader"
+                onClientUploadComplete={(res) => {
+                  if (res[0]?.url) setTeaserImageUrl(res[0].url);
+                }}
+                onUploadError={(error: Error) => setError(error.message)}
+                appearance={{
+                  button: "bg-[#FFFFFF] text-[#1A1A1A] font-medium text-[14px] border border-[#D9DCE3] hover:border-[#3A5FCD] hover:bg-[#F8F9FC] transition-colors rounded-[8px] h-10 px-4 w-full sm:w-auto shadow-[0_2px_8px_rgba(0,0,0,0.02)]",
+                  allowedContent: "text-xs text-[#1A1A1A]/50 mt-2"
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <Lock className="h-4 w-4 text-[#3A5FCD]" />
+          <Label htmlFor="hiddenContent" className="text-[14px] font-semibold text-[#1A1A1A]">Hidden Content *</Label>
+        </div>
+        <textarea
+          id="hiddenContent"
+          value={hiddenContent}
+          onChange={(e) => setHiddenContent(e.target.value)}
+          placeholder="Type or paste your highly valuable insight here. This remains locked until purchased."
+          rows={10}
+          required
+          className={`${inputClasses} font-mono text-[14px] resize-y min-h-[200px] leading-relaxed`}
+        />
+        <p className="text-xs font-medium text-[#3A5FCD] mt-1">
+          This content is encrypted and completely hidden from public view.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-[#D9DCE3]">
+        <div className="space-y-2">
+          <Label htmlFor="price" className="text-[14px] font-semibold text-[#1A1A1A]">Price (USD) *</Label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1A1A1A]/50 font-medium">$</span>
+            <input
+              id="price"
+              type="number"
+              step="0.01"
+              min="0.99"
+              value={priceStr}
+              onChange={(e) => setPriceStr(e.target.value)}
+              placeholder="9.99"
+              required
+              className={`${inputClasses} pl-8`}
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="unlockType" className="text-[14px] font-semibold text-[#1A1A1A]">Unlock Model *</Label>
+          <select
+            id="unlockType"
+            value={unlockType}
+            onChange={(e) =>
+              setUnlockType(e.target.value as "EXCLUSIVE" | "MULTI")
+            }
+            className={`${inputClasses} cursor-pointer appearance-none`}
+          >
+            <option value="MULTI">Multi-unlock (unlimited buyers)</option>
+            <option value="EXCLUSIVE">Exclusive (one buyer only)</option>
+          </select>
         </div>
       </div>
 
-      <div className="space-y-6 border-b border-[#D9DCE3] pb-8">
-        <div>
-          <h2 className="text-xl font-bold text-[#1A1A1A]">The Hidden Insight</h2>
-          <p className="mt-1 text-[14px] text-[#1A1A1A]/60">This is what buyers are paying for. Make it incredibly valuable.</p>
-        </div>
-        
+      {unlockType === "MULTI" && (
         <div className="space-y-2">
-          <Textarea
-            id="hiddenContent"
-            value={hiddenContent}
-            onChange={(e) => setHiddenContent(e.target.value)}
-            placeholder="Write your exclusive strategy, framework, snippet, or knowledge here..."
-            rows={12}
-            required
-            className="font-mono text-[14px]"
+          <Label htmlFor="maxUnlocks" className="text-[14px] font-semibold text-[#1A1A1A]">Max Unlocks (Optional)</Label>
+          <input
+            id="maxUnlocks"
+            type="number"
+            min="1"
+            value={maxUnlocks}
+            onChange={(e) => setMaxUnlocks(e.target.value)}
+            placeholder="Leave empty for unlimited sales"
+            className={inputClasses}
+          />
+          <p className="text-xs text-[#1A1A1A]/60 mt-1">
+            Creates artificial scarcity by limiting total available copies.
+          </p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <Label htmlFor="category" className="text-[14px] font-semibold text-[#1A1A1A]">Category</Label>
+          <input
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="e.g. SaaS, Marketing, Code"
+            className={inputClasses}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="tags" className="text-[14px] font-semibold text-[#1A1A1A]">Tags</Label>
+          <input
+            id="tags"
+            value={tagsStr}
+            onChange={(e) => setTagsStr(e.target.value)}
+            placeholder="growth, startup, seo (comma separated)"
+            className={inputClasses}
           />
         </div>
       </div>
 
-      <div className="space-y-6 pb-4">
-        <h2 className="text-xl font-bold text-[#1A1A1A]">Pricing & Discovery</h2>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="price" className="text-[#1A1A1A] font-semibold">Price (USD) *</Label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-medium text-[#1A1A1A]/50">$</span>
-              <Input
-                id="price"
-                type="number"
-                step="0.01"
-                min="0.99"
-                value={priceStr}
-                onChange={(e) => setPriceStr(e.target.value)}
-                placeholder="9.99"
-                className="pl-8"
-                required
-              />
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="unlockType" className="text-[#1A1A1A] font-semibold">Access Model *</Label>
-            <select
-              id="unlockType"
-              value={unlockType}
-              onChange={(e) =>
-                setUnlockType(e.target.value as "EXCLUSIVE" | "MULTI")
-              }
-              className="flex h-11 w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-2 text-[15px] font-medium text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20"
-            >
-              <option value="MULTI">Multi-unlock (Unlimited sales)</option>
-              <option value="EXCLUSIVE">Exclusive (Sells only once)</option>
-            </select>
-          </div>
-
-          {unlockType === "MULTI" && (
-            <div className="space-y-2">
-              <Label htmlFor="maxUnlocks" className="text-[#1A1A1A] font-semibold">Sales Limit</Label>
-              <Input
-                id="maxUnlocks"
-                type="number"
-                min="1"
-                value={maxUnlocks}
-                onChange={(e) => setMaxUnlocks(e.target.value)}
-                placeholder="Unlimited"
-              />
-              <p className="text-[13px] text-[#1A1A1A]/60">
-                Leave empty if you don't want to limit total sales.
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="category" className="text-[#1A1A1A] font-semibold">Category</Label>
-            <Input
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              placeholder="e.g. SaaS Growth"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="tags" className="text-[#1A1A1A] font-semibold">Tags</Label>
-            <Input
-              id="tags"
-              value={tagsStr}
-              onChange={(e) => setTagsStr(e.target.value)}
-              placeholder="marketing, seo, conversion"
-            />
-            <p className="text-[13px] text-[#1A1A1A]/60">
-              Separate with commas.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-4 pt-6 mt-4">
-        <Button type="submit" size="lg" className="w-full sm:flex-1 h-12 text-[16px]" disabled={isSubmitting}>
-          {isSubmitting ? "Publishing..." : submitLabel}
+      <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-[#D9DCE3]">
+        <Button type="submit" size="lg" className="sm:flex-1 h-12 text-[16px]" disabled={isSubmitting}>
+          {isSubmitting ? "Saving..." : submitLabel}
         </Button>
         <Button
           type="button"
           variant="outline"
           size="lg"
-          className="w-full sm:w-auto h-12 text-[16px]"
+          className="h-12 text-[16px] bg-[#FFFFFF]"
           onClick={() => router.push("/creator")}
           disabled={isSubmitting}
         >
