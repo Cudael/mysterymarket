@@ -21,26 +21,28 @@ import {
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/ideas", label: "Browse Ideas" },
+  { href: "/ideas", label: "Marketplace" },
   { href: "/about", label: "About" },
 ];
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-white/80 backdrop-blur-sm shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Lightbulb className="h-6 w-6 text-primary" />
-          <span className="text-lg font-bold text-foreground">MysteryIdea</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
+          <Lightbulb className="h-5 w-5 text-primary" />
+          <span className="text-base font-semibold tracking-tight text-foreground">
+            MysteryIdea
+          </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
             </Link>
@@ -48,10 +50,10 @@ export function Navbar() {
         </nav>
 
         {/* Desktop auth buttons */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-4 md:flex">
           <SignedIn>
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="font-medium">
                 Dashboard
               </Button>
             </Link>
@@ -59,18 +61,18 @@ export function Navbar() {
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="font-medium">
                 Sign In
               </Button>
             </SignInButton>
             <SignUpButton mode="modal">
-              <Button size="sm">Get Started</Button>
+              <Button size="sm">Start Selling</Button>
             </SignUpButton>
           </SignedOut>
         </div>
 
-        {/* Mobile hamburger */}
-        <div className="flex items-center gap-2 md:hidden">
+        {/* Mobile menu */}
+        <div className="flex items-center gap-4 md:hidden">
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
@@ -80,19 +82,19 @@ export function Navbar() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
-              <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-primary" />
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetHeader className="border-b border-border pb-4">
+                <SheetTitle className="flex items-center gap-2 text-base">
+                  <Lightbulb className="h-4 w-4 text-primary" />
                   MysteryIdea
                 </SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col gap-1 px-6 py-4">
+              <nav className="flex flex-col gap-2 pt-6">
                 {NAV_LINKS.map((link) => (
                   <SheetClose asChild key={link.href}>
                     <Link
                       href={link.href}
-                      className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                     >
                       {link.label}
                     </Link>
@@ -102,21 +104,21 @@ export function Navbar() {
                   <SheetClose asChild>
                     <Link
                       href="/dashboard"
-                      className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                     >
                       Dashboard
                     </Link>
                   </SheetClose>
                 </SignedIn>
                 <SignedOut>
-                  <div className="mt-4 flex flex-col gap-2">
+                  <div className="mt-6 flex flex-col gap-3">
                     <SignInButton mode="modal">
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full justify-center">
                         Sign In
                       </Button>
                     </SignInButton>
                     <SignUpButton mode="modal">
-                      <Button className="w-full">Get Started</Button>
+                      <Button className="w-full justify-center">Get Started</Button>
                     </SignUpButton>
                   </div>
                 </SignedOut>
