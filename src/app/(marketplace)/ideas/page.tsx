@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
-// Import directly from the features folder to avoid Client Component re-export bugs
+import type { Metadata } from "next";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters";
 import { Pagination } from "@/components/shared/pagination";
@@ -84,45 +83,26 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
           </p>
         </div>
 
+        {/* Remove Suspense wrapper - IdeaFilters is a client component */}
         <div className="mb-10">
-          <Suspense fallback={<div className="h-14 w-full animate-pulse rounded-[8px] bg-[#D9DCE3]/50"></div>}>
-            <IdeaFilters />
-          </Suspense>
+          <IdeaFilters />
         </div>
 
         {sortedIdeas.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
-            <p className="text-lg font-semibold text-[#1A1A1A]">
-              No ideas found
-            </p>
-            <p className="mt-2 text-[16px] text-[#1A1A1A]/70">
-              Try adjusting your filters or search term to discover more content.
-            </p>
+          <div className="py-16 text-center">
+            <p className="text-lg text-[#1A1A1A]/60">No ideas found matching your filters.</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {sortedIdeas.map((idea) => (
-                <IdeaCard
-                  key={idea.id}
-                  id={idea.id}
-                  title={idea.title}
-                  teaserText={idea.teaserText}
-                  teaserImageUrl={idea.teaserImageUrl}
-                  priceInCents={idea.priceInCents}
-                  unlockType={idea.unlockType}
-                  category={idea.category}
-                  creatorId={idea.creator.id}
-                  creatorName={idea.creator.name}
-                  creatorAvatarUrl={idea.creator.avatarUrl}
-                  purchaseCount={idea._count.purchases}
-                />
+                <IdeaCard key={idea.id} idea={idea} />
               ))}
             </div>
 
             {totalPages > 1 && (
-              <div className="mt-16 flex justify-center border-t border-[#D9DCE3] pt-10">
-                <Pagination currentPage={page} totalPages={totalPages} />
+              <div className="flex justify-center">
+                <Pagination currentPage={page} totalPages={totalPages} basePath="/ideas" />
               </div>
             )}
           </>
