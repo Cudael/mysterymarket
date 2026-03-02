@@ -3,45 +3,7 @@ import { ArrowRight, Lock, DollarSign, Zap } from "lucide-react";
 import { Hero } from "@/components/hero";
 import { IdeaCard } from "@/components/idea-card";
 import { Button } from "@/components/ui/button";
-
-const MOCK_IDEAS = [
-  {
-    id: "1",
-    title: "The 10-Minute Morning Ritual That Doubled My Productivity",
-    teaserText:
-      "A simple but unconventional morning routine that top performers swear by — but rarely share publicly.",
-    teaserImageUrl: null,
-    priceInCents: 999,
-    unlockType: "MULTI" as const,
-    category: "Productivity",
-    creatorName: "Alex Chen",
-    purchaseCount: 142,
-  },
-  {
-    id: "2",
-    title: "The Pricing Psychology Hack That Increased My SaaS MRR by 40%",
-    teaserText:
-      "One pricing page tweak that most founders overlook. Backed by behavioral economics.",
-    teaserImageUrl: null,
-    priceInCents: 2499,
-    unlockType: "EXCLUSIVE" as const,
-    category: "Business",
-    creatorName: "Sarah Kim",
-    purchaseCount: 1,
-  },
-  {
-    id: "3",
-    title: "My Secret Viral Content Framework for 0-to-100K Followers",
-    teaserText:
-      "The exact content structure and posting strategy I used to grow a niche audience in 6 months.",
-    teaserImageUrl: null,
-    priceInCents: 1499,
-    unlockType: "MULTI" as const,
-    category: "Marketing",
-    creatorName: "Jordan Lee",
-    purchaseCount: 87,
-  },
-];
+import prisma from "@/lib/prisma";
 
 const HOW_IT_WORKS = [
   {
@@ -67,7 +29,17 @@ const HOW_IT_WORKS = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const featuredIdeas = await prisma.idea.findMany({
+    where: { published: true },
+    include: {
+      creator: { select: { id: true, name: true, avatarUrl: true } },
+      _count: { select: { purchases: true } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+  });
+
   return (
     <>
       <Hero />
@@ -91,9 +63,28 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {MOCK_IDEAS.map((idea) => (
-              <IdeaCard key={idea.id} {...idea} />
-            ))}
+            {featuredIdeas.length === 0 ? (
+              <p className="col-span-3 text-center text-muted-foreground py-10">
+                No ideas have been published yet. Check back soon!
+              </p>
+            ) : (
+              featuredIdeas.map((idea) => (
+                <IdeaCard
+                  key={idea.id}
+                  id={idea.id}
+                  title={idea.title}
+                  teaserText={idea.teaserText}
+                  teaserImageUrl={idea.teaserImageUrl}
+                  priceInCents={idea.priceInCents}
+                  unlockType={idea.unlockType}
+                  category={idea.category}
+                  creatorId={idea.creator.id}
+                  creatorName={idea.creator.name}
+                  creatorAvatarUrl={idea.creator.avatarUrl}
+                  purchaseCount={idea._count.purchases}
+                />
+              ))
+            )}
           </div>
         </div>
       </section>
