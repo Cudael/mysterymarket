@@ -97,52 +97,52 @@ export default function ConnectPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold text-foreground">
-        Connect Your Stripe Account
-      </h1>
-      <p className="mt-2 text-muted-foreground">
-        Connect a Stripe account to receive payments from your ideas. A 15%
-        platform fee applies to each sale.
-      </p>
+    <div className="mx-auto max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
+      
+      <div className="mb-8">
+        <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">
+          Connect Your Stripe Account
+        </h1>
+        <p className="mt-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
+          Connect a Stripe account to receive payouts directly from your idea sales. A 15% platform fee applies to each transaction.
+        </p>
+      </div>
 
       {successMessage && (
-        <div className="mt-4 flex items-center gap-3 rounded-xl border border-green-500/30 bg-green-500/10 p-4">
-          <CheckCircle className="h-5 w-5 text-green-500" />
-          <p className="text-sm text-foreground">{successMessage}</p>
+        <div className="mt-6 flex items-center gap-3 rounded-[8px] border border-[#C8E6C9] bg-[#E8F5E9] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+          <CheckCircle className="h-5 w-5 text-[#054F31]" />
+          <p className="text-[14px] font-medium text-[#054F31]">{successMessage}</p>
         </div>
       )}
 
       {error && (
-        <div className="mt-4 flex items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4">
-          <AlertCircle className="h-5 w-5 text-destructive" />
-          <p className="text-sm text-destructive">{error}</p>
+        <div className="mt-6 flex items-center gap-3 rounded-[8px] border border-[#FFEAEA] bg-[#FFF0F0] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+          <AlertCircle className="h-5 w-5 text-[#D32F2F]" />
+          <p className="text-[14px] font-medium text-[#D32F2F]">{error}</p>
         </div>
       )}
 
-      <div className="mt-8 rounded-xl border border-border bg-card p-8">
+      <div className="mt-8 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
         {loading ? (
-          <div className="flex flex-col items-center gap-3 py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
+          <div className="flex flex-col items-center gap-3 py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-[#3A5FCD]" />
+            <p className="text-[14px] font-medium text-[#1A1A1A]/50">
               Loading account status...
             </p>
           </div>
         ) : !status?.connected ? (
-          <div className="flex flex-col items-center text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-              <CreditCard className="h-8 w-8 text-muted-foreground" />
+          <div className="flex flex-col items-center text-center px-6 py-12 sm:px-12">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-[12px] bg-[#F8F9FC] border border-[#D9DCE3]">
+              <CreditCard className="h-7 w-7 text-[#1A1A1A]/40" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-[20px] font-bold text-[#1A1A1A]">
               Not Connected
             </h2>
-            <p className="mt-3 max-w-md text-muted-foreground">
-              Connect your Stripe account to start accepting payments for your
-              ideas. You&apos;ll need to complete Stripe&apos;s onboarding
-              process.
+            <p className="mt-3 max-w-md text-[15px] leading-[1.6] text-[#1A1A1A]/60">
+              You must connect a Stripe account to accept payments for your ideas. You&apos;ll be securely redirected to complete Stripe&apos;s standard onboarding process.
             </p>
             <Button
-              className="mt-6 w-full gap-2"
+              className="mt-8 w-full sm:w-auto px-8 h-11 bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all gap-2"
               onClick={handleConnect}
               disabled={actionLoading}
             >
@@ -155,19 +155,18 @@ export default function ConnectPage() {
             </Button>
           </div>
         ) : !status.onboarded ? (
-          <div className="flex flex-col items-center text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-500/10">
-              <AlertCircle className="h-8 w-8 text-yellow-500" />
+          <div className="flex flex-col items-center text-center px-6 py-12 sm:px-12">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-[12px] bg-[#FFF8E1] border border-[#FFECB3]">
+              <AlertCircle className="h-7 w-7 text-[#B8860B]" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-[20px] font-bold text-[#1A1A1A]">
               Onboarding Incomplete
             </h2>
-            <p className="mt-3 max-w-md text-muted-foreground">
-              Your Stripe account is connected but you need to complete the
-              onboarding process to start receiving payments.
+            <p className="mt-3 max-w-md text-[15px] leading-[1.6] text-[#1A1A1A]/60">
+              Your Stripe account is created, but you must complete the required onboarding steps to start receiving payments.
             </p>
             <Button
-              className="mt-6 w-full gap-2"
+              className="mt-8 w-full sm:w-auto px-8 h-11 bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all gap-2"
               onClick={handleCompleteOnboarding}
               disabled={actionLoading}
             >
@@ -180,63 +179,75 @@ export default function ConnectPage() {
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col items-center text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
-              <CheckCircle className="h-8 w-8 text-green-500" />
+          <div className="flex flex-col items-center text-center px-6 py-12 sm:px-12">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-[12px] bg-[#E8F5E9] border border-[#C8E6C9]">
+              <CheckCircle className="h-7 w-7 text-[#054F31]" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground">
+            <h2 className="text-[20px] font-bold text-[#1A1A1A]">
               Stripe Connected
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-1.5 text-[14px] font-medium text-[#1A1A1A]/50">
               Account ID: {status.accountId}
             </p>
 
-            <div className="mt-6 w-full space-y-3 rounded-lg border border-border p-4 text-left">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Charges Enabled
+            <div className="mt-8 w-full space-y-0 rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] text-left overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-[#D9DCE3]">
+                <span className="text-[14px] font-medium text-[#1A1A1A]/70">
+                  Payments Enabled
                 </span>
                 {status.chargesEnabled ? (
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle className="h-4 w-4 text-[#054F31]" />
+                    <span className="text-[13px] font-semibold text-[#054F31]">Yes</span>
+                  </div>
                 ) : (
-                  <XCircle className="h-4 w-4 text-destructive" />
+                  <div className="flex items-center gap-1.5">
+                    <XCircle className="h-4 w-4 text-[#D32F2F]" />
+                    <span className="text-[13px] font-semibold text-[#D32F2F]">No</span>
+                  </div>
                 )}
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
+              <div className="flex items-center justify-between p-4">
+                <span className="text-[14px] font-medium text-[#1A1A1A]/70">
                   Payouts Enabled
                 </span>
                 {status.payoutsEnabled ? (
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                   <div className="flex items-center gap-1.5">
+                    <CheckCircle className="h-4 w-4 text-[#054F31]" />
+                    <span className="text-[13px] font-semibold text-[#054F31]">Yes</span>
+                  </div>
                 ) : (
-                  <XCircle className="h-4 w-4 text-destructive" />
+                   <div className="flex items-center gap-1.5">
+                    <XCircle className="h-4 w-4 text-[#D32F2F]" />
+                    <span className="text-[13px] font-semibold text-[#D32F2F]">No</span>
+                  </div>
                 )}
               </div>
             </div>
 
             <Button
-              className="mt-6 w-full gap-2"
+              className="mt-8 w-full gap-2 h-11 border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A] hover:bg-[#F8F9FC] hover:text-[#3A5FCD] transition-colors"
               variant="outline"
               onClick={handleOpenDashboard}
               disabled={actionLoading}
             >
               {actionLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin text-[#3A5FCD]" />
               ) : (
                 <ExternalLink className="h-4 w-4" />
               )}
-              Open Stripe Dashboard
+              View Stripe Dashboard
             </Button>
           </div>
         )}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <Link
           href="/creator"
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className="text-[14px] font-medium text-[#1A1A1A]/60 hover:text-[#3A5FCD] transition-colors flex items-center gap-1"
         >
-          ← Back to Creator Studio
+          &larr; Back to Creator Studio
         </Link>
       </div>
     </div>
