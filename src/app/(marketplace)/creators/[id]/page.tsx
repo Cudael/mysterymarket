@@ -18,8 +18,8 @@ export async function generateMetadata({
   });
   if (!user) return { title: "Creator Not Found" };
   return {
-    title: `${user.name ?? "Creator"} - MysteryIdea`,
-    description: user.bio ?? `Browse ideas by ${user.name ?? "this creator"} on MysteryIdea.`,
+    title: `${user.name ?? "Creator"} - MysteryMarket`,
+    description: user.bio ?? `Browse high-value ideas by ${user.name ?? "this creator"} on MysteryMarket.`,
   };
 }
 
@@ -56,47 +56,56 @@ export default async function CreatorProfilePage({
     .slice(0, 2);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      {/* Creator header */}
-      <div className="mb-10 flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
-        <Avatar className="h-24 w-24 shrink-0">
-          <AvatarImage src={user.avatarUrl ?? undefined} alt={user.name ?? "Creator"} />
-          <AvatarFallback className="text-2xl font-bold">{initials}</AvatarFallback>
-        </Avatar>
+    <div className="container mx-auto px-4 py-12 max-w-6xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      {/* Creator Profile Header Card */}
+      <div className="mb-12 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-8 sm:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
+          <Avatar className="h-24 w-24 shrink-0 border-2 border-[#F8F9FC] shadow-sm">
+            <AvatarImage src={user.avatarUrl ?? undefined} alt={user.name ?? "Creator"} />
+            <AvatarFallback className="bg-[#F8F9FC] text-[#3A5FCD] text-2xl font-bold border border-[#D9DCE3]">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
 
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold text-foreground">
-            {user.name ?? "Anonymous"}
-          </h1>
+          <div className="flex-1">
+            <h1 className="text-[32px] font-bold tracking-tight text-[#1A1A1A]">
+              {user.name ?? "Anonymous"}
+            </h1>
 
-          {user.bio && (
-            <p className="mt-2 max-w-xl text-muted-foreground">{user.bio}</p>
-          )}
+            {user.bio && (
+              <p className="mt-3 max-w-2xl text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+                {user.bio}
+              </p>
+            )}
 
-          <div className="mt-4 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground sm:justify-start">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              Member since{" "}
-              {new Date(user.createdAt).toLocaleDateString("en-US", {
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Lightbulb className="h-4 w-4" />
-              {user.ideas.length} idea{user.ideas.length !== 1 ? "s" : ""}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <ShoppingBag className="h-4 w-4" />
-              {totalSales} sale{totalSales !== 1 ? "s" : ""}
-            </span>
+            <div className="mt-6 flex flex-wrap justify-center gap-4 sm:justify-start">
+              <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
+                <Calendar className="h-4 w-4 text-[#1A1A1A]/50" />
+                Joined{" "}
+                {new Date(user.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+              <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
+                <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
+                {user.ideas.length} idea{user.ideas.length !== 1 ? "s" : ""}
+              </span>
+              <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
+                <ShoppingBag className="h-4 w-4 text-[#054F31]" />
+                {totalSales} sale{totalSales !== 1 ? "s" : ""}
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Ideas grid */}
       <div>
-        <h2 className="mb-6 text-xl font-semibold text-foreground">Ideas</h2>
+        <h2 className="mb-6 text-[22px] font-bold tracking-tight text-[#1A1A1A]">
+          Ideas by {user.name?.split(" ")[0] ?? "this creator"}
+        </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {user.ideas.map((idea) => (
             <IdeaCard
