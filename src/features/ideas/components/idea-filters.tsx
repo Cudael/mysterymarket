@@ -18,12 +18,12 @@ const SORT_OPTIONS = [
   { label: "Most Popular", value: "most-purchased" },
 ];
 
-export function IdeaFilters() {
+// Changed from "export function IdeaFilters()" to default export
+export default function IdeaFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // We use local state for the input so it feels snappy, while the URL is debounced
   const currentSearchUrl = searchParams.get("search") ?? "";
   const [localSearch, setLocalSearch] = useState(currentSearchUrl);
 
@@ -54,17 +54,14 @@ export function IdeaFilters() {
     };
   }, []);
 
-  // Update local state if URL changes externally
   useEffect(() => {
     setLocalSearch(searchParams.get("search") ?? "");
   }, [searchParams]);
 
   return (
     <div className="flex flex-col gap-6 mb-8">
-      {/* Top Row: Search & Dropdowns */}
       <div className="flex flex-col sm:flex-row justify-between gap-4">
         
-        {/* Search Input */}
         <div className="relative w-full sm:max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
           <input
@@ -76,67 +73,53 @@ export function IdeaFilters() {
           />
         </div>
 
-        {/* Filters & Sorts */}
         <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-none">
             <select
               value={currentUnlockType}
               onChange={(e) => updateParam("unlockType", e.target.value)}
-              className="h-10 w-full appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-3 pr-8 text-[14px] font-medium text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
             >
-              {UNLOCK_TYPES.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+              {UNLOCK_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 pointer-events-none text-[#1A1A1A]/50" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+          </div>
+
+          <div className="relative flex-1 sm:flex-none">
+            <select
+              value={currentCategory}
+              onChange={(e) => updateParam("category", e.target.value)}
+              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+            >
+              <option value="">All Categories</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
           </div>
 
           <div className="relative flex-1 sm:flex-none">
             <select
               value={currentSortBy}
               onChange={(e) => updateParam("sortBy", e.target.value)}
-              className="h-10 w-full appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-3 pr-8 text-[14px] font-medium text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
             >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
+              {SORT_OPTIONS.map((sort) => (
+                <option key={sort.value} value={sort.value}>
+                  {sort.label}
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 pointer-events-none text-[#1A1A1A]/50" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
           </div>
         </div>
-      </div>
-
-      {/* Bottom Row: Category Pills */}
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => updateParam("category", "")}
-          className={`rounded-[8px] border px-4 py-1.5 text-[14px] font-medium transition-all duration-200 ${
-            !currentCategory
-              ? "border-[#3A5FCD] bg-[#3A5FCD] text-[#FFFFFF] shadow-[0_2px_8px_rgba(58,95,205,0.2)]"
-              : "border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A]/70 hover:border-[#6D7BE0]/50 hover:bg-[#F8F9FC] hover:text-[#1A1A1A]"
-          }`}
-        >
-          All
-        </button>
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() =>
-              updateParam("category", currentCategory === cat ? "" : cat)
-            }
-            className={`rounded-[8px] border px-4 py-1.5 text-[14px] font-medium transition-all duration-200 ${
-              currentCategory === cat
-                ? "border-[#3A5FCD] bg-[#3A5FCD] text-[#FFFFFF] shadow-[0_2px_8px_rgba(58,95,205,0.2)]"
-                : "border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A]/70 hover:border-[#6D7BE0]/50 hover:bg-[#F8F9FC] hover:text-[#1A1A1A]"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
       </div>
     </div>
   );
