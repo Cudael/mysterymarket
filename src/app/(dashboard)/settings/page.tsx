@@ -7,10 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { updateProfile, getUserByClerkId } from "@/features/users/actions";
-import { User, Mail, ShieldAlert, CreditCard, ExternalLink } from "lucide-react";
+import { CheckCircle2, AlertCircle, Save, ExternalLink } from "lucide-react";
 
 export default function SettingsPage() {
   const { user: clerkUser } = useUser();
@@ -58,82 +56,90 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl pb-12">
+    <div className="max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Settings</h1>
+        <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">Settings</h1>
         <p className="mt-2 text-[15px] text-[#1A1A1A]/60">
-          Manage your account preferences, public profile, and integrations.
+          Manage your public profile and account preferences.
         </p>
       </div>
 
       <div className="space-y-8">
-        {/* Profile Section */}
-        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4 flex items-center gap-2">
-            <User className="h-4 w-4 text-[#3A5FCD]" />
+        {/* Profile Card */}
+        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
             <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Public Profile</h2>
           </div>
-          <div className="p-6">
-            <form onSubmit={handleSave} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-[14px] font-medium text-[#1A1A1A]">Display Name</Label>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name..."
-                  className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] focus:bg-[#FFFFFF] focus:border-[#3A5FCD] focus:ring-[#3A5FCD]/20 transition-all"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bio" className="text-[14px] font-medium text-[#1A1A1A]">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell buyers about yourself..."
-                  rows={4}
-                  className="resize-none rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] focus:bg-[#FFFFFF] focus:border-[#3A5FCD] focus:ring-[#3A5FCD]/20 transition-all"
-                />
-              </div>
-              <div className="flex justify-end pt-2">
-                <Button 
-                  type="submit" 
-                  disabled={isSaving}
-                  className="bg-[#3A5FCD] text-[#FFFFFF] hover:bg-[#3A5FCD]/90 h-10 px-6 font-medium shadow-[0_2px_8px_rgba(58,95,205,0.2)]"
-                >
-                  {isSaving ? "Saving..." : "Save Profile"}
-                </Button>
-              </div>
-            </form>
-          </div>
+          
+          <form onSubmit={handleSave} className="p-6 space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-[14px] font-medium text-[#1A1A1A]">Display Name</Label>
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Jane Doe"
+                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="bio" className="text-[14px] font-medium text-[#1A1A1A]">Biography</Label>
+              <Textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Tell buyers about your expertise..."
+                rows={4}
+                className="rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] resize-none transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+              />
+            </div>
+            
+            <div className="pt-2">
+              <Button 
+                type="submit" 
+                disabled={isSaving}
+                className="bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white font-medium px-6 h-10 shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all"
+              >
+                {isSaving ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" /> Save Profile
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
         </section>
 
-        {/* Account Info Section */}
-        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4 flex items-center gap-2">
-            <Mail className="h-4 w-4 text-[#3A5FCD]" />
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Account Information</h2>
+        {/* Account Info Card */}
+        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
+            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Account Details</h2>
           </div>
+          
           <div className="p-6">
             <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
               <div className="sm:col-span-1">
-                <dt className="text-[13px] font-medium text-[#1A1A1A]/60 uppercase tracking-wide">Email Address</dt>
-                <dd className="mt-1.5 text-[15px] font-medium text-[#1A1A1A]">
+                <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Email Address</dt>
+                <dd className="mt-1 text-[15px] font-medium text-[#1A1A1A]">
                   {clerkUser?.primaryEmailAddress?.emailAddress ?? dbUser?.email ?? "—"}
                 </dd>
               </div>
               <div className="sm:col-span-1">
-                <dt className="text-[13px] font-medium text-[#1A1A1A]/60 uppercase tracking-wide">Account Role</dt>
-                <dd className="mt-1.5">
-                  <Badge variant="outline" className="bg-[#F8F9FC] text-[#1A1A1A] border-[#D9DCE3] font-medium">
+                <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Account Role</dt>
+                <dd className="mt-1">
+                  <span className="inline-flex items-center rounded-[6px] bg-[#F5F6FA] px-2.5 py-1 text-[13px] font-semibold text-[#1A1A1A] border border-[#D9DCE3]">
                     {dbUser?.role ?? "USER"}
-                  </Badge>
+                  </span>
                 </dd>
               </div>
-              <div className="sm:col-span-2">
-                <dt className="text-[13px] font-medium text-[#1A1A1A]/60 uppercase tracking-wide">Member Since</dt>
-                <dd className="mt-1.5 text-[15px] text-[#1A1A1A]">
+              <div className="sm:col-span-1">
+                <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Member Since</dt>
+                <dd className="mt-1 text-[15px] text-[#1A1A1A]/80">
                   {dbUser?.createdAt
                     ? new Date(dbUser.createdAt).toLocaleDateString("en-US", {
                         month: "long",
@@ -147,70 +153,53 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Stripe Connect Section */}
-        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4 flex items-center gap-2">
-            <CreditCard className="h-4 w-4 text-[#3A5FCD]" />
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Payouts & Billing</h2>
+        {/* Stripe Connect Card */}
+        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
+            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Payouts & Stripe</h2>
           </div>
+          
           <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <p className="text-[15px] text-[#1A1A1A] font-medium">Stripe Connect Account</p>
-              <p className="text-[14px] text-[#1A1A1A]/60 mt-1">
-                Receive earnings directly to your bank account securely via Stripe.
+              {dbUser?.stripeOnboarded ? (
+                <div className="flex items-center gap-2 text-emerald-600 font-medium">
+                  <CheckCircle2 className="h-5 w-5" />
+                  <span>Stripe Connected</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-amber-600 font-medium">
+                  <AlertCircle className="h-5 w-5" />
+                  <span>Stripe Not Connected</span>
+                </div>
+              )}
+              <p className="mt-1 text-[14px] text-[#1A1A1A]/60">
+                {dbUser?.stripeOnboarded 
+                  ? "Your account is active and ready to receive payouts." 
+                  : "Connect your Stripe account to start earning from your ideas."}
               </p>
             </div>
-            
-            <div className="flex flex-col sm:items-end gap-3 shrink-0">
+
+            <Button 
+              asChild 
+              variant={dbUser?.stripeOnboarded ? "outline" : "default"}
+              className={dbUser?.stripeOnboarded 
+                ? "bg-[#FFFFFF] border-[#D9DCE3] text-[#1A1A1A]" 
+                : "bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
+              }
+            >
               {dbUser?.stripeOnboarded ? (
-                <>
-                  <Badge className="bg-[#E8F5E9] text-[#054F31] border-[#C8E6C9] px-3 py-1 text-[13px] self-start sm:self-end">
-                    Connected
-                  </Badge>
-                  <a
-                    href="https://dashboard.stripe.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-[14px] font-medium text-[#3A5FCD] hover:text-[#6D7BE0] transition-colors"
-                  >
-                    Stripe Dashboard <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                </>
+                <a href="https://dashboard.stripe.com" target="_blank" rel="noopener noreferrer">
+                  View Stripe Dashboard <ExternalLink className="ml-2 h-4 w-4" />
+                </a>
               ) : (
-                <>
-                  <Badge variant="outline" className="bg-[#FFF8E1] text-[#795548] border-[#FFECB3] px-3 py-1 text-[13px] self-start sm:self-end">
-                    Not Connected
-                  </Badge>
-                  <a 
-                    href="/creator/connect" 
-                    className="text-[14px] font-medium text-[#3A5FCD] hover:text-[#6D7BE0] transition-colors hover:underline"
-                  >
-                    Setup Payouts
-                  </a>
-                </>
+                <a href="/creator/connect">
+                  Connect Stripe
+                </a>
               )}
-            </div>
+            </Button>
           </div>
         </section>
 
-        {/* Danger Zone */}
-        <section className="rounded-[12px] border border-[#FFEAEA] bg-[#FFFAFA] shadow-[0_2px_8px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#FFEAEA] bg-[#FFF0F0] px-6 py-4 flex items-center gap-2">
-            <ShieldAlert className="h-4 w-4 text-[#D32F2F]" />
-            <h2 className="text-[16px] font-semibold text-[#D32F2F]">Danger Zone</h2>
-          </div>
-          <div className="p-6">
-            <p className="text-[14px] text-[#1A1A1A]/70">
-              Account deletion and data export options are currently handled through support. 
-              Contact us if you need to permanently remove your account.
-            </p>
-            <div className="mt-4">
-              <Button variant="destructive" disabled className="bg-[#D32F2F]/50 text-[#FFFFFF] opacity-50 cursor-not-allowed">
-                Delete Account
-              </Button>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );
