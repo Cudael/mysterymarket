@@ -31,14 +31,17 @@ export function CreatorSidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden w-56 shrink-0 border-r border-border bg-gray-50/50 md:flex md:flex-col">
-        <div className="flex items-center gap-2 border-b border-border px-4 py-3">
-          <Lightbulb className="h-4 w-4 text-primary" />
-          <span className="text-sm font-semibold text-foreground">
-            My Dashboard
+      <aside className="hidden w-[260px] shrink-0 border-r border-[#D9DCE3] bg-[#F5F6FA]/50 md:flex md:flex-col">
+        <div className="flex h-[72px] items-center gap-3 border-b border-[#D9DCE3] px-6">
+          <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#FFFFFF] border border-[#D9DCE3] shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+            <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
+          </div>
+          <span className="text-[15px] font-bold tracking-tight text-[#1A1A1A]">
+            Dashboard
           </span>
         </div>
-        <nav className="flex flex-col gap-1 p-3">
+        
+        <nav className="flex flex-col gap-1.5 p-4">
           {NAV_LINKS.map(({ href, label, icon: Icon, exact }) => {
             const isActive = exact ? pathname === href : pathname.startsWith(href);
             return (
@@ -46,13 +49,13 @@ export function CreatorSidebar() {
                 key={href}
                 href={href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                  "flex items-center gap-3 rounded-[8px] px-3.5 py-2.5 text-[14px] font-medium transition-all duration-200",
                   isActive
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                    ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
+                    : "text-[#1A1A1A]/70 hover:bg-[#FFFFFF] hover:text-[#1A1A1A] hover:shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className={cn("h-4.5 w-4.5", isActive ? "text-[#3A5FCD]" : "text-[#1A1A1A]/50")} />
                 {label}
               </Link>
             );
@@ -61,25 +64,27 @@ export function CreatorSidebar() {
       </aside>
 
       {/* Mobile horizontal nav */}
-      <div className="flex overflow-x-auto border-b border-border bg-card px-4 md:hidden">
-        {NAV_LINKS.map(({ href, label, icon: Icon, exact }) => {
-          const isActive = exact ? pathname === href : pathname.startsWith(href);
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "flex shrink-0 items-center gap-2 border-b-2 px-3 py-3 text-sm transition-colors",
-                isActive
-                  ? "border-primary text-primary font-medium"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              {label}
-            </Link>
-          );
-        })}
+      <div className="flex overflow-x-auto border-b border-[#D9DCE3] bg-[#FFFFFF] px-4 md:hidden no-scrollbar shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+        <div className="flex gap-2 py-3">
+          {NAV_LINKS.map(({ href, label, icon: Icon, exact }) => {
+            const isActive = exact ? pathname === href : pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
+                  isActive
+                    ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
+                    : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </>
   );
