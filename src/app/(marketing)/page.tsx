@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Lock, DollarSign, Wallet, Code, TrendingUp, Palette, Briefcase, Star, Quote } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
 import { Hero } from "@/components/layout/hero";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { Button } from "@/components/ui/button";
@@ -49,15 +50,27 @@ const HOW_IT_WORKS = [
 ];
 
 export default async function HomePage() {
-  const featuredIdeas = await prisma.idea.findMany({
-    where: { published: true },
-    include: {
-      creator: { select: { id: true, name: true, avatarUrl: true } },
-      _count: { select: { purchases: true } },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 3,
-  });
+  const { userId: clerkId } = await auth();
+
+  const [featuredIdeas, bookmarkedIdeaIds] = await Promise.all([
+    prisma.idea.findMany({
+      where: { published: true },
+      include: {
+        creator: { select: { id: true, name: true, avatarUrl: true } },
+        _count: { select: { purchases: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+    }),
+    clerkId
+      ? prisma.bookmark
+          .findMany({
+            where: { user: { clerkId } },
+            select: { ideaId: true },
+          })
+          .then((bs) => new Set(bs.map((b) => b.ideaId)))
+      : Promise.resolve(new Set<string>()),
+  ]);
 
   return (
     <>
@@ -130,6 +143,8 @@ export default async function HomePage() {
                   creatorName={idea.creator.name}
                   creatorAvatarUrl={idea.creator.avatarUrl}
                   purchaseCount={idea._count.purchases}
+                  initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
+                  isAuthenticated={!!clerkId}
                 />
               ))
             )}

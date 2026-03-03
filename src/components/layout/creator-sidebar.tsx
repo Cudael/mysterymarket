@@ -11,11 +11,13 @@ import {
   BarChart3,
   Wallet2,
   ShoppingBag,
+  Bookmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "My Purchases", icon: ShoppingBag, exact: true },
+  { href: "/dashboard/bookmarks", label: "Saved Ideas", icon: Bookmark, exact: false },
   { href: "/dashboard/wallet", label: "My Wallet", icon: Wallet2, exact: false },
   { href: "/creator", label: "Creator Studio", icon: LayoutDashboard, exact: true },
   { href: "/creator/wallet", label: "Earnings", icon: Wallet2, exact: false },

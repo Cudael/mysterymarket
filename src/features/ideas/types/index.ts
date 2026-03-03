@@ -12,6 +12,8 @@ export interface IdeaCardProps {
   purchaseCount?: number;
   isOwner?: boolean;
   isPurchased?: boolean;
+  initialBookmarked?: boolean;
+  isAuthenticated?: boolean;
 }
 
 export interface IdeaWithCreator {

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { auth } from "@clerk/nextjs/server";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters-client";
 import { Pagination } from "@/components/shared/pagination";
@@ -24,6 +25,7 @@ interface IdeasPageProps {
 
 export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   const params = await searchParams;
+  const { userId: clerkId } = await auth();
 
   const search = params?.search ?? "";
   const category = params?.category ?? "";
@@ -49,7 +51,8 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
         ? { priceInCents: "desc" as const }
         : { createdAt: "desc" as const };
 
-  const [ideas, total] = await Promise.all([
+  // Fetch ideas + bookmark IDs for authenticated user in parallel
+  const [ideas, total, bookmarkedIdeaIds] = await Promise.all([
     prisma.idea.findMany({
       where,
       include: {
@@ -61,6 +64,14 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
       take: ITEMS_PER_PAGE,
     }),
     prisma.idea.count({ where }),
+    clerkId
+      ? prisma.bookmark
+          .findMany({
+            where: { user: { clerkId } },
+            select: { ideaId: true },
+          })
+          .then((bs) => new Set(bs.map((b) => b.ideaId)))
+      : Promise.resolve(new Set<string>()),
   ]);
 
   const sortedIdeas =
@@ -117,6 +128,8 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
                   creatorName={idea.creator.name}
                   creatorAvatarUrl={idea.creator.avatarUrl}
                   purchaseCount={idea._count.purchases}
+                  initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
+                  isAuthenticated={!!clerkId}
                 />
               ))}
             </div>

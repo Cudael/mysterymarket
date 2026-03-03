@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { UnlockButton } from "@/features/purchases/components/unlock-button";
+import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
 import { ShareButtons } from "@/components/shared/share-buttons";
 import { ReviewList } from "@/features/reviews/components/review-list";
 import { ReviewForm } from "@/features/reviews/components/review-form";
@@ -60,11 +61,18 @@ export default async function IdeaDetailPage({
   // Check if the current user has purchased
   let isPurchased = false;
   let hasReviewed = false;
+  let isBookmarked = false;
   if (currentUser && !isOwner) {
-    const purchase = await prisma.purchase.findUnique({
-      where: { buyerId_ideaId: { buyerId: currentUser.id, ideaId: id } },
-    });
+    const [purchase, bookmark] = await Promise.all([
+      prisma.purchase.findUnique({
+        where: { buyerId_ideaId: { buyerId: currentUser.id, ideaId: id } },
+      }),
+      prisma.bookmark.findUnique({
+        where: { userId_ideaId: { userId: currentUser.id, ideaId: id } },
+      }),
+    ]);
     isPurchased = purchase?.status === "COMPLETED";
+    isBookmarked = !!bookmark;
     if (isPurchased) {
       const existing = await prisma.review.findUnique({
         where: { buyerId_ideaId: { buyerId: currentUser.id, ideaId: id } },
@@ -131,6 +139,14 @@ export default async function IdeaDetailPage({
                 url={`${process.env.NEXT_PUBLIC_APP_URL}/ideas/${id}`}
                 title={idea.title}
               />
+              {!isOwner && (
+                <BookmarkButton
+                  ideaId={id}
+                  initialBookmarked={isBookmarked}
+                  isAuthenticated={!!clerkId}
+                  size="md"
+                />
+              )}
               {clerkId && !isOwner && (
                 <ReportDialog ideaId={id} />
               )}

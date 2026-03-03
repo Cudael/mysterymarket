@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Lock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
 import { formatPrice } from "@/lib/utils";
 import type { IdeaCardProps } from "@/features/ideas/types";
 
@@ -21,6 +22,8 @@ export function IdeaCard({
   purchaseCount,
   isOwner = false,
   isPurchased = false,
+  initialBookmarked = false,
+  isAuthenticated = false,
 }: IdeaCardProps) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-[#6D7BE0]/40">
@@ -47,6 +50,17 @@ export function IdeaCard({
             <span className="inline-flex items-center rounded-[6px] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#1A1A1A] shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-[#D9DCE3]">
               {category}
             </span>
+          </div>
+        )}
+
+        {/* Bookmark button */}
+        {!isOwner && (
+          <div className="absolute right-3 top-3 z-20">
+            <BookmarkButton
+              ideaId={id}
+              initialBookmarked={initialBookmarked}
+              isAuthenticated={isAuthenticated}
+            />
           </div>
         )}
       </div>
