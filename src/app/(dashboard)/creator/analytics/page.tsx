@@ -11,7 +11,7 @@ import { getConnectAccountStatus } from "@/features/stripe/actions";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Analytics - MysteryIdea",
+  title: "Analytics - MysteryMarket",
 };
 
 export default async function CreatorAnalyticsPage() {
@@ -42,21 +42,19 @@ export default async function CreatorAnalyticsPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
         {[
-          { label: "Total Revenue", value: formatPrice(stats.totalRevenue), sub: "Net earnings", icon: DollarSign, color: "text-[#054F31]", bg: "bg-[#E8F5E9]" },
-          { label: "Total Sales", value: stats.totalSales, sub: "Purchases", icon: ShoppingCart, color: "text-[#3A5FCD]", bg: "bg-[#F0F4FF]" },
-          { label: "Avg Rating", value: stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "—", sub: "Out of 5.0", icon: Star, color: "text-[#B8860B]", bg: "bg-[#FFF8E1]" },
-          { label: "Total Reviews", value: stats.totalReviews, sub: "Engagement", icon: MessageSquare, color: "text-[#6D7BE0]", bg: "bg-[#F5F6FA]" },
-          { label: "Active Ideas", value: stats.activeIdeas, sub: "Published", icon: Lightbulb, color: "text-[#E8C26A]", bg: "bg-[#FFFDE7]" },
-          { label: "Total Ideas", value: stats.totalIdeas, sub: "All time", icon: Lightbulb, color: "text-[#1A1A1A]/60", bg: "bg-[#F8F9FC]" },
+          { label: "Total Revenue", value: formatPrice(stats.totalRevenue), sub: "Net earnings", icon: DollarSign },
+          { label: "Total Sales", value: stats.totalSales, sub: "Purchases", icon: ShoppingCart },
+          { label: "Avg Rating", value: stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "—", sub: "Out of 5.0", icon: Star },
+          { label: "Total Reviews", value: stats.totalReviews, sub: "Engagement", icon: MessageSquare },
+          { label: "Active Ideas", value: stats.activeIdeas, sub: "Published", icon: Lightbulb },
+          { label: "Total Ideas", value: stats.totalIdeas, sub: "All time", icon: Lightbulb },
         ].map((stat, i) => (
-          <div key={i} className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-            <div className="flex items-center justify-between">
-              <p className="text-[12px] font-bold uppercase tracking-wider text-[#1A1A1A]/50">{stat.label}</p>
-              <div className={`h-6 w-6 rounded-full flex items-center justify-center ${stat.bg}`}>
-                <stat.icon className={`h-3.5 w-3.5 ${stat.color}`} />
-              </div>
+          <div key={i} className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col justify-between transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+            <div className="flex items-start justify-between">
+              <p className="text-[12px] font-bold uppercase tracking-wider text-[#1A1A1A]/50 mt-0.5">{stat.label}</p>
+              <stat.icon className="h-4 w-4 text-[#1A1A1A]/70" />
             </div>
-            <div className="mt-4">
+            <div className="mt-5">
               <p className="text-2xl font-bold text-[#1A1A1A]">{stat.value}</p>
               <p className="mt-0.5 text-[12px] font-medium text-[#1A1A1A]/40">{stat.sub}</p>
             </div>
