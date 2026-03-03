@@ -56,7 +56,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="mx-auto max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
       
       {/* Header */}
       <div className="mb-8">
