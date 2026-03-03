@@ -60,7 +60,7 @@ export function IdeaFilters() {
   return (
     <div className="flex flex-col gap-6 mb-8">
       <div className="flex flex-col sm:flex-row justify-between gap-4">
-        
+
         <div className="relative w-full sm:max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
           <input
@@ -96,8 +96,8 @@ export function IdeaFilters() {
             >
               <option value="">All Categories</option>
               {CATEGORIES.map((cat) => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
+                <option key={cat} value={cat}>
+                  {cat}
                 </option>
               ))}
             </select>
