@@ -2,36 +2,37 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-[#F8F9FC] px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-[400px] animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <SignIn 
+    <div className="flex min-h-screen items-center justify-center bg-[#F5F6FA] px-4 py-12">
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <SignIn
           appearance={{
-            elements: {
-              rootBox: "w-full",
-              cardBox: "w-full shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-[16px] border border-[#D9DCE3]",
-              card: "w-full rounded-[16px] bg-[#FFFFFF]",
-              headerTitle: "text-[#1A1A1A] font-bold text-[24px]",
-              headerSubtitle: "text-[#1A1A1A]/60 text-[15px]",
-              socialButtonsBlockButton: "border-[#D9DCE3] bg-[#FFFFFF] hover:bg-[#F8F9FC] text-[#1A1A1A] h-11 rounded-[8px]",
-              socialButtonsBlockButtonText: "text-[#1A1A1A] font-medium",
-              dividerLine: "bg-[#D9DCE3]",
-              dividerText: "text-[#1A1A1A]/40",
-              formFieldLabel: "text-[#1A1A1A]/80 font-medium text-[13px]",
-              formFieldInput: "h-11 rounded-[8px] border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A] focus:border-[#3A5FCD] focus:ring-[#3A5FCD]",
-              formButtonPrimary: "h-11 rounded-[8px] bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all",
-              footerActionText: "text-[#1A1A1A]/60",
-              footerActionLink: "text-[#3A5FCD] hover:text-[#6D7BE0] font-medium",
-              identityPreviewEditButtonIcon: "text-[#3A5FCD]"
-            },
             variables: {
               colorPrimary: "#3A5FCD",
               colorText: "#1A1A1A",
-              colorTextSecondary: "#666666",
               colorBackground: "#FFFFFF",
               colorDanger: "#D32F2F",
-              fontFamily: "inherit",
               borderRadius: "8px",
-            }
+              fontFamily: "inherit",
+            },
+            elements: {
+              cardBox: "shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-[#D9DCE3] rounded-[16px] m-0",
+              card: "bg-[#FFFFFF] rounded-[16px]",
+              headerTitle: "text-[24px] font-bold tracking-tight text-[#1A1A1A]",
+              headerSubtitle: "text-[15px] text-[#1A1A1A]/60",
+              socialButtonsBlockButton: "border border-[#D9DCE3] bg-[#FFFFFF] hover:bg-[#F8F9FC] text-[#1A1A1A] h-11 transition-colors",
+              socialButtonsBlockButtonText: "font-medium text-[#1A1A1A]",
+              formButtonPrimary: "bg-[#3A5FCD] hover:bg-[#6D7BE0] h-11 text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all",
+              formFieldInput: "bg-[#F8F9FC] border border-[#D9DCE3] text-[#1A1A1A] h-11 rounded-[8px] focus:ring-[#3A5FCD]",
+              formFieldLabel: "text-[13px] font-semibold text-[#1A1A1A]/70 mb-1.5",
+              footerActionLink: "text-[#3A5FCD] hover:text-[#6D7BE0] font-medium transition-colors",
+              footerActionText: "text-[#1A1A1A]/60",
+              dividerLine: "bg-[#D9DCE3]",
+              dividerText: "text-[#1A1A1A]/50 font-medium",
+              identityPreview: "border border-[#D9DCE3] bg-[#F8F9FC] rounded-[8px]",
+              identityPreviewText: "text-[#1A1A1A]",
+              identityPreviewEditButtonIcon: "text-[#3A5FCD]",
+              formFieldWarningText: "text-[#D32F2F]",
+            },
           }}
         />
       </div>
