@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
 import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
 import { creditWalletForDeposit } from "@/features/wallet/actions";
+import { trackEvent } from "@/lib/analytics";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -57,6 +58,13 @@ export async function POST(req: Request) {
         await prisma.purchase.updateMany({
           where: { stripePaymentIntentId: paymentIntentId },
           data: { status: "COMPLETED" },
+        });
+
+        trackEvent("purchase_completed", {
+          userId: buyerId,
+          ideaId,
+          paymentIntentId,
+          paymentMethod: "stripe",
         });
 
         // Credit creator wallet and send emails

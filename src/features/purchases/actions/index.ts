@@ -8,6 +8,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { debitWalletForPurchase, creditWallet } from "@/features/wallet/actions";
 import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
 import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
+import { trackEvent } from "@/lib/analytics";
 
 export async function createCheckoutSession(ideaId: string) {
   const { userId: clerkId } = await auth();
@@ -79,6 +80,13 @@ export async function createCheckoutSession(ideaId: string) {
       platformFeeInCents: platformFeeAmount,
       stripePaymentIntentId: session.payment_intent as string,
     },
+  });
+
+  trackEvent("checkout_started", {
+    userId: user.id,
+    ideaId,
+    amountInCents: idea.priceInCents,
+    paymentMethod: "stripe",
   });
 
   return { url: session.url };
@@ -193,6 +201,21 @@ export async function purchaseWithWallet(ideaId: string) {
       stripePaymentIntentId: referenceId,
       status: "COMPLETED",
     },
+  });
+
+  trackEvent("checkout_started", {
+    userId: user.id,
+    ideaId,
+    amountInCents: idea.priceInCents,
+    paymentMethod: "wallet",
+  });
+
+  trackEvent("purchase_completed", {
+    userId: user.id,
+    ideaId,
+    purchaseId: purchase.id,
+    amountInCents: idea.priceInCents,
+    paymentMethod: "wallet",
   });
 
   // Send emails (non-blocking)

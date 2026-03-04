@@ -15,6 +15,7 @@ import { ReportDialog } from "@/features/reports/components/report-dialog";
 import prisma from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 import { getIdeaById } from "@/features/ideas/actions";
+import { trackEvent } from "@/lib/analytics";
 
 export async function generateMetadata({
   params,
@@ -96,6 +97,13 @@ export default async function IdeaDetailPage({
   }
 
   const showContent = isOwner || isPurchased;
+
+  trackEvent("idea_viewed", {
+    ideaId: idea.id,
+    viewerId: currentUser?.id,
+    isOwner,
+    isPurchased,
+  });
 
   return (
     <div className="container mx-auto px-4 py-12">
