@@ -7,6 +7,7 @@ import { z } from "zod";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createIdeaSchema } from "@/features/ideas/schemas";
+import { trackEvent } from "@/lib/analytics";
 
 export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
   const { userId } = await auth();
@@ -108,6 +109,13 @@ export async function publishIdea(ideaId: string, published: boolean) {
     where: { id: ideaId },
     data: { published },
   });
+
+  if (published) {
+    trackEvent("creator_idea_published", {
+      creatorId: user.id,
+      ideaId,
+    });
+  }
 
   revalidatePath("/creator");
   revalidatePath("/ideas");

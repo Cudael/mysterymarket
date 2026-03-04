@@ -121,10 +121,16 @@ prisma/
 
 ## Roadmap
 
-- **Phase 1 (Current):** Project scaffold, auth, database schema, UI components
-- **Phase 2: Creator Flow** — Full idea creation form, Stripe Connect onboarding, image uploads
-- **Phase 3: Marketplace** — Real idea listings, search/filter, checkout flow, purchase verification
-- **Phase 4: Polish** — Email notifications, analytics dashboard, mobile optimization, public creator profiles
+- ✅ **Completed foundation:** Auth, ideas CRUD, purchases, wallet, analytics, reviews/reports, bookmarks, creator profiles
+- 🚧 **Current execution plan:** Follow phased delivery in `IMPLEMENTATION_PLAN.md`
+  - **Phase 0:** Docs + metrics + event instrumentation
+  - **Phase 1:** Buyer retention UX (purchase history + post-purchase flow)
+  - **Phase 2:** Discovery and recommendation quality
+  - **Phase 3:** Trust, safety, and moderation workflows
+  - **Phase 4:** Creator growth and monetization optimization
+  - **Phase 5:** Growth loops and content engine
+
+See `docs/metrics.md` for KPI definitions used to validate each phase.
 
 ---
 

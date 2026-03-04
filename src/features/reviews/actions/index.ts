@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { trackEvent } from "@/lib/analytics";
 
 export async function createReview(
   ideaId: string,
@@ -36,6 +37,12 @@ export async function createReview(
       buyerId: user.id,
       ideaId,
     },
+  });
+
+  trackEvent("review_submitted", {
+    userId: user.id,
+    ideaId,
+    rating,
   });
 
   revalidatePath(`/ideas/${ideaId}`);
