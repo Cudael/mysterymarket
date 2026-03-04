@@ -9,7 +9,6 @@ import {
   Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
 import { getIdeasByCreator } from "@/features/ideas/actions";
 import { getWalletWithTransactions } from "@/features/wallet/actions";

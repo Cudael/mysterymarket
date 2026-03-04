@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Lock, FileText, Sparkles } from "lucide-react";
+import { ArrowRight, Lock, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {

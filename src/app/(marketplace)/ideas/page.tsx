@@ -108,7 +108,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
             </div>
             <p className="text-[18px] font-bold text-[#1A1A1A]">No ideas found</p>
             <p className="mt-2 text-[15px] text-[#1A1A1A]/60">
-              Try adjusting your filters or search terms to find what you're looking for.
+              Try adjusting your filters or search terms to find what you&apos;re looking for.
             </p>
           </div>
         ) : (

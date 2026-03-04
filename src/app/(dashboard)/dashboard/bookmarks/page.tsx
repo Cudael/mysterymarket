@@ -22,7 +22,7 @@ export default async function BookmarksPage() {
       <div className="mb-8 border-b border-[#D9DCE3] pb-6">
         <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">Saved Ideas</h1>
         <p className="mt-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
-          Ideas you've saved to revisit and unlock later.
+          Ideas you&apos;ve saved to revisit and unlock later.
         </p>
       </div>
 
