@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { trackEvent } from "@/lib/analytics";
 
 export async function toggleBookmark(ideaId: string): Promise<{ bookmarked: boolean }> {
   const { userId: clerkId } = await auth();
@@ -26,6 +27,10 @@ export async function toggleBookmark(ideaId: string): Promise<{ bookmarked: bool
   }
 
   await prisma.bookmark.create({ data: { userId: user.id, ideaId } });
+  trackEvent("idea_bookmarked", {
+    userId: user.id,
+    ideaId,
+  });
   revalidatePath(`/ideas/${ideaId}`);
   revalidatePath("/dashboard/bookmarks");
   return { bookmarked: true };

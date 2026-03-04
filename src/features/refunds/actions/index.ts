@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { trackEvent } from "@/lib/analytics";
 
 export async function createRefundRequest(purchaseId: string, reason: string) {
   const { userId } = await auth();
@@ -25,6 +26,12 @@ export async function createRefundRequest(purchaseId: string, reason: string) {
       purchaseId,
       reason: reason.trim(),
     },
+  });
+
+  trackEvent("refund_requested", {
+    userId: user.id,
+    purchaseId,
+    ideaId: purchase.ideaId,
   });
 }
 
