@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
 import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
 import { creditWalletForDeposit } from "@/features/wallet/actions";
+import { createNotification } from "@/features/notifications/actions";
 import { trackEvent } from "@/lib/analytics";
 
 export async function POST(req: Request) {
@@ -119,6 +120,23 @@ export async function POST(req: Request) {
               purchase.platformFeeInCents,
               purchase.ideaId
             );
+
+            await Promise.all([
+              createNotification({
+                userId: purchase.buyerId,
+                type: "PURCHASE",
+                title: "Idea Unlocked!",
+                message: `You successfully unlocked '${purchase.idea.title}'`,
+                link: `/ideas/${purchase.ideaId}`,
+              }),
+              createNotification({
+                userId: purchase.idea.creatorId,
+                type: "SALE",
+                title: "New Sale!",
+                message: `Someone just unlocked your idea '${purchase.idea.title}'`,
+                link: `/creator`,
+              }),
+            ]);
           }
         } catch (emailErr) {
           console.error("[stripe-webhook] Post-purchase processing failed:", emailErr);

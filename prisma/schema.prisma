@@ -8,23 +8,24 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(cuid())
-  clerkId          String     @unique
-  email            String     @unique
+  id               String         @id @default(cuid())
+  clerkId          String         @unique
+  email            String         @unique
   name             String?
   avatarUrl        String?
   bio              String?
   stripeAccountId  String?
-  stripeOnboarded  Boolean    @default(false)
-  role             Role       @default(USER)
-  ideas            Idea[]     @relation("CreatorIdeas")
+  stripeOnboarded  Boolean        @default(false)
+  role             Role           @default(USER)
+  ideas            Idea[]         @relation("CreatorIdeas")
   purchases        Purchase[]
-  reviews          Review[]   @relation("BuyerReviews")
-  reports          Report[]   @relation("ReporterReports")
+  reviews          Review[]       @relation("BuyerReviews")
+  reports          Report[]       @relation("ReporterReports")
   wallet           Wallet?
   bookmarks        Bookmark[]
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  notifications    Notification[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 }
 
 enum Role {
@@ -218,4 +219,28 @@ model Bookmark {
   @@unique([userId, ideaId])
   @@index([userId])
   @@index([ideaId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  user      User             @relation(fields: [userId], references: [id])
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  link      String?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
+}
+
+enum NotificationType {
+  PURCHASE
+  SALE
+  REVIEW
+  REFUND
+  BOOKMARK
+  SYSTEM
 }

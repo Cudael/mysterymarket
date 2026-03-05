@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { trackEvent } from "@/lib/analytics";
+import { createNotification } from "@/features/notifications/actions";
 
 export async function createReview(
   ideaId: string,
@@ -30,6 +31,11 @@ export async function createReview(
   });
   if (existing) throw new Error("You have already reviewed this idea");
 
+  const idea = await prisma.idea.findUnique({
+    where: { id: ideaId },
+    select: { title: true, creatorId: true },
+  });
+
   await prisma.review.create({
     data: {
       rating,
@@ -38,6 +44,16 @@ export async function createReview(
       ideaId,
     },
   });
+
+  if (idea) {
+    await createNotification({
+      userId: idea.creatorId,
+      type: "REVIEW",
+      title: "New Review",
+      message: `${user.name ?? "Someone"} left a ${rating}-star review on '${idea.title}'`,
+      link: `/ideas/${ideaId}`,
+    });
+  }
 
   trackEvent("review_submitted", {
     userId: user.id,

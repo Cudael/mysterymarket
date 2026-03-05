@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Lightbulb,
@@ -12,11 +13,14 @@ import {
   Wallet2,
   ShoppingBag,
   Bookmark,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getUnreadCount } from "@/features/notifications/actions";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "My Purchases", icon: ShoppingBag, exact: true },
+  { href: "/dashboard/notifications", label: "Notifications", icon: Bell, exact: false },
   { href: "/dashboard/bookmarks", label: "Saved Ideas", icon: Bookmark, exact: false },
   { href: "/dashboard/wallet", label: "My Wallet", icon: Wallet2, exact: false },
   { href: "/creator", label: "Creator Studio", icon: LayoutDashboard, exact: true },
@@ -29,6 +33,18 @@ const NAV_LINKS = [
 
 export function CreatorSidebar() {
   const pathname = usePathname();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCount = () => {
+      getUnreadCount()
+        .then(setUnreadCount)
+        .catch(() => {});
+    };
+    fetchCount();
+    const interval = setInterval(fetchCount, 30_000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -46,6 +62,7 @@ export function CreatorSidebar() {
         <nav className="flex flex-col gap-1.5 p-4">
           {NAV_LINKS.map(({ href, label, icon: Icon, exact }) => {
             const isActive = exact ? pathname === href : pathname.startsWith(href);
+            const isNotifications = href === "/dashboard/notifications";
             return (
               <Link
                 key={href}
@@ -59,6 +76,11 @@ export function CreatorSidebar() {
               >
                 <Icon className={cn("h-4.5 w-4.5", isActive ? "text-[#3A5FCD]" : "text-[#1A1A1A]/50")} />
                 {label}
+                {isNotifications && unreadCount > 0 && (
+                  <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -70,6 +92,7 @@ export function CreatorSidebar() {
         <div className="flex gap-2 py-3">
           {NAV_LINKS.map(({ href, label, icon: Icon, exact }) => {
             const isActive = exact ? pathname === href : pathname.startsWith(href);
+            const isNotifications = href === "/dashboard/notifications";
             return (
               <Link
                 key={href}
@@ -83,6 +106,11 @@ export function CreatorSidebar() {
               >
                 <Icon className="h-4 w-4" />
                 {label}
+                {isNotifications && unreadCount > 0 && (
+                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </Link>
             );
           })}

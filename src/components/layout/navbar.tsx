@@ -17,6 +17,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { AuthModal } from "@/components/auth/auth-modal";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -64,6 +65,7 @@ export function Navbar() {
               <Link href="/dashboard">Dashboard</Link>
             </Button>
             <div className="h-5 w-px bg-[#D9DCE3] mx-2"></div>
+            <NotificationBell />
             <UserButton 
               afterSignOutUrl="/" 
               appearance={{
@@ -93,6 +95,7 @@ export function Navbar() {
         {/* Mobile menu */}
         <div className="flex items-center gap-4 md:hidden">
           <SignedIn>
+            <NotificationBell />
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
           <Sheet>

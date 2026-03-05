@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { trackEvent } from "@/lib/analytics";
+import { createNotification } from "@/features/notifications/actions";
 
 export async function toggleBookmark(ideaId: string): Promise<{ bookmarked: boolean }> {
   const { userId: clerkId } = await auth();
@@ -31,6 +32,21 @@ export async function toggleBookmark(ideaId: string): Promise<{ bookmarked: bool
     userId: user.id,
     ideaId,
   });
+
+  const idea = await prisma.idea.findUnique({
+    where: { id: ideaId },
+    select: { title: true, creatorId: true },
+  });
+  if (idea) {
+    await createNotification({
+      userId: idea.creatorId,
+      type: "BOOKMARK",
+      title: "Idea Saved!",
+      message: `Someone saved your idea '${idea.title}' for later`,
+      link: `/ideas/${ideaId}`,
+    });
+  }
+
   revalidatePath(`/ideas/${ideaId}`);
   revalidatePath("/dashboard/bookmarks");
   return { bookmarked: true };
