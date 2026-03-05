@@ -37,7 +37,7 @@ export function IdeaCard({
       */}
       <div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted/30">
         
-        {/* Placeholder Background (Dot Pattern) OR Actual Image */}
+        {/* Placeholder Background OR Actual Image */}
         {teaserImageUrl ? (
           <Image
             src={teaserImageUrl}
@@ -46,7 +46,10 @@ export function IdeaCard({
             className="object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px] opacity-70 dark:bg-[radial-gradient(#334155_1px,transparent_1px)]" />
+          <div className="absolute inset-0 bg-zinc-900">
+            {/* Thicker, darker dots that will survive the blur effect */}
+            <div className="absolute inset-0 bg-[radial-gradient(#52525b_2px,transparent_2px)] [background-size:24px_24px]" />
+          </div>
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
