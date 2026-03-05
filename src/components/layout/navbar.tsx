@@ -22,6 +22,7 @@ import { NotificationBell } from "@/features/notifications/components/notificati
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/ideas", label: "Marketplace" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
 ];
 

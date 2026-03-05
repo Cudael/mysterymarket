@@ -55,6 +55,7 @@ export function Footer() {
             </h3>
             <ul className="space-y-3.5">
               <li><Link href="/about" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">About Us</Link></li>
+              <li><Link href="/blog" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Blog</Link></li>
               <li><Link href="/contact" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Contact Support</Link></li>
             </ul>
           </div>
