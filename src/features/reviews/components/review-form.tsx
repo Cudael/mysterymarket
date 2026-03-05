@@ -25,7 +25,7 @@ export function ReviewForm({ ideaId }: ReviewFormProps) {
     startTransition(async () => {
       try {
         await createReview(ideaId, rating, comment);
-        toast.success("Review submitted!");
+        toast.success("Review posted! ⭐", { description: "Thanks for your feedback." });
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : "Failed to submit review"

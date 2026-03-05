@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function CookiesPage() {
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 py-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mx-auto max-w-3xl">
         <h1 className="text-4xl font-bold text-foreground">Cookie Policy</h1>
         <p className="mt-2 text-sm text-muted-foreground">

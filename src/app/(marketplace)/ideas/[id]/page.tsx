@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { UnlockButton } from "@/features/purchases/components/unlock-button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
 import { ShareButtons } from "@/components/shared/share-buttons";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { ReviewList } from "@/features/reviews/components/review-list";
 import { ReviewForm } from "@/features/reviews/components/review-form";
 import { ReportDialog } from "@/features/reports/components/report-dialog";
@@ -106,7 +107,14 @@ export default async function IdeaDetailPage({
   });
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Ideas", href: "/ideas" },
+          { label: idea.title },
+        ]}
+      />
       <Link
         href="/ideas"
         className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"

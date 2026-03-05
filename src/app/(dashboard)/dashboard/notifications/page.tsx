@@ -5,6 +5,7 @@ import {
   markAllRead,
 } from "@/features/notifications/actions";
 import { NotificationsClient } from "@/features/notifications/components/notifications-client";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import type { Notification } from "@prisma/client";
 
 export const metadata: Metadata = {
@@ -25,6 +26,13 @@ export default async function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-3xl pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Notifications" },
+        ]}
+      />
       <div className="mb-8 flex items-center justify-between border-b border-[#D9DCE3] pb-6">
         <div>
           <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">

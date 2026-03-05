@@ -6,6 +6,7 @@ import { RevenueChart } from "@/features/analytics/components/revenue-chart";
 import { TopIdeasTable } from "@/features/analytics/components/top-ideas-table";
 import { RecentSales } from "@/features/analytics/components/recent-sales";
 import { PayoutInfo } from "@/features/analytics/components/payout-info";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { getCreatorAnalytics } from "@/features/analytics/actions";
 import { getConnectAccountStatus } from "@/features/stripe/actions";
 import { formatPrice } from "@/lib/utils";
@@ -27,7 +28,14 @@ export default async function CreatorAnalyticsPage() {
 
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12 space-y-8">
-      
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Creator Studio", href: "/creator" },
+          { label: "Analytics" },
+        ]}
+      />
       {/* Header */}
       <div className="flex items-center gap-3.5 border-b border-[#D9DCE3] pb-6">
         <div className="flex h-12 w-12 items-center justify-center rounded-[10px] bg-[#3A5FCD] shadow-[0_2px_8px_rgba(58,95,205,0.3)]">

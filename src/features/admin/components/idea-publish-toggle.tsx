@@ -20,7 +20,11 @@ export function IdeaPublishToggle({
     try {
       await toggleIdeaPublished(ideaId, !isPublished);
       setIsPublished(!isPublished);
-      toast.success(isPublished ? "Idea unpublished" : "Idea published");
+      if (isPublished) {
+        toast("Idea unpublished", { description: "It's now hidden from the marketplace." });
+      } else {
+        toast.success("Idea published! 🚀", { description: "It's now visible in the marketplace." });
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {

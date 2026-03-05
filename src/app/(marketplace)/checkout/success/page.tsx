@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ConfettiEffect } from "@/components/shared/confetti-effect";
 import { stripe } from "@/lib/stripe";
 import { formatPrice } from "@/lib/utils";
 
@@ -71,6 +72,7 @@ export default async function CheckoutSuccessPage({
 
   return (
     <div className="container mx-auto px-4 py-24 sm:py-32 flex items-center justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <ConfettiEffect />
       <div className="w-full max-w-[500px] rounded-[16px] border border-[#C8E6C9] bg-[#FFFFFF] p-8 sm:p-12 text-center shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#E8F5E9] border border-[#C8E6C9]">

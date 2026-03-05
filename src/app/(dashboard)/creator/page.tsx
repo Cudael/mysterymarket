@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { getIdeasByCreator } from "@/features/ideas/actions";
 import { getWalletWithTransactions } from "@/features/wallet/actions";
 import { formatPrice } from "@/lib/utils";
@@ -37,7 +38,14 @@ export default async function CreatorPage() {
   const totalSales = ideas.reduce((sum, idea) => sum + idea._count.purchases, 0);
 
   return (
-    <div>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Creator Studio" },
+        ]}
+      />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">Creator Studio</h1>

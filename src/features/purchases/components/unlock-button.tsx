@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Lock, CheckCircle, Ban, ShieldOff, Wallet2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { createCheckoutSession, purchaseWithWallet } from "@/features/purchases/actions";
 import { formatPrice } from "@/lib/utils";
 
@@ -99,6 +100,7 @@ export function UnlockButton({
     setError(null);
     try {
       await purchaseWithWallet(ideaId);
+      toast.success("Idea unlocked! 🎉", { description: "Check your purchases to read the full content." });
       window.location.reload();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";

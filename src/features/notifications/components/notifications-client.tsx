@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { markAsRead, markAllRead } from "@/features/notifications/actions";
+import { EmptyState } from "@/components/shared/empty-state";
 import type { Notification, NotificationType } from "@prisma/client";
 import { cn } from "@/lib/utils";
 
@@ -94,19 +95,11 @@ export function NotificationsClient({
 
   if (notifications.length === 0) {
     return (
-      <div className="rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#F8F9FC] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#FFFFFF] border border-[#D9DCE3]">
-            <Bell className="h-7 w-7 text-[#1A1A1A]/40" />
-          </div>
-          <p className="text-[18px] font-semibold text-[#1A1A1A]">
-            No notifications yet
-          </p>
-          <p className="mt-2 text-[15px] text-[#1A1A1A]/60 max-w-md">
-            When something happens, you&#39;ll see it here.
-          </p>
-        </div>
-      </div>
+      <EmptyState
+        icon={<Bell className="h-9 w-9 text-[#1A1A1A]/40" />}
+        title="All caught up!"
+        description="You have no notifications right now. We'll let you know when something important happens."
+      />
     );
   }
 

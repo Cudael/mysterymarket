@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ShoppingBag, DollarSign, ArrowRight, Calendar, MessageSquare } from "lucide-react";
+import { ShoppingBag, DollarSign, Calendar, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/shared/empty-state";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { getPurchasesByUser } from "@/features/purchases/actions";
 import { getRefundRequestsForUser } from "@/features/refunds/actions";
 import { formatPrice } from "@/lib/utils";
@@ -71,6 +73,13 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "My Purchases" },
+        ]}
+      />
       <div className="mb-8 border-b border-[#D9DCE3] pb-6">
         <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">My Purchases</h1>
         <p className="mt-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
@@ -102,20 +111,12 @@ export default async function DashboardPage() {
 
       {purchases.length === 0 ? (
         <div className="mt-10 rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#F8F9FC] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#FFFFFF] border border-[#D9DCE3]">
-              <ShoppingBag className="h-7 w-7 text-[#1A1A1A]/40" />
-            </div>
-            <p className="text-[18px] font-semibold text-[#1A1A1A]">No purchases yet</p>
-            <p className="mt-2 text-[15px] text-[#1A1A1A]/60 max-w-md">
-              Browse the marketplace to find and unlock high-value hidden ideas from top creators.
-            </p>
-            <Button asChild className="mt-8 bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white font-medium h-11 px-6 shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all">
-              <Link href="/ideas">
-                Explore Marketplace <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+          <EmptyState
+            icon={<ShoppingBag className="h-9 w-9 text-[#1A1A1A]/40" />}
+            title="No purchases yet"
+            description="Browse the marketplace to find and unlock high-value hidden ideas from top creators."
+            action={{ label: "Explore Marketplace", href: "/ideas" }}
+          />
 
           {recommendedIdeas.length > 0 && (
             <div className="border-t border-[#D9DCE3] pt-6">

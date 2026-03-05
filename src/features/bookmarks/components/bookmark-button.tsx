@@ -42,11 +42,15 @@ export function BookmarkButton({
     try {
       const result = await toggleBookmark(ideaId);
       setBookmarked(result.bookmarked);
-      toast.success(result.bookmarked ? "Idea saved" : "Idea removed from saved");
+      if (result.bookmarked) {
+        toast.success("Saved to bookmarks", { description: "Find it in your Saved Ideas." });
+      } else {
+        toast("Removed from bookmarks");
+      }
     } catch {
       // Revert optimistic update
       setBookmarked((prev) => !prev);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Failed to save bookmark", { description: "Please try again." });
     } finally {
       setLoading(false);
     }

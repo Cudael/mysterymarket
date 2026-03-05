@@ -94,7 +94,11 @@ export function IdeaForm({
       });
 
       await onSubmit(data);
-      toast.success(submitLabel === "Publish Idea" ? "Idea published!" : "Idea updated!");
+      if (submitLabel === "Publish Idea") {
+        toast.success("Idea published! 🚀", { description: "It's now visible in the marketplace." });
+      } else {
+        toast.success("Idea updated!");
+      }
       router.push("/creator");
     } catch (err) {
       if (err instanceof z.ZodError) {

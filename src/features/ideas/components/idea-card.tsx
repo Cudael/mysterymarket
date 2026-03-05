@@ -27,7 +27,7 @@ export function IdeaCard({
   isAuthenticated = false,
 }: IdeaCardProps) {
   return (
-    <div className="group flex flex-col overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-[#6D7BE0]/40">
+    <div className="group relative flex flex-col overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-[#6D7BE0]/40">
       
       {/* Image / Subtle Placeholder */}
       <div className="relative h-48 w-full overflow-hidden border-b border-[#D9DCE3] bg-[#F5F6FA]">
@@ -154,6 +154,27 @@ export function IdeaCard({
               </Link>
             </Button>
           )}
+        </div>
+      </div>
+
+      {/* Hover preview — desktop only */}
+      <div
+        className="pointer-events-none invisible absolute left-0 top-full z-50 mt-2 hidden w-full opacity-0 transition-all duration-200 ease-out group-hover:visible group-hover:opacity-100 md:block"
+      >
+        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_8px_32px_rgba(0,0,0,0.12)] p-4">
+          {teaserText && (
+            <p className="text-[14px] leading-[1.6] text-[#1A1A1A]/80">{teaserText}</p>
+          )}
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-[13px] text-[#1A1A1A]/60">
+            {category && (
+              <span className="font-medium text-[#1A1A1A]">{category}</span>
+            )}
+            {creatorName && (
+              <span>by {creatorName}</span>
+            )}
+            <span className="font-semibold text-[#1A1A1A]">{formatPrice(priceInCents)}</span>
+          </div>
+          <p className="mt-3 text-[12px] font-medium text-[#3A5FCD]">Click to view details →</p>
         </div>
       </div>
     </div>
