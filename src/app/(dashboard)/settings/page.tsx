@@ -14,7 +14,11 @@ export default function SettingsPage() {
   const { user: clerkUser } = useUser();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
+  const [twitterUrl, setTwitterUrl] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isSavingSocial, setIsSavingSocial] = useState(false);
   const [dbUser, setDbUser] = useState<{
     email: string;
     role: string;
@@ -36,10 +40,18 @@ export default function SettingsPage() {
         });
         setName(u.name ?? "");
         setBio(u.bio ?? "");
+        setTwitterUrl(u.twitterUrl ?? "");
+        setLinkedinUrl(u.linkedinUrl ?? "");
+        setWebsiteUrl(u.websiteUrl ?? "");
       }
     }
     loadUser();
   }, []);
+
+  function validateUrl(value: string): boolean {
+    if (!value) return true;
+    return value.startsWith("https://");
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -52,6 +64,36 @@ export default function SettingsPage() {
       toast.error("Failed to save profile");
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleSaveSocial(e: React.FormEvent) {
+    e.preventDefault();
+    if (!validateUrl(twitterUrl)) {
+      toast.error("Twitter URL must start with https://");
+      return;
+    }
+    if (!validateUrl(linkedinUrl)) {
+      toast.error("LinkedIn URL must start with https://");
+      return;
+    }
+    if (!validateUrl(websiteUrl)) {
+      toast.error("Website URL must start with https://");
+      return;
+    }
+    setIsSavingSocial(true);
+    try {
+      await updateProfile({
+        twitterUrl: twitterUrl || undefined,
+        linkedinUrl: linkedinUrl || undefined,
+        websiteUrl: websiteUrl || undefined,
+      });
+      toast.success("Social links saved successfully");
+    } catch (err) {
+      console.error("[settings] Social links save failed:", err);
+      toast.error("Failed to save social links");
+    } finally {
+      setIsSavingSocial(false);
     }
   }
 
@@ -108,6 +150,64 @@ export default function SettingsPage() {
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" /> Save Profile
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </section>
+
+        {/* Social Links Card */}
+        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
+            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Social Links</h2>
+          </div>
+
+          <form onSubmit={handleSaveSocial} className="p-6 space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="twitterUrl" className="text-[14px] font-medium text-[#1A1A1A]">Twitter / X URL</Label>
+              <Input
+                id="twitterUrl"
+                value={twitterUrl}
+                onChange={(e) => setTwitterUrl(e.target.value)}
+                placeholder="https://twitter.com/yourusername"
+                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="linkedinUrl" className="text-[14px] font-medium text-[#1A1A1A]">LinkedIn URL</Label>
+              <Input
+                id="linkedinUrl"
+                value={linkedinUrl}
+                onChange={(e) => setLinkedinUrl(e.target.value)}
+                placeholder="https://linkedin.com/in/yourusername"
+                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="websiteUrl" className="text-[14px] font-medium text-[#1A1A1A]">Website URL</Label>
+              <Input
+                id="websiteUrl"
+                value={websiteUrl}
+                onChange={(e) => setWebsiteUrl(e.target.value)}
+                placeholder="https://yourwebsite.com"
+                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+              />
+            </div>
+
+            <div className="pt-2">
+              <Button
+                type="submit"
+                disabled={isSavingSocial}
+                className="bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white font-medium px-6 h-10 shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all"
+              >
+                {isSavingSocial ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" /> Save Social Links
                   </>
                 )}
               </Button>
