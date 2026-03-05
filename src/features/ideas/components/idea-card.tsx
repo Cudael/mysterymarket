@@ -43,13 +43,8 @@ export function IdeaCard({
             className="object-cover"
           />
         ) : (
-          <div 
-            className="absolute inset-0 bg-zinc-950"
-            style={{
-              backgroundImage: 'radial-gradient(#3f3f46 2px, transparent 2px)',
-              backgroundSize: '24px 24px'
-            }}
-          />
+          /* Smooth, dark, premium gradient instead of harsh dots */
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950" />
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
