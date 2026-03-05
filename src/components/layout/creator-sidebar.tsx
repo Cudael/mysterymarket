@@ -14,9 +14,11 @@ import {
   ShoppingBag,
   Bookmark,
   Bell,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getUnreadCount } from "@/features/notifications/actions";
+import { getIsAdmin } from "@/features/admin/actions";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "My Purchases", icon: ShoppingBag, exact: true },
@@ -34,8 +36,13 @@ const NAV_LINKS = [
 export function CreatorSidebar() {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    getIsAdmin()
+      .then(setIsAdmin)
+      .catch(() => {});
+
     const fetchCount = () => {
       getUnreadCount()
         .then(setUnreadCount)
@@ -43,6 +50,7 @@ export function CreatorSidebar() {
     };
     fetchCount();
     const interval = setInterval(fetchCount, 30_000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -84,6 +92,35 @@ export function CreatorSidebar() {
               </Link>
             );
           })}
+
+          {/* Admin section */}
+          {isAdmin && (
+            <>
+              <div className="my-2 h-px bg-[#D9DCE3]" />
+              <Link
+                href="/admin"
+                className={cn(
+                  "flex items-center gap-3 rounded-[8px] px-3.5 py-2.5 text-[14px] font-medium transition-all duration-200",
+                  pathname.startsWith("/admin")
+                    ? "bg-red-500/10 text-red-600"
+                    : "text-[#1A1A1A]/70 hover:bg-[#FFFFFF] hover:text-[#1A1A1A] hover:shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
+                )}
+              >
+                <Shield
+                  className={cn(
+                    "h-4 w-4",
+                    pathname.startsWith("/admin")
+                      ? "text-red-500"
+                      : "text-[#1A1A1A]/50"
+                  )}
+                />
+                Admin Panel
+                <span className="ml-auto flex h-4 min-w-[28px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
+                  ADMIN
+                </span>
+              </Link>
+            </>
+          )}
         </nav>
       </aside>
 
@@ -114,6 +151,23 @@ export function CreatorSidebar() {
               </Link>
             );
           })}
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className={cn(
+                "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
+                pathname.startsWith("/admin")
+                  ? "bg-red-500/10 text-red-600"
+                  : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+              )}
+            >
+              <Shield className="h-4 w-4" />
+              Admin
+              <span className="flex h-4 min-w-[28px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
+                ADMIN
+              </span>
+            </Link>
+          )}
         </div>
       </div>
     </>
