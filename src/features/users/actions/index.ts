@@ -53,7 +53,17 @@ export async function getUserByClerkId(clerkId?: string) {
 const updateProfileSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   bio: z.string().max(500).optional(),
+  twitterUrl: z.string().optional(),
+  linkedinUrl: z.string().optional(),
+  websiteUrl: z.string().optional(),
 });
+
+function normalizeSocialUrl(value?: string): string | null | undefined {
+  if (value === undefined) return undefined;
+  if (value === "") return null;
+  if (!value.startsWith("https://")) throw new Error(`URL must start with https://`);
+  return value;
+}
 
 export async function updateProfile(
   data: z.infer<typeof updateProfileSchema>
@@ -65,7 +75,13 @@ export async function updateProfile(
 
   const user = await prisma.user.update({
     where: { clerkId: userId },
-    data: validated,
+    data: {
+      name: validated.name,
+      bio: validated.bio,
+      twitterUrl: normalizeSocialUrl(validated.twitterUrl),
+      linkedinUrl: normalizeSocialUrl(validated.linkedinUrl),
+      websiteUrl: normalizeSocialUrl(validated.websiteUrl),
+    },
   });
 
   revalidatePath("/settings");
