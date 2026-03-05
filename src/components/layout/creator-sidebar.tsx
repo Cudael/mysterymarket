@@ -15,6 +15,7 @@ import {
   Bookmark,
   Bell,
   Shield,
+  PieChart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getUnreadCount } from "@/features/notifications/actions";
@@ -22,6 +23,7 @@ import { getIsAdmin } from "@/features/admin/actions";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "My Purchases", icon: ShoppingBag, exact: true },
+  { href: "/dashboard/insights", label: "Buyer Insights", icon: PieChart, exact: false },
   { href: "/dashboard/notifications", label: "Notifications", icon: Bell, exact: false },
   { href: "/dashboard/bookmarks", label: "Saved Ideas", icon: Bookmark, exact: false },
   { href: "/dashboard/wallet", label: "My Wallet", icon: Wallet2, exact: false },
