@@ -31,11 +31,8 @@ export function IdeaCard({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
       
-      {/* 
-        Image Header Area 
-        Fixed height of 12rem (h-48) to prevent layout collapse.
-      */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted/30">
+      {/* Image Header Area */}
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-zinc-950">
         
         {/* Placeholder Background OR Actual Image */}
         {teaserImageUrl ? (
@@ -46,19 +43,22 @@ export function IdeaCard({
             className="object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-zinc-900">
-            {/* Thicker, darker dots that will survive the blur effect */}
-            <div className="absolute inset-0 bg-[radial-gradient(#52525b_2px,transparent_2px)] [background-size:24px_24px]" />
-          </div>
+          <div 
+            className="absolute inset-0 bg-zinc-950"
+            style={{
+              backgroundImage: 'radial-gradient(#3f3f46 2px, transparent 2px)',
+              backgroundSize: '24px 24px'
+            }}
+          />
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
         {isLocked && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/60 backdrop-blur-md">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background border border-border shadow-md">
-              <Lock className="h-5 w-5 text-muted-foreground" strokeWidth={2.5} />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900/90 border border-zinc-700 shadow-xl">
+              <Lock className="h-5 w-5 text-zinc-300" strokeWidth={2.5} />
             </div>
-            <span className="mt-3 rounded-full bg-background border border-border px-3 py-1 text-xs font-semibold tracking-wide text-foreground shadow-sm">
+            <span className="mt-3 rounded-full bg-zinc-900/90 border border-zinc-700 px-3 py-1 text-xs font-semibold tracking-wide text-zinc-300 shadow-xl">
               Locked Content
             </span>
           </div>
@@ -108,7 +108,6 @@ export function IdeaCard({
             )}
           </div>
 
-          {/* Bookmark moved here to ensure it's always visible and clickable */}
           {!isOwner && (
             <div className="shrink-0">
               <BookmarkButton
