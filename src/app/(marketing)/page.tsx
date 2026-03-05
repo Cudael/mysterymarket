@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 
 const CATEGORIES = [
-  { icon: TrendingUp, name: "SaaS Growth", desc: "Scaling strategies & MRR hacks" },
-  { icon: Briefcase, name: "Business Strategy", desc: "Operations & executive insights" },
-  { icon: Code, name: "Engineering", desc: "High-value scripts & architecture" },
-  { icon: Palette, name: "Design Secrets", desc: "UX patterns & creative workflows" },
+  { icon: TrendingUp, name: "SaaS Growth", desc: "Scaling strategies & MRR hacks", slug: "marketing" },
+  { icon: Briefcase, name: "Business Strategy", desc: "Operations & executive insights", slug: "business" },
+  { icon: Code, name: "Engineering", desc: "High-value scripts & architecture", slug: "technology" },
+  { icon: Palette, name: "Design Secrets", desc: "UX patterns & creative workflows", slug: "design" },
 ];
 
 const SOCIAL_PROOF = [
@@ -89,8 +89,8 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {CATEGORIES.map(({ icon: Icon, name, desc }) => (
-              <Link key={name} href={`/ideas?category=${encodeURIComponent(name)}`} className="group flex flex-col rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-6 transition-all duration-200 hover:border-[#3A5FCD]/50 hover:bg-[#FFFFFF] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+            {CATEGORIES.map(({ icon: Icon, name, desc, slug }) => (
+              <Link key={name} href={`/ideas/category/${slug}`} className="group flex flex-col rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-6 transition-all duration-200 hover:border-[#3A5FCD]/50 hover:bg-[#FFFFFF] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
                 <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#FFFFFF] border border-[#D9DCE3] group-hover:border-[#3A5FCD]/20 group-hover:bg-[#3A5FCD]/5">
                   <Icon className="h-5 w-5 text-[#3A5FCD]" />
                 </div>

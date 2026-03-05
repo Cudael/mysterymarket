@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
+import { CATEGORY_META } from "@/lib/constants";
 
 export function Footer() {
   return (
     <footer className="border-t border-[#D9DCE3] bg-[#FFFFFF] mt-auto">
       <div className="container mx-auto px-6 py-16 lg:px-8 max-w-7xl">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-4 lg:gap-8">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-5 lg:gap-8">
           
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 group w-fit">
@@ -30,6 +31,21 @@ export function Footer() {
               <li><Link href="/creator" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Creator Studio</Link></li>
               <li><Link href="/dashboard" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">My Purchases</Link></li>
               <li><Link href="/dashboard/bookmarks" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Saved Ideas</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-5 text-[14px] font-bold uppercase tracking-wider text-[#1A1A1A]">
+              Categories
+            </h3>
+            <ul className="space-y-3.5">
+              {Object.values(CATEGORY_META).slice(0, 5).map((cat) => (
+                <li key={cat.slug}>
+                  <Link href={`/ideas/category/${cat.slug}`} className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

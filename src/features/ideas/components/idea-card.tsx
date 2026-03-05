@@ -6,6 +6,7 @@ import { Lock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
 import { formatPrice } from "@/lib/utils";
+import { CATEGORY_META } from "@/lib/constants";
 import type { IdeaCardProps } from "@/features/ideas/types";
 
 export function IdeaCard({
@@ -47,9 +48,19 @@ export function IdeaCard({
         {/* Category badge */}
         {category && (
           <div className="absolute left-4 top-4 z-20">
-            <span className="inline-flex items-center rounded-[6px] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#1A1A1A] shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-[#D9DCE3]">
-              {category}
-            </span>
+            {CATEGORY_META[category]?.slug ? (
+              <Link
+                href={`/ideas/category/${CATEGORY_META[category].slug}`}
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center rounded-[6px] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#1A1A1A] shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-[#D9DCE3] hover:border-[#3A5FCD]/40 hover:text-[#3A5FCD] transition-colors"
+              >
+                {category}
+              </Link>
+            ) : (
+              <span className="inline-flex items-center rounded-[6px] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#1A1A1A] shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-[#D9DCE3]">
+                {category}
+              </span>
+            )}
           </div>
         )}
 
