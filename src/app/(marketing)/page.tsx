@@ -76,45 +76,45 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* 1. Explore Categories - Pure White Background */}
-      <section className="bg-[#FFFFFF] py-24">
+      {/* 1. Explore Categories */}
+      <section className="bg-background py-24">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="mb-12 text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
               Explore by category
             </h2>
-            <p className="mt-4 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+            <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
               Discover specialized knowledge from industry veterans across various domains.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {CATEGORIES.map(({ icon: Icon, name, desc, slug }) => (
-              <Link key={name} href={`/ideas/category/${slug}`} className="group flex flex-col rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-6 transition-all duration-200 hover:border-[#3A5FCD]/50 hover:bg-[#FFFFFF] hover:shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
-                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#FFFFFF] border border-[#D9DCE3] group-hover:border-[#3A5FCD]/20 group-hover:bg-[#3A5FCD]/5">
+              <Link key={name} href={`/ideas/category/${slug}`} className="group flex flex-col rounded-[12px] border border-border bg-card p-6 transition-all duration-200 hover:border-[#3A5FCD]/50 hover:bg-accent hover:shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[8px] bg-muted border border-border group-hover:border-[#3A5FCD]/20 group-hover:bg-[#3A5FCD]/5">
                   <Icon className="h-5 w-5 text-[#3A5FCD]" />
                 </div>
-                <h3 className="text-[16px] font-semibold text-[#1A1A1A] mb-1">{name}</h3>
-                <p className="text-[14px] text-[#1A1A1A]/60 leading-[1.5]">{desc}</p>
+                <h3 className="text-[16px] font-semibold text-foreground mb-1">{name}</h3>
+                <p className="text-[14px] text-muted-foreground leading-[1.5]">{desc}</p>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 2. Featured Insights - Fog Grey Background */}
-      <section className="bg-[#F5F6FA] py-24 border-y border-[#D9DCE3]">
+      {/* 2. Featured Insights */}
+      <section className="bg-card py-24 border-y border-border">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 border-b border-[#D9DCE3] pb-6">
+          <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 border-b border-border pb-6">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">
                 Featured Insights
               </h2>
-              <p className="mt-2 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+              <p className="mt-2 text-[16px] leading-[1.6] text-muted-foreground">
                 Highly-rated ideas recently unlocked by the community.
               </p>
             </div>
-            <Button asChild variant="outline" className="shrink-0 gap-2 bg-[#FFFFFF]">
+            <Button asChild variant="outline" className="shrink-0 gap-2">
               <Link href="/ideas">
                 View all insights <ArrowRight className="h-4 w-4" />
               </Link>
@@ -123,8 +123,8 @@ export default async function HomePage() {
           
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {featuredIdeas.length === 0 ? (
-              <div className="col-span-full rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-12 text-center shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                <p className="text-[16px] text-[#1A1A1A]/70">
+              <div className="col-span-full rounded-[12px] border border-border bg-background p-12 text-center shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                <p className="text-[16px] text-muted-foreground">
                   No ideas have been published yet. Be the first to create one.
                 </p>
               </div>
@@ -152,33 +152,33 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. Social Proof - Pure White Background */}
-      <section className="bg-[#FFFFFF] py-24">
+      {/* 3. Social Proof */}
+      <section className="bg-background py-24">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="mb-16 text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
               Trusted by professionals
             </h2>
-            <p className="mt-4 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+            <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
               See what creators and buyers are saying about the marketplace.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {SOCIAL_PROOF.map((testimonial, idx) => (
-              <div key={idx} className="relative rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                <Quote className="absolute top-6 right-6 h-8 w-8 text-[#D9DCE3]" />
+              <div key={idx} className="relative rounded-[12px] border border-border bg-card p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                <Quote className="absolute top-6 right-6 h-8 w-8 text-border" />
                 <div className="mb-6 flex gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="h-4 w-4 fill-[#E8C26A] text-[#E8C26A]" />
                   ))}
                 </div>
-                <p className="text-[16px] leading-[1.6] text-[#1A1A1A] mb-8 font-medium">
+                <p className="text-[16px] leading-[1.6] text-foreground mb-8 font-medium">
                   &quot;{testimonial.quote}&quot;
                 </p>
-                <div className="mt-auto border-t border-[#D9DCE3] pt-4">
-                  <p className="text-[15px] font-bold text-[#1A1A1A]">{testimonial.author}</p>
-                  <p className="text-[14px] text-[#1A1A1A]/60">{testimonial.role}</p>
+                <div className="mt-auto border-t border-border pt-4">
+                  <p className="text-[15px] font-bold text-foreground">{testimonial.author}</p>
+                  <p className="text-[14px] text-muted-foreground">{testimonial.role}</p>
                 </div>
               </div>
             ))}
@@ -186,28 +186,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 4. How It Works - Fog Grey Background */}
-      <section className="bg-[#F5F6FA] py-24 border-t border-[#D9DCE3]">
+      {/* 4. How It Works */}
+      <section className="bg-card py-24 border-t border-border">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
               Turn your expertise into income
             </h2>
-            <p className="mt-4 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+            <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
               A streamlined, highly secure platform designed for professionals to monetize their insights without the overhead of a full product.
             </p>
           </div>
           
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {HOW_IT_WORKS.map(({ icon: Icon, title, description }) => (
-              <div key={title} className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-8 shadow-[0_4px_14px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-[#F5F6FA] border border-[#D9DCE3]">
+              <div key={title} className="rounded-[12px] border border-border bg-background p-8 shadow-[0_4px_14px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-muted border border-border">
                   <Icon className="h-5 w-5 text-[#3A5FCD]" />
                 </div>
-                <h3 className="mb-3 text-[18px] font-semibold text-[#1A1A1A]">
+                <h3 className="mb-3 text-[18px] font-semibold text-foreground">
                   {title}
                 </h3>
-                <p className="text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+                <p className="text-[16px] leading-[1.6] text-muted-foreground">
                   {description}
                 </p>
               </div>

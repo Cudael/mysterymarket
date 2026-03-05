@@ -17,7 +17,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[#F5F6FA] text-[#1A1A1A] font-sans antialiased selection:bg-red-500 selection:text-white">
+    <div className="flex min-h-[100dvh] flex-col bg-background text-foreground font-sans antialiased selection:bg-red-500 selection:text-white">
       <Navbar />
       <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col md:flex-row">
         <AdminSidebar />
