@@ -8,6 +8,16 @@ export const metadata: Metadata = {
   title: "Users - Admin - MysteryMarket",
 };
 
+function getPageWindow(current: number, total: number): (number | null)[] {
+  if (total <= 9) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages: (number | null)[] = [1];
+  if (current > 4) pages.push(null);
+  for (let p = Math.max(2, current - 2); p <= Math.min(total - 1, current + 2); p++) pages.push(p);
+  if (current < total - 3) pages.push(null);
+  pages.push(total);
+  return pages;
+}
+
 const ROLE_TABS = [
   { value: "ALL", label: "All" },
   { value: "USER", label: "Users" },
@@ -162,7 +172,10 @@ export default async function AdminUsersPage({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+          {getPageWindow(currentPage, totalPages).map((p, i) => {
+            if (p === null) {
+              return <span key={`ellipsis-${i}`} className="px-1 text-[#1A1A1A]/40">…</span>;
+            }
             const params = new URLSearchParams();
             if (search) params.set("search", search);
             if (activeRole !== "ALL") params.set("role", activeRole);
