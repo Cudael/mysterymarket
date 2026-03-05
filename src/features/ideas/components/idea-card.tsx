@@ -99,10 +99,10 @@ export function IdeaCard({
           <div className="flex flex-wrap items-center gap-2 mt-1">
             <span
               className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                unlockType === "EXCLUSIVE" 
+                unlockType === "EXCLUSIVE"
                   ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
                   : "bg-secondary text-secondary-foreground"
-              }"}
+              }`}
             >
               {unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
             </span>
@@ -172,7 +172,7 @@ export function IdeaCard({
               </Button>
             ) : isPurchased ? (
               <Button asChild size="sm" className="bg-green-600 hover:bg-green-700 text-white gap-1.5">
-                <Link href={`/ideas/${id}`}>          
+                <Link href={`/ideas/${id}`}>  
                   <Unlock className="h-3.5 w-3.5" /> Read
                 </Link>
               </Button>
