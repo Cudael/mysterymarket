@@ -145,7 +145,7 @@ export function IdeaForm({
           <p>
             No payout setup required to publish.{" "}
             <span className="text-[#1A1A1A]/70">
-              Earnings go straight to your in-app wallet. Connect Stripe later when you're ready to withdraw.
+              Earnings go straight to your in-app wallet. Connect Stripe later when you&apos;re ready to withdraw.
             </span>
           </p>
         </div>
