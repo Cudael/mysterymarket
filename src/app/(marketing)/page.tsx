@@ -1,5 +1,19 @@
 import Link from "next/link";
-import { ArrowRight, Lock, DollarSign, Wallet, Code, Bot, Palette, Rocket, Star, Quote, Flame, Lightbulb, Users } from "lucide-react";
+import {
+  ArrowRight,
+  Lock,
+  DollarSign,
+  Wallet,
+  Code,
+  Bot,
+  Palette,
+  Rocket,
+  Quote,
+  Lightbulb,
+  Users,
+  ShieldCheck,
+  TrendingUp,
+} from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { Hero } from "@/components/layout/hero";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
@@ -7,265 +21,329 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 
 const CATEGORIES = [
-  { icon: Rocket, name: "Startup Ideas", desc: "Venture concepts & business models", slug: "startup-business-ideas" },
-  { icon: Bot, name: "AI & Automation", desc: "AI apps, agents & prompt libraries", slug: "ai-automation" },
-  { icon: Code, name: "Software & Tech", desc: "SaaS, apps & developer tools", slug: "software-technology" },
-  { icon: Palette, name: "Design & Arts", desc: "Creative direction & visual concepts", slug: "design-visual-arts" },
-];
-
-const SOCIAL_PROOF = [
-  {
-    quote: "I paid $25 for a hidden SEO tactic on MysteryMarket and it doubled my organic traffic in a month. The ROI is unbelievable.",
-    author: "Sarah Jenkins",
-    role: "Startup Founder"
-  },
-  {
-    quote: "I drafted a 300-word insight about my recent successful exit, priced it at $50, and woke up to $800 in my Stripe account.",
-    author: "David Chen",
-    role: "SaaS Operator"
-  },
-  {
-    quote: "The mystery aspect forces creators to only post their absolute best material. No fluff, just pure, actionable value.",
-    author: "Elena Rodriguez",
-    role: "Marketing Director"
-  }
+  { icon: Rocket, name: "Startup Ideas", desc: "Venture concepts, business models, and operator insights.", slug: "startup-business-ideas" },
+  { icon: Bot, name: "AI & Automation", desc: "AI products, prompt systems, agents, and workflow automation.", slug: "ai-automation" },
+  { icon: Code, name: "Software & Tech", desc: "SaaS opportunities, developer tools, and product strategy.", slug: "software-technology" },
+  { icon: Palette, name: "Design & Arts", desc: "Creative direction, visual systems, and design-led concepts.", slug: "design-visual-arts" },
 ];
 
 const HOW_IT_WORKS = [
   {
     icon: Lock,
-    title: "Draft your insight",
-    description: "Write your hidden idea, craft a compelling teaser, and choose your price point.",
+    title: "Create a premium listing",
+    description: "Write your insight, add a teaser, and package the value clearly for buyers.",
   },
   {
     icon: DollarSign,
-    title: "Set your terms",
-    description: "Opt for an exclusive single-buyer model or allow multiple unlocks.",
+    title: "Set price and access model",
+    description: "Choose exclusive or multi-unlock distribution based on scarcity and value.",
   },
   {
     icon: Wallet,
-    title: "Earn instantly",
-    description: "Earnings are processed instantly and sent directly to your Stripe account.",
+    title: "Get paid as buyers unlock",
+    description: "Use Stripe-powered payouts and monetize expertise with transparent economics.",
   },
 ];
+
+const CREATOR_BENEFITS = [
+  {
+    icon: ShieldCheck,
+    title: "Monetize expertise directly",
+    description: "Turn niche experience, frameworks, and opportunities into premium digital inventory.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Built for high-intent buyers",
+    description: "Position your ideas in a marketplace designed around value, not vanity metrics.",
+  },
+  {
+    icon: Users,
+    title: "Professional brand positioning",
+    description: "Sell insights in an environment that feels more curated and credible than social platforms.",
+  },
+];
+
+const SOCIAL_PROOF = [
+  {
+    quote:
+      "I paid for a hidden SEO idea on MysteryMarket and got a practical angle I could test immediately. That level of specificity is hard to find elsewhere.",
+    author: "Sarah Jenkins",
+    role: "Startup Founder",
+  },
+  {
+    quote:
+      "The platform makes premium knowledge feel like an asset class. It’s one of the few places where concise expertise can be packaged and sold well.",
+    author: "David Chen",
+    role: "SaaS Operator",
+  },
+  {
+    quote:
+      "What stands out is the presentation. The marketplace makes ideas feel curated, credible, and worth paying attention to.",
+    author: "Elena Rodriguez",
+    role: "Marketing Director",
+  },
+];
+
+function SectionHeader({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="mx-auto max-w-3xl text-center">
+      {eyebrow && (
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-[#3A5FCD]">
+          {eyebrow}
+        </p>
+      )}
+      <h2 className="text-[30px] font-bold tracking-tight text-[#111827] sm:text-[38px]">
+        {title}
+      </h2>
+      {description && (
+        <p className="mt-4 text-[17px] leading-8 text-[#1A1A1A]/65">
+          {description}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default async function HomePage() {
   const { userId: clerkId } = await auth();
 
-  const [featuredIdeas, bookmarkedIdeaIds, totalIdeas, totalPurchases, totalCreators] = await Promise.all([
-    prisma.idea.findMany({
-      where: { published: true },
-      include: {
-        creator: { select: { id: true, name: true, avatarUrl: true } },
-        _count: { select: { purchases: true } },
-      },
-      orderBy: { purchases: { _count: "desc" } },
-      take: 3,
-    }),
-    clerkId
-      ? prisma.bookmark
-          .findMany({
-            where: { user: { clerkId } },
-            select: { ideaId: true },
-          })
-          .then((bs) => new Set(bs.map((b) => b.ideaId)))
-      : Promise.resolve(new Set<string>()),
-    prisma.idea.count({ where: { published: true } }),
-    prisma.purchase.count({ where: { status: "COMPLETED" } }),
-    prisma.user.count({ where: { role: "CREATOR" } }),
-  ]);
+  const [featuredIdeas, bookmarkedIdeaIds, totalIdeas, totalPurchases, totalCreators] =
+    await Promise.all([
+      prisma.idea.findMany({
+        where: { published: true },
+        include: {
+          creator: { select: { id: true, name: true, avatarUrl: true } },
+          _count: { select: { purchases: true } },
+        },
+        orderBy: { purchases: { _count: "desc" } },
+        take: 3,
+      }),
+      clerkId
+        ? prisma.bookmark
+            .findMany({
+              where: { user: { clerkId } },
+              select: { ideaId: true },
+            })
+            .then((bs) => new Set(bs.map((b) => b.ideaId)))
+        : Promise.resolve(new Set<string>()),
+      prisma.idea.count({ where: { published: true } }),
+      prisma.purchase.count({ where: { status: "COMPLETED" } }),
+      prisma.user.count({ where: { role: "CREATOR" } }),
+    ]);
 
   return (
-    <>
+    <div className="bg-[#F8F9FC] text-[#1A1A1A]">
       <Hero />
 
-      {/* Live Marketplace Stats Strip */}
-      {(totalIdeas > 0 || totalPurchases > 0 || totalCreators > 0) && (
-        <section className="border-y border-border bg-card py-6">
-          <div className="container mx-auto px-6 lg:px-8">
-            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16">
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10 border border-[#3A5FCD]/20">
-                  <Lightbulb className="h-4.5 w-4.5 text-[#3A5FCD]" />
-                </div>
-                <div>
-                  <p className="text-[22px] font-bold tracking-tight text-foreground">{totalIdeas}</p>
-                  <p className="text-[12px] text-muted-foreground">ideas published</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-green-500/10 border border-green-500/20">
-                  <DollarSign className="h-4.5 w-4.5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-[22px] font-bold tracking-tight text-foreground">{totalPurchases}</p>
-                  <p className="text-[12px] text-muted-foreground">ideas unlocked</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-amber-500/10 border border-amber-500/20">
-                  <Users className="h-4.5 w-4.5 text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-[22px] font-bold tracking-tight text-foreground">{totalCreators}</p>
-                  <p className="text-[12px] text-muted-foreground">active creators</p>
-                </div>
-              </div>
-            </div>
+      <section className="border-y border-[#D9DCE3] bg-white">
+        <div className="container mx-auto grid max-w-[1400px] grid-cols-1 gap-6 px-6 py-6 sm:grid-cols-3 lg:px-8">
+          <div className="rounded-[14px] border border-[#E7EAF1] bg-[#FCFCFE] px-5 py-4">
+            <p className="text-sm text-[#1A1A1A]/55">Published ideas</p>
+            <p className="mt-1 text-2xl font-bold text-[#111827]">{totalIdeas.toLocaleString()}</p>
           </div>
-        </section>
-      )}
-
-      {/* 1. Explore Categories */}
-      <section className="bg-background py-24">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="mb-12 text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Explore by category
-            </h2>
-            <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
-              Discover specialized knowledge from industry veterans across various domains.
-            </p>
+          <div className="rounded-[14px] border border-[#E7EAF1] bg-[#FCFCFE] px-5 py-4">
+            <p className="text-sm text-[#1A1A1A]/55">Successful unlocks</p>
+            <p className="mt-1 text-2xl font-bold text-[#111827]">{totalPurchases.toLocaleString()}</p>
           </div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {CATEGORIES.map(({ icon: Icon, name, desc, slug }) => (
-              <Link key={name} href={`/ideas/category/${slug}`} className="group flex flex-col rounded-[12px] border border-border bg-card p-6 transition-all duration-200 hover:border-[#3A5FCD]/50 hover:bg-accent hover:shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
-                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-[8px] bg-muted border border-border group-hover:border-[#3A5FCD]/20 group-hover:bg-[#3A5FCD]/5">
-                  <Icon className="h-5 w-5 text-[#3A5FCD]" />
-                </div>
-                <h3 className="text-[16px] font-semibold text-foreground mb-1">{name}</h3>
-                <p className="text-[14px] text-muted-foreground leading-[1.5]">{desc}</p>
-              </Link>
-            ))}
+          <div className="rounded-[14px] border border-[#E7EAF1] bg-[#FCFCFE] px-5 py-4">
+            <p className="text-sm text-[#1A1A1A]/55">Active creators</p>
+            <p className="mt-1 text-2xl font-bold text-[#111827]">{totalCreators.toLocaleString()}</p>
           </div>
         </div>
       </section>
 
-      {/* 2. Featured Insights */}
-      <section className="bg-card py-24 border-y border-border">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 border-b border-border pb-6">
-            <div>
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-orange-500/10 border border-orange-500/20 px-3 py-1">
-                <Flame className="h-3.5 w-3.5 text-orange-500" />
-                <span className="text-[12px] font-semibold text-orange-600">Most Popular</span>
+      <section className="container mx-auto max-w-[1400px] px-6 py-20 lg:px-8">
+        <SectionHeader
+          eyebrow="How it works"
+          title="A cleaner way to package and monetize valuable ideas"
+          description="Designed for experts who want better positioning and buyers who want faster access to useful insight."
+        />
+
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {HOW_IT_WORKS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.title}
+                className="rounded-[18px] border border-[#D9DCE3] bg-white p-7 shadow-[0_8px_30px_rgba(17,24,39,0.04)]"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10 text-[#3A5FCD]">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-xl font-semibold text-[#111827]">{item.title}</h3>
+                <p className="mt-3 text-[15px] leading-7 text-[#1A1A1A]/65">{item.description}</p>
               </div>
-              <h2 className="text-3xl font-bold tracking-tight text-foreground">
-                Trending Insights
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="border-y border-[#D9DCE3] bg-white">
+        <div className="container mx-auto max-w-[1400px] px-6 py-20 lg:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#3A5FCD]">
+                Featured marketplace picks
+              </p>
+              <h2 className="mt-3 text-[30px] font-bold tracking-tight text-[#111827] sm:text-[38px]">
+                Popular ideas buyers are unlocking
               </h2>
-              <p className="mt-2 text-[16px] leading-[1.6] text-muted-foreground">
-                The most-unlocked ideas right now — ranked by community demand.
+              <p className="mt-4 text-[17px] leading-8 text-[#1A1A1A]/65">
+                Showcase your strongest inventory and help new users understand the quality of the marketplace.
               </p>
             </div>
-            <Button asChild variant="outline" className="shrink-0 gap-2">
+
+            <Button asChild variant="outline" className="rounded-[10px] border-[#D9DCE3] bg-white">
               <Link href="/ideas">
-                View all insights <ArrowRight className="h-4 w-4" />
+                Browse all ideas
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>
-          
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredIdeas.length === 0 ? (
-              <div className="col-span-full rounded-[12px] border border-border bg-background p-12 text-center shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                <p className="text-[16px] text-muted-foreground">
-                  No ideas have been published yet. Be the first to create one.
-                </p>
-              </div>
-            ) : (
-              featuredIdeas.map((idea, idx) => (
-                <IdeaCard
-                  key={idea.id}
-                  id={idea.id}
-                  title={idea.title}
-                  teaserText={idea.teaserText}
-                  teaserImageUrl={idea.teaserImageUrl}
-                  priceInCents={idea.priceInCents}
-                  unlockType={idea.unlockType}
-                  category={idea.category}
-                  creatorId={idea.creator.id}
-                  creatorName={idea.creator.name}
-                  creatorAvatarUrl={idea.creator.avatarUrl}
-                  purchaseCount={idea._count.purchases}
-                  initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
-                  isAuthenticated={!!clerkId}
-                  isTrending={idx === 0 && idea._count.purchases > 0}
-                />
-              ))
-            )}
-          </div>
-        </div>
-      </section>
 
-      {/* 3. Social Proof */}
-      <section className="bg-background py-24">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="mb-16 text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Trusted by professionals
-            </h2>
-            <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
-              See what creators and buyers are saying about the marketplace.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {SOCIAL_PROOF.map((testimonial, idx) => (
-              <div key={idx} className="relative rounded-[12px] border border-border bg-card p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-                <Quote className="absolute top-6 right-6 h-8 w-8 text-border" />
-                <div className="mb-6 flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-[#E8C26A] text-[#E8C26A]" />
-                  ))}
-                </div>
-                <p className="text-[16px] leading-[1.6] text-foreground mb-8 font-medium">
-                  &quot;{testimonial.quote}&quot;
-                </p>
-                <div className="mt-auto border-t border-border pt-4">
-                  <p className="text-[15px] font-bold text-foreground">{testimonial.author}</p>
-                  <p className="text-[14px] text-muted-foreground">{testimonial.role}</p>
-                </div>
-              </div>
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {featuredIdeas.map((idea) => (
+              <IdeaCard
+                key={idea.id}
+                id={idea.id}
+                title={idea.title}
+                teaserText={idea.teaserText}
+                teaserImageUrl={idea.teaserImageUrl}
+                priceInCents={idea.priceInCents}
+                unlockType={idea.unlockType}
+                category={idea.category}
+                creatorId={idea.creator.id}
+                creatorName={idea.creator.name}
+                creatorAvatarUrl={idea.creator.avatarUrl}
+                purchaseCount={idea._count.purchases}
+                initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
+                isAuthenticated={!!clerkId}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. How It Works */}
-      <section className="bg-card py-24 border-t border-border">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Turn your expertise into income
-            </h2>
-            <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
-              A streamlined, highly secure platform designed for professionals to monetize their insights without the overhead of a full product.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {HOW_IT_WORKS.map(({ icon: Icon, title, description }) => (
-              <div key={title} className="rounded-[12px] border border-border bg-background p-8 shadow-[0_4px_14px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)]">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-muted border border-border">
-                  <Icon className="h-5 w-5 text-[#3A5FCD]" />
+      <section className="container mx-auto max-w-[1400px] px-6 py-20 lg:px-8">
+        <SectionHeader
+          eyebrow="Explore by category"
+          title="Browse high-value ideas by domain"
+          description="Use category entry points to help buyers find relevant opportunities faster."
+        />
+
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {CATEGORIES.map((category) => {
+            const Icon = category.icon;
+            return (
+              <Link
+                key={category.slug}
+                href={`/ideas/category/${category.slug}`}
+                className="group rounded-[18px] border border-[#D9DCE3] bg-white p-6 shadow-[0_8px_30px_rgba(17,24,39,0.04)] transition-all hover:-translate-y-[2px] hover:border-[#3A5FCD]/30 hover:shadow-[0_14px_40px_rgba(58,95,205,0.10)]"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10 text-[#3A5FCD]">
+                  <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="mb-3 text-[18px] font-semibold text-foreground">
-                  {title}
+                <h3 className="mt-5 text-lg font-semibold text-[#111827] group-hover:text-[#3A5FCD]">
+                  {category.name}
                 </h3>
-                <p className="text-[16px] leading-[1.6] text-muted-foreground">
-                  {description}
-                </p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-16 text-center">
-             <Button asChild size="lg" className="h-12 px-8 text-[16px]">
-                <Link href="/sign-up">Create your first idea</Link>
-             </Button>
+                <p className="mt-3 text-sm leading-7 text-[#1A1A1A]/65">{category.desc}</p>
+                <div className="mt-5 inline-flex items-center text-sm font-semibold text-[#3A5FCD]">
+                  Explore category
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="border-y border-[#D9DCE3] bg-white">
+        <div className="container mx-auto max-w-[1400px] px-6 py-20 lg:px-8">
+          <SectionHeader
+            eyebrow="For creators"
+            title="Built to make expertise feel premium"
+            description="Create stronger positioning for your ideas with a marketplace designed around quality, scarcity, and discoverability."
+          />
+
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {CREATOR_BENEFITS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-[18px] border border-[#D9DCE3] bg-[#FCFCFE] p-7"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10 text-[#3A5FCD]">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mt-5 text-xl font-semibold text-[#111827]">{item.title}</h3>
+                  <p className="mt-3 text-[15px] leading-7 text-[#1A1A1A]/65">{item.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
-    </>
+
+      <section className="container mx-auto max-w-[1400px] px-6 py-20 lg:px-8">
+        <SectionHeader
+          eyebrow="What people value"
+          title="Why the format works"
+          description="A more focused marketplace experience creates stronger expectations around quality and usefulness."
+        />
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          {SOCIAL_PROOF.map((item) => (
+            <div
+              key={item.author}
+              className="rounded-[18px] border border-[#D9DCE3] bg-white p-7 shadow-[0_8px_30px_rgba(17,24,39,0.04)]"
+            >
+              <Quote className="h-7 w-7 text-[#3A5FCD]/35" />
+              <p className="mt-5 text-[16px] leading-8 text-[#1A1A1A]/72">
+                “{item.quote}”
+              </p>
+              <div className="mt-6 border-t border-[#E7EAF1] pt-5">
+                <p className="font-semibold text-[#111827]">{item.author}</p>
+                <p className="mt-1 text-sm text-[#1A1A1A]/55">{item.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="pb-24">
+        <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
+          <div className="rounded-[28px] border border-[#D9DCE3] bg-[linear-gradient(135deg,#FFFFFF_0%,#F5F7FD_100%)] px-8 py-12 shadow-[0_24px_80px_rgba(17,24,39,0.08)] sm:px-12 sm:py-14">
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[16px] bg-[#3A5FCD]/10 text-[#3A5FCD]">
+                <Lightbulb className="h-6 w-6" />
+              </div>
+              <h2 className="mt-6 text-[32px] font-bold tracking-tight text-[#111827] sm:text-[40px]">
+                Turn insight into inventory — or find your next edge
+              </h2>
+              <p className="mt-4 text-[17px] leading-8 text-[#1A1A1A]/65">
+                Join MysteryMarket to discover premium ideas or start packaging your own expertise for a buyer-ready audience.
+              </p>
+              <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+                <Button asChild size="lg" className="h-12 rounded-[10px] bg-[#3A5FCD] px-7 hover:bg-[#2D4FB0]">
+                  <Link href="/ideas">Explore ideas</Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="h-12 rounded-[10px] border-[#D9DCE3] bg-white px-7">
+                  <Link href="/sign-up">Become a creator</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
