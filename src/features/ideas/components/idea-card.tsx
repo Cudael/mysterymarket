@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Lightbulb, Unlock, Users } from "lucide-react";
+import { Flame, Lightbulb, Unlock, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
@@ -27,6 +27,7 @@ export function IdeaCard({
   isPurchased = false,
   initialBookmarked = false,
   isAuthenticated = false,
+  isTrending = false,
 }: IdeaCardProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -103,6 +104,12 @@ export function IdeaCard({
 
         {/* Tags Overlay */}
         <div className="absolute left-3 top-3 flex flex-wrap items-center gap-1.5">
+          {isTrending && (
+            <span className="inline-flex items-center gap-1 rounded-md bg-orange-500 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white shadow-sm">
+              <Flame className="h-2.5 w-2.5" />
+              Trending
+            </span>
+          )}
           <span
             className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wide shadow-sm ${
               unlockType === "EXCLUSIVE"

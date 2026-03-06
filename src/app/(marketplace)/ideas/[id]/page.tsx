@@ -15,6 +15,7 @@ import { ReviewForm } from "@/features/reviews/components/review-form";
 import { ReportDialog } from "@/features/reports/components/report-dialog";
 import prisma from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
+import { CATEGORY_META } from "@/lib/constants";
 import { getIdeaById } from "@/features/ideas/actions";
 import { trackEvent } from "@/lib/analytics";
 
@@ -87,12 +88,13 @@ export default async function IdeaDetailPage({
   const exclusiveClaimed =
     idea.unlockType === "EXCLUSIVE" && idea._count.purchases > 0 && !isPurchased;
 
-  // Fetch wallet balance, creator stats, and review aggregate in parallel
+  // Fetch wallet balance, creator stats, review aggregate, and similar ideas in parallel
   const [
     creatorPublishedCount,
     creatorTotalSales,
     reviewAggregate,
     wallet,
+    similarIdeas,
   ] = await Promise.all([
     prisma.idea.count({ where: { creatorId: idea.creatorId, published: true } }),
     prisma.purchase.count({ where: { idea: { creatorId: idea.creatorId }, status: "COMPLETED" } }),
@@ -103,6 +105,23 @@ export default async function IdeaDetailPage({
           select: { balanceInCents: true },
         })
       : Promise.resolve(null),
+    prisma.idea.findMany({
+      where: {
+        published: true,
+        id: { not: id },
+        ...(idea.category ? { category: idea.category } : {}),
+      },
+      select: {
+        id: true,
+        title: true,
+        priceInCents: true,
+        category: true,
+        creator: { select: { name: true } },
+        _count: { select: { purchases: true } },
+      },
+      orderBy: { purchases: { _count: "desc" } },
+      take: 3,
+    }),
   ]);
 
   const walletBalance = wallet?.balanceInCents ?? null;
@@ -275,6 +294,43 @@ export default async function IdeaDetailPage({
             {/* Reviews section */}
             <ReviewList ideaId={id} />
             {isPurchased && !hasReviewed && <ReviewForm ideaId={id} />}
+
+            {/* What's next — shown after purchase */}
+            {isPurchased && similarIdeas.length > 0 && (
+              <div className="mt-8 rounded-xl border border-border bg-card p-6">
+                <h2 className="mb-1 text-base font-semibold text-foreground">
+                  {idea.category ? `More ${idea.category} insights` : "You might also like"}
+                </h2>
+                <p className="mb-4 text-xs text-muted-foreground">Keep exploring ideas in this category</p>
+                <div className="flex flex-col gap-3">
+                  {similarIdeas.map((sim) => (
+                    <Link
+                      key={sim.id}
+                      href={`/ideas/${sim.id}`}
+                      className="group flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 transition-all hover:border-primary/30 hover:shadow-sm"
+                    >
+                      <div className="min-w-0">
+                        <p className="line-clamp-1 text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                          {sim.title}
+                        </p>
+                        {sim.creator.name && (
+                          <p className="mt-0.5 text-xs text-muted-foreground truncate">by {sim.creator.name}</p>
+                        )}
+                      </div>
+                      <span className="ml-3 shrink-0 text-sm font-bold text-primary">{formatPrice(sim.priceInCents)}</span>
+                    </Link>
+                  ))}
+                </div>
+                <div className="mt-4 text-center">
+                  <Link
+                    href={idea.category && CATEGORY_META[idea.category] ? `/ideas/category/${CATEGORY_META[idea.category].slug}` : "/ideas"}
+                    className="text-xs font-medium text-primary hover:underline"
+                  >
+                    Browse all {idea.category ? `${idea.category} ` : ""}ideas →
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sidebar */}

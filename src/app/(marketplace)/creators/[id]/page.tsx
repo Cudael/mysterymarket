@@ -11,6 +11,8 @@ import {
   Linkedin,
   ExternalLink,
   Users,
+  Flame,
+  Trophy,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
@@ -99,6 +101,22 @@ export default async function CreatorProfilePage({
   const avgRating = reviewAgg._avg.rating;
   const reviewCount = reviewAgg._count.id;
 
+  // Derive category specialization from published ideas
+  const categoryCounts = user.ideas.reduce<Record<string, number>>((acc, idea) => {
+    if (idea.category) {
+      acc[idea.category] = (acc[idea.category] ?? 0) + 1;
+    }
+    return acc;
+  }, {});
+  const topCategories = Object.entries(categoryCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([cat]) => cat);
+
+  // Trust badges
+  const isTopRated = avgRating != null && Number(avgRating) >= 4.5 && reviewCount >= 3;
+  const isPopularCreator = totalSales >= 10;
+
   const initials = (user.name ?? "?")
     .split(" ")
     .map((n) => n[0])
@@ -131,6 +149,18 @@ export default async function CreatorProfilePage({
                 <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-[#3A5FCD]/20 bg-[#3A5FCD]/10 px-2.5 py-1 text-[12px] font-semibold text-[#3A5FCD]">
                   <BadgeCheck className="h-3.5 w-3.5" />
                   Verified Creator
+                </span>
+              )}
+              {isTopRated && (
+                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-amber-300/40 bg-amber-50 px-2.5 py-1 text-[12px] font-semibold text-amber-700">
+                  <Trophy className="h-3.5 w-3.5" />
+                  Top Rated
+                </span>
+              )}
+              {isPopularCreator && (
+                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-orange-300/40 bg-orange-50 px-2.5 py-1 text-[12px] font-semibold text-orange-700">
+                  <Flame className="h-3.5 w-3.5" />
+                  Popular Creator
                 </span>
               )}
             </div>
@@ -177,6 +207,18 @@ export default async function CreatorProfilePage({
                     Website
                   </a>
                 )}
+              </div>
+            )}
+
+            {/* Category Specialization */}
+            {topCategories.length > 0 && (
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                <span className="text-[12px] font-semibold uppercase tracking-wider text-[#1A1A1A]/40">Specializes in</span>
+                {topCategories.map((cat) => (
+                  <span key={cat} className="inline-flex items-center rounded-[6px] border border-[#3A5FCD]/20 bg-[#F0F4FF] px-2.5 py-1 text-[12px] font-medium text-[#3A5FCD]">
+                    {cat}
+                  </span>
+                ))}
               </div>
             )}
 

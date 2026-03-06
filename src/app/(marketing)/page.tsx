@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Lock, DollarSign, Wallet, Code, TrendingUp, Palette, Briefcase, Star, Quote } from "lucide-react";
+import { ArrowRight, Lock, DollarSign, Wallet, Code, TrendingUp, Palette, Briefcase, Star, Quote, Flame, Lightbulb, Users } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { Hero } from "@/components/layout/hero";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
@@ -52,14 +52,14 @@ const HOW_IT_WORKS = [
 export default async function HomePage() {
   const { userId: clerkId } = await auth();
 
-  const [featuredIdeas, bookmarkedIdeaIds] = await Promise.all([
+  const [featuredIdeas, bookmarkedIdeaIds, totalIdeas, totalPurchases, totalCreators] = await Promise.all([
     prisma.idea.findMany({
       where: { published: true },
       include: {
         creator: { select: { id: true, name: true, avatarUrl: true } },
         _count: { select: { purchases: true } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { purchases: { _count: "desc" } },
       take: 3,
     }),
     clerkId
@@ -70,11 +70,51 @@ export default async function HomePage() {
           })
           .then((bs) => new Set(bs.map((b) => b.ideaId)))
       : Promise.resolve(new Set<string>()),
+    prisma.idea.count({ where: { published: true } }),
+    prisma.purchase.count({ where: { status: "COMPLETED" } }),
+    prisma.user.count({ where: { role: "CREATOR" } }),
   ]);
 
   return (
     <>
       <Hero />
+
+      {/* Live Marketplace Stats Strip */}
+      {(totalIdeas > 0 || totalPurchases > 0 || totalCreators > 0) && (
+        <section className="border-y border-border bg-card py-6">
+          <div className="container mx-auto px-6 lg:px-8">
+            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10 border border-[#3A5FCD]/20">
+                  <Lightbulb className="h-4.5 w-4.5 text-[#3A5FCD]" />
+                </div>
+                <div>
+                  <p className="text-[22px] font-bold tracking-tight text-foreground">{totalIdeas}</p>
+                  <p className="text-[12px] text-muted-foreground">ideas published</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-green-500/10 border border-green-500/20">
+                  <DollarSign className="h-4.5 w-4.5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-[22px] font-bold tracking-tight text-foreground">{totalPurchases}</p>
+                  <p className="text-[12px] text-muted-foreground">ideas unlocked</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-amber-500/10 border border-amber-500/20">
+                  <Users className="h-4.5 w-4.5 text-amber-600" />
+                </div>
+                <div>
+                  <p className="text-[22px] font-bold tracking-tight text-foreground">{totalCreators}</p>
+                  <p className="text-[12px] text-muted-foreground">active creators</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 1. Explore Categories */}
       <section className="bg-background py-24">
@@ -107,11 +147,15 @@ export default async function HomePage() {
         <div className="container mx-auto px-6 lg:px-8">
           <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 border-b border-border pb-6">
             <div>
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-orange-500/10 border border-orange-500/20 px-3 py-1">
+                <Flame className="h-3.5 w-3.5 text-orange-500" />
+                <span className="text-[12px] font-semibold text-orange-600">Most Popular</span>
+              </div>
               <h2 className="text-3xl font-bold tracking-tight text-foreground">
-                Featured Insights
+                Trending Insights
               </h2>
               <p className="mt-2 text-[16px] leading-[1.6] text-muted-foreground">
-                Highly-rated ideas recently unlocked by the community.
+                The most-unlocked ideas right now — ranked by community demand.
               </p>
             </div>
             <Button asChild variant="outline" className="shrink-0 gap-2">
@@ -129,7 +173,7 @@ export default async function HomePage() {
                 </p>
               </div>
             ) : (
-              featuredIdeas.map((idea) => (
+              featuredIdeas.map((idea, idx) => (
                 <IdeaCard
                   key={idea.id}
                   id={idea.id}
@@ -145,6 +189,7 @@ export default async function HomePage() {
                   purchaseCount={idea._count.purchases}
                   initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
                   isAuthenticated={!!clerkId}
+                  isTrending={idx === 0 && idea._count.purchases > 0}
                 />
               ))
             )}
