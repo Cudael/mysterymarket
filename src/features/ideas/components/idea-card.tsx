@@ -44,13 +44,10 @@ export function IdeaCard({
       {/* Image Header Area */}
       <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#1A1B22]">
 
-        {/* Always-present premium dark gradient base layer */}
+        {/* Always-present premium dark gradient base (visible when no image or image fails) */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#1E1F25] via-[#2A2C35] to-[#1A1B22]" />
 
-        {/* Soft vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-        {/* Actual image rendered above the gradient when valid */}
+        {/* Image sits above the base gradient but below the dark overlay */}
         {hasImage && (
           <Image
             src={teaserImageUrl!}
@@ -60,6 +57,9 @@ export function IdeaCard({
             onError={() => setImageError(true)}
           />
         )}
+
+        {/* Dark vignette overlay always rendered above the image so bright images retain the premium dark treatment */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/20" />
 
         {/* Lock Overlay */}
         {isLocked && (
