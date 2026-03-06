@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Menu } from "lucide-react";
+import { Sparkles, Menu, ChevronDown, ChevronRight } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/sheet";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
+import { CategoryDropdown } from "@/components/layout/category-dropdown";
+import { NAV_CATEGORIES } from "@/lib/category-nav";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -31,6 +33,7 @@ export function Navbar() {
     open: false,
     tab: "sign-in",
   });
+  const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#D9DCE3] bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300">
@@ -57,6 +60,7 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          <CategoryDropdown />
         </nav>
 
         {/* Desktop auth buttons */}
@@ -125,6 +129,38 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
+
+                {/* Mobile Categories */}
+                <nav aria-label="Category navigation" className="border-t border-[#D9DCE3] pt-4 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => setMobileCatsOpen((v) => !v)}
+                    className="flex w-full items-center justify-between py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                  >
+                    <span>Categories</span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-200 ${mobileCatsOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {mobileCatsOpen && (
+                    <div className="mt-2 flex flex-col gap-0.5">
+                      {NAV_CATEGORIES.map((cat) => {
+                        const Icon = cat.icon;
+                        return (
+                          <Link
+                            key={cat.slug}
+                            href={`/ideas/category/${cat.slug}`}
+                            className="flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-[14px] font-medium text-[#1A1A1A]/70 hover:bg-[#F5F6FA] hover:text-[#3A5FCD] transition-colors"
+                          >
+                            <Icon className="h-4 w-4 shrink-0 text-[#3A5FCD]" />
+                            {cat.name}
+                            <ChevronRight className="ml-auto h-3.5 w-3.5 text-[#1A1A1A]/30" />
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </nav>
                 
                 <SignedOut>
                   <div className="mt-4 flex flex-col gap-3 pt-6 border-t border-[#D9DCE3]">
