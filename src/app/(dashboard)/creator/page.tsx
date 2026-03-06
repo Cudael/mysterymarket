@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
+import { CreatorPublishToggle } from "@/features/ideas/components/creator-publish-toggle";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { getIdeasByCreator } from "@/features/ideas/actions";
 import { getWalletWithTransactions } from "@/features/wallet/actions";
@@ -156,6 +157,10 @@ export default async function CreatorPage() {
                     <td className="px-6 py-4 text-[#1A1A1A]/70">{idea._count.purchases}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <CreatorPublishToggle
+                          ideaId={idea.id}
+                          published={idea.published}
+                        />
                         <Button asChild size="sm" variant="outline" className="h-8">
                           <Link href={`/creator/ideas/${idea.id}/edit`}>
                             <Pencil className="h-3 w-3 mr-1" /> Edit

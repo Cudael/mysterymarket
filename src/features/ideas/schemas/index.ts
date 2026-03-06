@@ -10,4 +10,5 @@ export const createIdeaSchema = z.object({
   maxUnlocks: z.number().int().min(1).optional().nullable(),
   category: z.string().max(50).optional(),
   tags: z.array(z.string()).max(10).optional(),
+  published: z.boolean().optional(),
 });

@@ -35,6 +35,7 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
       ...sanitized,
       teaserImageUrl: sanitized.teaserImageUrl || null,
       tags: sanitized.tags ?? [],
+      published: sanitized.published ?? false,
       creatorId: user.id,
     },
   });

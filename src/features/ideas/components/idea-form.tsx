@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
-import { ImagePlus, Info, Lock } from "lucide-react";
+import { ImagePlus, Info, Lock, Eye, EyeOff } from "lucide-react";
+import { CATEGORIES } from "@/lib/constants";
 
 const ideaFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(200),
@@ -23,6 +23,7 @@ const ideaFormSchema = z.object({
   maxUnlocks: z.number().int().min(1).optional().nullable(),
   category: z.string().max(50).optional(),
   tags: z.array(z.string()).max(10).optional(),
+  published: z.boolean().optional(),
 });
 
 export type IdeaFormData = z.infer<typeof ideaFormSchema>;
@@ -39,6 +40,7 @@ export function IdeaForm({
   submitLabel = "Publish Idea",
 }: IdeaFormProps) {
   const router = useRouter();
+  const isCreateMode = submitLabel === "Publish Idea";
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,6 +64,9 @@ export function IdeaForm({
   const [category, setCategory] = useState(initialData?.category ?? "");
   const [tagsStr, setTagsStr] = useState(
     initialData?.tags?.join(", ") ?? ""
+  );
+  const [publishNow, setPublishNow] = useState(
+    initialData?.published ?? true
   );
 
   async function handleSubmit(e: React.FormEvent) {
@@ -91,11 +96,20 @@ export function IdeaForm({
             : null,
         category: category || undefined,
         tags,
+        published: isCreateMode ? publishNow : undefined,
       });
 
       await onSubmit(data);
-      if (submitLabel === "Publish Idea") {
-        toast.success("Idea published! 🚀", { description: "It's now visible in the marketplace." });
+      if (isCreateMode) {
+        if (publishNow) {
+          toast.success("Idea published! 🚀", {
+            description: "It's now visible in the marketplace.",
+          });
+        } else {
+          toast.success("Draft saved.", {
+            description: "You can publish it later from Creator Studio.",
+          });
+        }
       } else {
         toast.success("Idea updated!");
       }
@@ -126,15 +140,46 @@ export function IdeaForm({
     }
   }
 
-  const isStripeError = error === "Please connect your Stripe account before creating ideas.";
+  const isStripeError =
+    error === "Please connect your Stripe account before creating ideas.";
 
-  const inputClasses = "w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3 text-[15px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]";
+  const inputClasses =
+    "w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3 text-[15px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]";
+
+  const textareaClasses = `${inputClasses} resize-none`;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 sm:p-8 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
-      {/* Rest of your form JSX from your original code */}
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Error banners */}
+      {error && !isStripeError && (
+        <div className="rounded-[8px] border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">
+          {error}
+        </div>
+      )}
+      {isStripeError && (
+        <div className="flex items-start gap-3 rounded-[8px] border border-amber-200 bg-amber-50 px-4 py-3 text-[14px] text-amber-800">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          <div>
+            {error}{" "}
+            <button
+              type="button"
+              className="font-semibold underline"
+              onClick={() => router.push("/creator/connect")}
+            >
+              Connect Stripe
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Title */}
       <div className="space-y-2">
-        <Label htmlFor="title" className="text-[14px] font-semibold text-[#1A1A1A]">Title *</Label>
+        <Label
+          htmlFor="title"
+          className="text-[14px] font-semibold text-[#1A1A1A]"
+        >
+          Title <span className="text-red-500">*</span>
+        </Label>
         <input
           id="title"
           value={title}
@@ -144,10 +189,324 @@ export function IdeaForm({
           className={inputClasses}
         />
       </div>
-      {/* ... */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-[#D9DCE3]">
-        <Button type="submit" size="lg" className="sm:flex-1 h-12 text-[16px]" disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : submitLabel}
+
+      {/* Teaser Text */}
+      <div className="space-y-2">
+        <Label
+          htmlFor="teaserText"
+          className="text-[14px] font-semibold text-[#1A1A1A]"
+        >
+          Teaser Text{" "}
+          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+            — visible to everyone before purchase
+          </span>
+        </Label>
+        <textarea
+          id="teaserText"
+          value={teaserText}
+          onChange={(e) => setTeaserText(e.target.value)}
+          placeholder="Tease your idea without giving it all away..."
+          rows={3}
+          maxLength={500}
+          className={textareaClasses}
+        />
+        <p className="text-right text-[12px] text-[#1A1A1A]/40">
+          {teaserText.length}/500
+        </p>
+      </div>
+
+      {/* Teaser Image */}
+      <div className="space-y-2">
+        <Label className="text-[14px] font-semibold text-[#1A1A1A]">
+          Teaser Image{" "}
+          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+            — optional preview image
+          </span>
+        </Label>
+        {teaserImageUrl ? (
+          <div className="relative overflow-hidden rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC]">
+            <Image
+              src={teaserImageUrl}
+              alt="Teaser preview"
+              width={600}
+              height={300}
+              className="max-h-[240px] w-full object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => setTeaserImageUrl("")}
+              className="absolute right-2 top-2 rounded-[6px] border border-[#D9DCE3] bg-[#FFFFFF]/90 px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A] transition-colors hover:bg-[#F8F9FC]"
+            >
+              Remove
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center rounded-[8px] border-2 border-dashed border-[#D9DCE3] bg-[#F8F9FC] p-8">
+            <div className="text-center">
+              <ImagePlus className="mx-auto mb-3 h-8 w-8 text-[#1A1A1A]/20" />
+              <UploadButton
+                endpoint="teaserImageUploader"
+                onClientUploadComplete={(res) => {
+                  if (res?.[0]?.url) setTeaserImageUrl(res[0].url);
+                }}
+                onUploadError={(err) => { toast.error(err.message); }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Hidden Content */}
+      <div className="space-y-2">
+        <Label
+          htmlFor="hiddenContent"
+          className="text-[14px] font-semibold text-[#1A1A1A]"
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <Lock className="h-3.5 w-3.5" />
+            Hidden Content <span className="text-red-500">*</span>
+          </span>{" "}
+          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+            — only visible after purchase
+          </span>
+        </Label>
+        <textarea
+          id="hiddenContent"
+          value={hiddenContent}
+          onChange={(e) => setHiddenContent(e.target.value)}
+          placeholder="Share your full insight, methodology, or secret here..."
+          rows={8}
+          required
+          className={textareaClasses}
+        />
+      </div>
+
+      {/* Price */}
+      <div className="space-y-2">
+        <Label
+          htmlFor="price"
+          className="text-[14px] font-semibold text-[#1A1A1A]"
+        >
+          Price (USD) <span className="text-red-500">*</span>
+        </Label>
+        <div className="relative">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[15px] text-[#1A1A1A]/50">
+            $
+          </span>
+          <input
+            id="price"
+            type="number"
+            min="0.99"
+            max="1000"
+            step="0.01"
+            value={priceStr}
+            onChange={(e) => setPriceStr(e.target.value)}
+            placeholder="9.99"
+            required
+            className={`${inputClasses} pl-8`}
+          />
+        </div>
+        <p className="text-[12px] text-[#1A1A1A]/40">
+          Minimum $0.99 · Maximum $1,000.00
+        </p>
+      </div>
+
+      {/* Unlock Type */}
+      <div className="space-y-3">
+        <Label className="text-[14px] font-semibold text-[#1A1A1A]">
+          Unlock Type <span className="text-red-500">*</span>
+        </Label>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <label
+            className={`flex cursor-pointer items-start gap-3 rounded-[8px] border p-4 transition-all ${
+              unlockType === "MULTI"
+                ? "border-[#3A5FCD] bg-[#3A5FCD]/5 ring-1 ring-[#3A5FCD]/20"
+                : "border-[#D9DCE3] bg-[#F8F9FC] hover:border-[#3A5FCD]/40"
+            }`}
+          >
+            <input
+              type="radio"
+              name="unlockType"
+              value="MULTI"
+              checked={unlockType === "MULTI"}
+              onChange={() => setUnlockType("MULTI")}
+              className="mt-0.5 accent-[#3A5FCD]"
+            />
+            <div>
+              <p className="text-[14px] font-semibold text-[#1A1A1A]">
+                Multi-unlock
+              </p>
+              <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
+                Multiple buyers can purchase this idea
+              </p>
+            </div>
+          </label>
+          <label
+            className={`flex cursor-pointer items-start gap-3 rounded-[8px] border p-4 transition-all ${
+              unlockType === "EXCLUSIVE"
+                ? "border-[#3A5FCD] bg-[#3A5FCD]/5 ring-1 ring-[#3A5FCD]/20"
+                : "border-[#D9DCE3] bg-[#F8F9FC] hover:border-[#3A5FCD]/40"
+            }`}
+          >
+            <input
+              type="radio"
+              name="unlockType"
+              value="EXCLUSIVE"
+              checked={unlockType === "EXCLUSIVE"}
+              onChange={() => setUnlockType("EXCLUSIVE")}
+              className="mt-0.5 accent-[#3A5FCD]"
+            />
+            <div>
+              <p className="text-[14px] font-semibold text-[#1A1A1A]">
+                Exclusive
+              </p>
+              <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
+                Only one buyer can unlock this idea
+              </p>
+            </div>
+          </label>
+        </div>
+        {unlockType === "MULTI" && (
+          <div className="mt-2 space-y-2">
+            <Label
+              htmlFor="maxUnlocks"
+              className="text-[14px] font-medium text-[#1A1A1A]/70"
+            >
+              Max Unlocks{" "}
+              <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+                — leave blank for unlimited
+              </span>
+            </Label>
+            <input
+              id="maxUnlocks"
+              type="number"
+              min="1"
+              value={maxUnlocks}
+              onChange={(e) => setMaxUnlocks(e.target.value)}
+              placeholder="e.g. 50"
+              className={inputClasses}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Category */}
+      <div className="space-y-2">
+        <Label
+          htmlFor="category"
+          className="text-[14px] font-semibold text-[#1A1A1A]"
+        >
+          Category
+        </Label>
+        <div className="relative">
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className={`${inputClasses} cursor-pointer appearance-none pr-10`}
+          >
+            <option value="">Select a category...</option>
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <svg
+            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Tags */}
+      <div className="space-y-2">
+        <Label
+          htmlFor="tags"
+          className="text-[14px] font-semibold text-[#1A1A1A]"
+        >
+          Tags{" "}
+          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+            — comma-separated, up to 10
+          </span>
+        </Label>
+        <input
+          id="tags"
+          value={tagsStr}
+          onChange={(e) => setTagsStr(e.target.value)}
+          placeholder="e.g. startup, growth, SaaS"
+          className={inputClasses}
+        />
+      </div>
+
+      {/* Publish toggle — only shown in create mode */}
+      {isCreateMode && (
+        <div className="rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={publishNow}
+              onChange={(e) => setPublishNow(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded accent-[#3A5FCD]"
+            />
+            <div>
+              <p className="text-[14px] font-semibold text-[#1A1A1A]">
+                {publishNow ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Eye className="h-4 w-4 text-[#3A5FCD]" />
+                    Publish immediately
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5">
+                    <EyeOff className="h-4 w-4 text-[#1A1A1A]/40" />
+                    Save as draft
+                  </span>
+                )}
+              </p>
+              <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
+                {publishNow
+                  ? "Your idea will be visible in the marketplace right away."
+                  : "Your idea will be saved privately. You can publish it later from Creator Studio."}
+              </p>
+            </div>
+          </label>
+        </div>
+      )}
+
+      {/* Submit / Cancel */}
+      <div className="flex flex-col gap-3 border-t border-[#D9DCE3] pt-6 sm:flex-row">
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          className="h-12 text-[15px] sm:w-auto"
+          onClick={() => router.push("/creator")}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          size="lg"
+          className="h-12 text-[16px] sm:flex-1"
+          disabled={isSubmitting}
+        >
+          {isSubmitting
+            ? "Saving..."
+            : isCreateMode
+              ? publishNow
+                ? "Publish Idea"
+                : "Save as Draft"
+              : submitLabel}
         </Button>
       </div>
     </form>
