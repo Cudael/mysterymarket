@@ -20,7 +20,7 @@ export function IdeaCard({
   category,
   creatorId,
   creatorName,
-  creatorAvatarUrl,
+  _creatorAvatarUrl,
   purchaseCount,
   isOwner = false,
   isPurchased = false,
@@ -168,7 +168,7 @@ export function IdeaCard({
                 size="sm"
                 className="bg-green-600 hover:bg-green-700 text-white gap-1.5"
               >
-                <Link href={`/ideas/${id}`}>
+                <Link href={`/ideas/${id}`}>  
                   <Unlock className="h-3.5 w-3.5" />
                   Read
                 </Link>
