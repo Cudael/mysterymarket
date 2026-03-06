@@ -28,16 +28,23 @@ export function IdeaCard({
 }: IdeaCardProps) {
   const isLocked = !isOwner && !isPurchased;
 
+  // Strict check: only treat as valid if it's a real URL
+  const hasImage =
+    typeof teaserImageUrl === "string" &&
+    teaserImageUrl.length > 5 &&
+    (teaserImageUrl.startsWith("http://") ||
+      teaserImageUrl.startsWith("https://"));
+
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
 
       {/* Image Header Area */}
       <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#1A1B22]">
 
-        {/* Placeholder Background OR Actual Image */}
-        {teaserImageUrl ? (
+        {/* Placeholder OR Actual Image */}
+        {hasImage ? (
           <Image
-            src={teaserImageUrl}
+            src={teaserImageUrl!}
             alt={title}
             fill
             className="object-cover"
@@ -45,11 +52,14 @@ export function IdeaCard({
         ) : (
           <>
             {/* Premium dark gradient */}
-            <div className="absolute inset-0 bg-red-600" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1E1F25] via-[#2A2C35] to-[#1A1B22]" />
+
+            {/* Soft vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           </>
         )}
 
-        {/* Lock Overlay for Unpurchased Ideas */}
+        {/* Lock Overlay */}
         {isLocked && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#1A1B22]/50 backdrop-blur-[2px]">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 border border-[#D9DCE3] shadow-xl">
@@ -61,7 +71,7 @@ export function IdeaCard({
           </div>
         )}
 
-        {/* Top Left: Category Badge */}
+        {/* Category Badge */}
         {category && (
           <div className="absolute left-3 top-3 z-20">
             {CATEGORY_META[category]?.slug ? (
@@ -84,7 +94,7 @@ export function IdeaCard({
       {/* Content Area */}
       <div className="flex flex-1 flex-col p-5">
 
-        {/* Top Row: Badges & Bookmark */}
+        {/* Top Row */}
         <div className="mb-3 flex items-start justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2 mt-1">
             <span
@@ -116,7 +126,7 @@ export function IdeaCard({
           )}
         </div>
 
-        {/* Title & Teaser */}
+        {/* Title */}
         <h3 className="line-clamp-2 text-lg font-bold leading-tight text-foreground">
           <Link href={`/ideas/${id}`} className="hover:text-primary transition-colors focus:outline-none">
             {title}
