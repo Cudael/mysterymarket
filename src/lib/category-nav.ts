@@ -15,12 +15,10 @@ export interface NavCategory {
   quickLinks: NavSubcategory[];
 }
 
-const QUICK_LINK_COUNT = 4;
-
 export const NAV_CATEGORIES: NavCategory[] = Object.values(CATEGORY_META).map((cat) => ({
   name: cat.name,
   slug: cat.slug,
   description: cat.description,
   icon: getCategoryIcon(cat.icon),
-  quickLinks: (SUBCATEGORIES[cat.name] ?? []).slice(0, QUICK_LINK_COUNT),
+  quickLinks: SUBCATEGORIES[cat.name] ?? [],
 }));
