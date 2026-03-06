@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { PageHeader } from "@/components/shared/page-header";
+import { InlineStatCard } from "@/components/shared/stat-card";
+import { DashboardCard } from "@/components/shared/dashboard-card";
 import { getPurchasesByUser } from "@/features/purchases/actions";
 import { getRefundRequestsForUser } from "@/features/refunds/actions";
 import { formatPrice } from "@/lib/utils";
@@ -80,33 +83,14 @@ export default async function DashboardPage() {
           { label: "My Purchases" },
         ]}
       />
-      <div className="mb-8 border-b border-[#D9DCE3] pb-6">
-        <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">My Purchases</h1>
-        <p className="mt-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
-          A collection of all the high-value ideas and insights you have unlocked.
-        </p>
-      </div>
+      <PageHeader
+        title="My Purchases"
+        description="A collection of all the high-value ideas and insights you have unlocked."
+      />
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
-        <div className="flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[8px] bg-[#F8F9FC] border border-[#D9DCE3]">
-            <ShoppingBag className="h-5 w-5 text-[#3A5FCD]" />
-          </div>
-          <div>
-            <p className="text-[13px] font-bold uppercase tracking-wider text-[#1A1A1A]/50">Total Purchases</p>
-            <p className="mt-0.5 text-[28px] font-bold tracking-tight text-[#1A1A1A]">{purchases.length}</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[8px] bg-[#F8F9FC] border border-[#D9DCE3]">
-            <DollarSign className="h-5 w-5 text-[#3A5FCD]" />
-          </div>
-          <div>
-            <p className="text-[13px] font-bold uppercase tracking-wider text-[#1A1A1A]/50">Total Spent</p>
-            <p className="mt-0.5 text-[28px] font-bold tracking-tight text-[#1A1A1A]">{formatPrice(totalSpent)}</p>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <InlineStatCard label="Total Purchases" value={purchases.length} icon={ShoppingBag} />
+        <InlineStatCard label="Total Spent" value={formatPrice(totalSpent)} icon={DollarSign} />
       </div>
 
       {purchases.length === 0 ? (
@@ -140,11 +124,7 @@ export default async function DashboardPage() {
           )}
         </div>
       ) : (
-        <div className="mt-10 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Purchase History</h2>
-          </div>
-
+        <DashboardCard title="Purchase History" bodyClassName="p-0" className="mt-10">
           <div className="divide-y divide-[#D9DCE3]">
             {purchases.map((purchase) => {
               const refundStatus = refundByPurchaseId.get(purchase.id);
@@ -206,7 +186,7 @@ export default async function DashboardPage() {
               );
             })}
           </div>
-        </div>
+        </DashboardCard>
       )}
     </div>
   );

@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
 import { CreatorPublishToggle } from "@/features/ideas/components/creator-publish-toggle";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { PageHeader } from "@/components/shared/page-header";
+import { StatCard } from "@/components/shared/stat-card";
 import { getIdeasByCreator } from "@/features/ideas/actions";
 import { getWalletWithTransactions } from "@/features/wallet/actions";
 import { formatPrice } from "@/lib/utils";
@@ -47,20 +49,18 @@ export default async function CreatorPage() {
           { label: "Creator Studio" },
         ]}
       />
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">Creator Studio</h1>
-          <p className="mt-2 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
-            Manage your ideas and track your earnings.
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/creator/ideas/new" className="gap-2">
-            <PlusCircle className="h-4 w-4" />
-            New Idea
-          </Link>
-        </Button>
-      </div>
+      <PageHeader
+        title="Creator Studio"
+        description="Manage your ideas and track your earnings."
+        action={
+          <Button asChild>
+            <Link href="/creator/ideas/new" className="gap-2">
+              <PlusCircle className="h-4 w-4" />
+              New Idea
+            </Link>
+          </Button>
+        }
+      />
 
       {/* Wallet summary */}
       <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4 rounded-[12px] border border-[#3A5FCD]/20 bg-[#3A5FCD]/5 p-5">
@@ -85,29 +85,9 @@ export default async function CreatorPage() {
 
       {/* Stats */}
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-[#1A1A1A]/60">Total Ideas</span>
-            <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
-          </div>
-          <p className="mt-4 text-3xl font-bold text-[#1A1A1A]">{ideas.length}</p>
-        </div>
-        
-        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-[#1A1A1A]/60">Net Revenue</span>
-            <DollarSign className="h-4 w-4 text-[#3A5FCD]" />
-          </div>
-          <p className="mt-4 text-3xl font-bold text-[#1A1A1A]">{formatPrice(totalRevenue)}</p>
-        </div>
-
-        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-[#1A1A1A]/60">Total Sales</span>
-            <TrendingUp className="h-4 w-4 text-[#3A5FCD]" />
-          </div>
-          <p className="mt-4 text-3xl font-bold text-[#1A1A1A]">{totalSales}</p>
-        </div>
+        <StatCard label="Total Ideas" value={ideas.length} icon={Lightbulb} />
+        <StatCard label="Net Revenue" value={formatPrice(totalRevenue)} icon={DollarSign} />
+        <StatCard label="Total Sales" value={totalSales} icon={TrendingUp} />
       </div>
 
       {/* Ideas list */}

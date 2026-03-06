@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { trackEvent } from "@/lib/analytics";
 
 export type ReportReason =
   | "MISLEADING"
@@ -34,6 +35,12 @@ export async function createReport(
       reporterId: user.id,
       ideaId,
     },
+  });
+
+  trackEvent("report_submitted", {
+    userId: user.id,
+    ideaId,
+    reason,
   });
 
   revalidatePath(`/ideas/${ideaId}`);

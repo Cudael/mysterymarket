@@ -75,6 +75,14 @@ export async function updateRefundStatus(
     data: { status },
   });
 
+  trackEvent("refund_resolved", {
+    adminId: admin.id,
+    refundRequestId,
+    purchaseId: refundRequest.purchaseId,
+    ideaId: refundRequest.purchase.ideaId,
+    status,
+  });
+
   const statusLabel = status === "APPROVED" ? "approved" : "denied";
   await createNotification({
     userId: refundRequest.purchase.buyerId,

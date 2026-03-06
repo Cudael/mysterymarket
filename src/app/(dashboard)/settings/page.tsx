@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { DashboardCard } from "@/components/shared/dashboard-card";
 import { updateProfile, getUserByClerkId } from "@/features/users/actions";
 import { CheckCircle2, AlertCircle, Save, ExternalLink } from "lucide-react";
 
@@ -110,12 +111,8 @@ export default function SettingsPage() {
 
       <div className="space-y-8">
         {/* Profile Card */}
-        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Public Profile</h2>
-          </div>
-          
-          <form onSubmit={handleSave} className="p-6 space-y-6">
+        <DashboardCard title="Public Profile">
+          <form onSubmit={handleSave} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-[14px] font-medium text-[#1A1A1A]">Display Name</Label>
               <Input
@@ -155,15 +152,11 @@ export default function SettingsPage() {
               </Button>
             </div>
           </form>
-        </section>
+        </DashboardCard>
 
         {/* Social Links Card */}
-        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Social Links</h2>
-          </div>
-
-          <form onSubmit={handleSaveSocial} className="p-6 space-y-6">
+        <DashboardCard title="Social Links">
+          <form onSubmit={handleSaveSocial} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="twitterUrl" className="text-[14px] font-medium text-[#1A1A1A]">Twitter / X URL</Label>
               <Input
@@ -213,92 +206,82 @@ export default function SettingsPage() {
               </Button>
             </div>
           </form>
-        </section>
+        </DashboardCard>
 
         {/* Account Info Card */}
-        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Account Details</h2>
-          </div>
-          
-          <div className="p-6">
-            <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-              <div className="sm:col-span-1">
-                <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Email Address</dt>
-                <dd className="mt-1 text-[15px] font-medium text-[#1A1A1A]">
-                  {clerkUser?.primaryEmailAddress?.emailAddress ?? dbUser?.email ?? "—"}
-                </dd>
-              </div>
-              <div className="sm:col-span-1">
-                <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Account Role</dt>
-                <dd className="mt-1">
-                  <span className="inline-flex items-center rounded-[6px] bg-[#F5F6FA] px-2.5 py-1 text-[13px] font-semibold text-[#1A1A1A] border border-[#D9DCE3]">
-                    {dbUser?.role ?? "USER"}
-                  </span>
-                </dd>
-              </div>
-              <div className="sm:col-span-1">
-                <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Member Since</dt>
-                <dd className="mt-1 text-[15px] text-[#1A1A1A]/80">
-                  {dbUser?.createdAt
-                    ? new Date(dbUser.createdAt).toLocaleDateString("en-US", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                    : "—"}
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </section>
+        <DashboardCard title="Account Details">
+          <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+            <div className="sm:col-span-1">
+              <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Email Address</dt>
+              <dd className="mt-1 text-[15px] font-medium text-[#1A1A1A]">
+                {clerkUser?.primaryEmailAddress?.emailAddress ?? dbUser?.email ?? "—"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Account Role</dt>
+              <dd className="mt-1">
+                <span className="inline-flex items-center rounded-[6px] bg-[#F5F6FA] px-2.5 py-1 text-[13px] font-semibold text-[#1A1A1A] border border-[#D9DCE3]">
+                  {dbUser?.role ?? "USER"}
+                </span>
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Member Since</dt>
+              <dd className="mt-1 text-[15px] text-[#1A1A1A]/80">
+                {dbUser?.createdAt
+                  ? new Date(dbUser.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  : "—"}
+              </dd>
+            </div>
+          </dl>
+        </DashboardCard>
 
         {/* Stripe Connect Card */}
-        <section className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Payouts & Stripe</h2>
+        <DashboardCard title="Payouts & Stripe">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            {dbUser?.stripeOnboarded ? (
+              <div className="flex items-center gap-2 text-emerald-600 font-medium">
+                <CheckCircle2 className="h-5 w-5" />
+                <span>Stripe Connected</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-amber-600 font-medium">
+                <AlertCircle className="h-5 w-5" />
+                <span>Stripe Not Connected</span>
+              </div>
+            )}
+            <p className="mt-1 text-[14px] text-[#1A1A1A]/60">
+              {dbUser?.stripeOnboarded 
+                ? "Your account is active and ready to receive payouts." 
+                : "Connect your Stripe account to start earning from your ideas."}
+            </p>
           </div>
-          
-          <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              {dbUser?.stripeOnboarded ? (
-                <div className="flex items-center gap-2 text-emerald-600 font-medium">
-                  <CheckCircle2 className="h-5 w-5" />
-                  <span>Stripe Connected</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 text-amber-600 font-medium">
-                  <AlertCircle className="h-5 w-5" />
-                  <span>Stripe Not Connected</span>
-                </div>
-              )}
-              <p className="mt-1 text-[14px] text-[#1A1A1A]/60">
-                {dbUser?.stripeOnboarded 
-                  ? "Your account is active and ready to receive payouts." 
-                  : "Connect your Stripe account to start earning from your ideas."}
-              </p>
-            </div>
 
-            <Button 
-              asChild 
-              variant={dbUser?.stripeOnboarded ? "outline" : "default"}
-              className={dbUser?.stripeOnboarded 
-                ? "bg-[#FFFFFF] border-[#D9DCE3] text-[#1A1A1A]" 
-                : "bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
-              }
-            >
-              {dbUser?.stripeOnboarded ? (
-                <a href="https://dashboard.stripe.com" target="_blank" rel="noopener noreferrer">
-                  View Stripe Dashboard <ExternalLink className="ml-2 h-4 w-4" />
-                </a>
-              ) : (
-                <a href="/creator/connect">
-                  Connect Stripe
-                </a>
-              )}
-            </Button>
+          <Button 
+            asChild 
+            variant={dbUser?.stripeOnboarded ? "outline" : "default"}
+            className={dbUser?.stripeOnboarded 
+              ? "bg-[#FFFFFF] border-[#D9DCE3] text-[#1A1A1A]" 
+              : "bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
+            }
+          >
+            {dbUser?.stripeOnboarded ? (
+              <a href="https://dashboard.stripe.com" target="_blank" rel="noopener noreferrer">
+                View Stripe Dashboard <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            ) : (
+              <a href="/creator/connect">
+                Connect Stripe
+              </a>
+            )}
+          </Button>
           </div>
-        </section>
+        </DashboardCard>
 
       </div>
     </div>

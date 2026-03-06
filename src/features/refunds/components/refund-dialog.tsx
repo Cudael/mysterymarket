@@ -38,6 +38,9 @@ const STATUS_VARIANTS: Record<
   DENIED: "destructive",
 };
 
+const MIN_REASON_LENGTH = 20;
+const MAX_REASON_LENGTH = 1000;
+
 export function RefundDialog({ purchaseId, existingStatus }: RefundDialogProps) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
@@ -51,9 +54,17 @@ export function RefundDialog({ purchaseId, existingStatus }: RefundDialogProps) 
     );
   }
 
+  const reasonLength = reason.trim().length;
+  const isTooShort = reasonLength > 0 && reasonLength < MIN_REASON_LENGTH;
+  const charsRemaining = MAX_REASON_LENGTH - reason.length;
+
   function handleSubmit() {
     if (!reason.trim()) {
       toast.error("Please provide a reason for the refund request");
+      return;
+    }
+    if (reasonLength < MIN_REASON_LENGTH) {
+      toast.error(`Please provide at least ${MIN_REASON_LENGTH} characters`);
       return;
     }
     startTransition(async () => {
@@ -94,13 +105,28 @@ export function RefundDialog({ purchaseId, existingStatus }: RefundDialogProps) 
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-2">
+          <div className="py-2 space-y-1.5">
             <Textarea
               placeholder="Explain why you're requesting a refund..."
               value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              onChange={(e) => setReason(e.target.value.slice(0, MAX_REASON_LENGTH))}
               rows={4}
+              aria-label="Refund reason"
             />
+            <div className="flex items-center justify-between text-xs">
+              {isTooShort ? (
+                <p className="text-destructive">
+                  {MIN_REASON_LENGTH - reasonLength} more characters needed
+                </p>
+              ) : (
+                <p className="text-muted-foreground">
+                  Minimum {MIN_REASON_LENGTH} characters required
+                </p>
+              )}
+              <p className={charsRemaining < 100 ? "text-amber-500" : "text-muted-foreground"}>
+                {charsRemaining} remaining
+              </p>
+            </div>
           </div>
 
           <DialogFooter>
@@ -111,7 +137,7 @@ export function RefundDialog({ purchaseId, existingStatus }: RefundDialogProps) 
             >
               Cancel
             </Button>
-            <Button onClick={handleSubmit} disabled={isPending}>
+            <Button onClick={handleSubmit} disabled={isPending || reasonLength < MIN_REASON_LENGTH}>
               {isPending ? "Submitting..." : "Submit Request"}
             </Button>
           </DialogFooter>

@@ -89,6 +89,13 @@ export async function createCheckoutSession(ideaId: string) {
     paymentMethod: "stripe",
   });
 
+  trackEvent("unlock_initiated", {
+    userId: user.id,
+    ideaId,
+    amountInCents: idea.priceInCents,
+    paymentMethod: "stripe",
+  });
+
   return { url: session.url };
 }
 
@@ -209,6 +216,13 @@ export async function purchaseWithWallet(ideaId: string) {
   });
 
   trackEvent("checkout_started", {
+    userId: user.id,
+    ideaId,
+    amountInCents: idea.priceInCents,
+    paymentMethod: "wallet",
+  });
+
+  trackEvent("unlock_initiated", {
     userId: user.id,
     ideaId,
     amountInCents: idea.priceInCents,

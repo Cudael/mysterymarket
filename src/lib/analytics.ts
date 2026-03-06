@@ -4,10 +4,14 @@ export type AnalyticsEventName =
   | "idea_viewed"
   | "idea_bookmarked"
   | "checkout_started"
+  | "unlock_initiated"
   | "purchase_completed"
   | "review_submitted"
+  | "report_submitted"
   | "refund_requested"
-  | "creator_idea_published";
+  | "refund_resolved"
+  | "creator_idea_published"
+  | "creator_idea_created";
 
 export type AnalyticsEventPayload = Record<string, string | number | boolean | null | undefined>;
 

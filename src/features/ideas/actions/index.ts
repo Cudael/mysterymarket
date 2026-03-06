@@ -36,6 +36,19 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
     },
   });
 
+  trackEvent("creator_idea_created", {
+    creatorId: user.id,
+    ideaId: idea.id,
+    published: idea.published,
+  });
+
+  if (idea.published) {
+    trackEvent("creator_idea_published", {
+      creatorId: user.id,
+      ideaId: idea.id,
+    });
+  }
+
   revalidatePath("/creator");
   revalidatePath("/ideas");
   return idea;
