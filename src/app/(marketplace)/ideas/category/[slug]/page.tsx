@@ -4,15 +4,21 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
 import {
+  Rocket,
+  Package,
   Code,
-  Briefcase,
+  Bot,
   TrendingUp,
+  Fingerprint,
+  Video,
+  PenTool,
   Palette,
+  Music,
+  Link as LinkIcon,
+  DollarSign,
   GraduationCap,
   Heart,
-  DollarSign,
-  Film,
-  Microscope,
+  Compass,
   Sparkles,
   Lightbulb,
   ChevronRight,
@@ -23,15 +29,21 @@ import { CATEGORY_META, getCategoryBySlug, ITEMS_PER_PAGE } from "@/lib/constant
 import prisma from "@/lib/prisma";
 
 const ICON_MAP: Record<string, React.ElementType> = {
+  Rocket,
+  Package,
   Code,
-  Briefcase,
+  Bot,
   TrendingUp,
+  Fingerprint,
+  Video,
+  PenTool,
   Palette,
+  Music,
+  Link: LinkIcon,
+  DollarSign,
   GraduationCap,
   Heart,
-  DollarSign,
-  Film,
-  Microscope,
+  Compass,
   Sparkles,
 };
 

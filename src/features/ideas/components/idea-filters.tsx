@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, ChevronDown, X, SlidersHorizontal } from "lucide-react";
-import { CATEGORIES } from "@/lib/constants";
+import { CATEGORIES, IDEA_MATURITY_LEVELS, getSubcategoriesByCategory } from "@/lib/constants";
 
 const UNLOCK_TYPES = [
   { label: "All Types", value: "" },
@@ -28,8 +28,12 @@ export function IdeaFilters() {
   const [localSearch, setLocalSearch] = useState(currentSearchUrl);
 
   const currentCategory = searchParams.get("category") ?? "";
+  const currentSubcategory = searchParams.get("subcategory") ?? "";
   const currentUnlockType = searchParams.get("unlockType") ?? "";
   const currentSortBy = searchParams.get("sortBy") ?? "newest";
+  const currentMaturity = searchParams.get("maturity") ?? "";
+
+  const availableSubcategories = getSubcategoriesByCategory(currentCategory);
 
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -38,6 +42,18 @@ export function IdeaFilters() {
     } else {
       params.delete(key);
     }
+    params.delete("page");
+    router.push(`/ideas?${params.toString()}`);
+  }
+
+  function handleCategoryChange(value: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("category", value);
+    } else {
+      params.delete("category");
+    }
+    params.delete("subcategory");
     params.delete("page");
     router.push(`/ideas?${params.toString()}`);
   }
@@ -66,6 +82,11 @@ export function IdeaFilters() {
   const activeFilters: { label: string; key: string }[] = [];
   if (currentSearchUrl) activeFilters.push({ label: `"${currentSearchUrl}"`, key: "search" });
   if (currentCategory) activeFilters.push({ label: currentCategory, key: "category" });
+  if (currentSubcategory) activeFilters.push({ label: currentSubcategory, key: "subcategory" });
+  if (currentMaturity) {
+    const maturityLabel = IDEA_MATURITY_LEVELS.find((m) => m.value === currentMaturity)?.label ?? currentMaturity;
+    activeFilters.push({ label: maturityLabel, key: "maturity" });
+  }
   if (currentUnlockType) {
     activeFilters.push({
       label: currentUnlockType === "EXCLUSIVE" ? "Exclusive Only" : "Multi-unlock",
@@ -114,13 +135,47 @@ export function IdeaFilters() {
           <div className="relative flex-1 sm:flex-none">
             <select
               value={currentCategory}
-              onChange={(e) => updateParam("category", e.target.value)}
-              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
             >
               <option value="">All Categories</option>
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+          </div>
+
+          {availableSubcategories.length > 0 && (
+            <div className="relative flex-1 sm:flex-none">
+              <select
+                value={currentSubcategory}
+                onChange={(e) => updateParam("subcategory", e.target.value)}
+                className="h-10 w-full sm:w-[220px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              >
+                <option value="">All Subcategories</option>
+                {availableSubcategories.map((sub) => (
+                  <option key={sub.slug} value={sub.slug}>
+                    {sub.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+            </div>
+          )}
+
+          <div className="relative flex-1 sm:flex-none">
+            <select
+              value={currentMaturity}
+              onChange={(e) => updateParam("maturity", e.target.value)}
+              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+            >
+              <option value="">All Maturities</option>
+              {IDEA_MATURITY_LEVELS.map((level) => (
+                <option key={level.value} value={level.value}>
+                  {level.label}
                 </option>
               ))}
             </select>

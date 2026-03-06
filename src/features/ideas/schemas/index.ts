@@ -8,7 +8,9 @@ export const createIdeaSchema = z.object({
   priceInCents: z.number().int().min(99).max(100000),
   unlockType: z.enum(["EXCLUSIVE", "MULTI"]),
   maxUnlocks: z.number().int().min(1).optional().nullable(),
-  category: z.string().max(50).optional(),
+  category: z.string().max(100).optional(),
+  subcategory: z.string().max(100).optional(),
+  maturityLevel: z.enum(["SEED", "CONCEPT", "BLUEPRINT", "PROTOTYPE_READY"]).optional(),
   tags: z.array(z.string()).max(10).optional(),
   published: z.boolean().optional(),
 });

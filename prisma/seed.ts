@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { seedCategories } from './seed-categories';
 
 const prisma = new PrismaClient();
 
@@ -41,9 +42,10 @@ async function main() {
       hiddenContent:
         'Build a conversational AI that analyzes spending patterns, predicts cash flow, and automatically moves money between savings goals. Monetize via premium tiers and B2B licensing to credit unions.',
       priceInCents: 499,
-      category: 'Technology',
+      category: 'Software & Technology',
       tags: ['AI', 'FinTech', 'SaaS'],
       unlockType: 'MULTI' as const,
+      maturityLevel: 'CONCEPT' as const,
       published: true,
     },
     {
@@ -53,9 +55,10 @@ async function main() {
       hiddenContent:
         'Partner directly with indie board game designers on Kickstarter to offer exclusive pre-release versions. Each box includes a game, designer interview card, and a QR code to a private Discord community. Revenue model: $39/month, 60% margins after COGS.',
       priceInCents: 299,
-      category: 'Business',
+      category: 'Startup & Business Ideas',
       tags: ['Subscription', 'Gaming', 'E-commerce'],
       unlockType: 'MULTI' as const,
+      maturityLevel: 'BLUEPRINT' as const,
       published: true,
     },
     {
@@ -65,9 +68,10 @@ async function main() {
       hiddenContent:
         'Use Glide + Airtable + Stripe to build a Thumbtack-style marketplace for your city. Focus on one vertical (e.g., pet care) and one zip code. Charge 15% service fee. Detailed step-by-step with screenshots and templates included.',
       priceInCents: 799,
-      category: 'Technology',
+      category: 'Software & Technology',
       tags: ['No-Code', 'Marketplace', 'Local'],
       unlockType: 'EXCLUSIVE' as const,
+      maturityLevel: 'PROTOTYPE_READY' as const,
       maxUnlocks: 1,
       published: true,
     },
@@ -78,9 +82,10 @@ async function main() {
       hiddenContent:
         'Take one long-form YouTube video or podcast episode and repurpose it into 15+ pieces of content (tweets, LinkedIn posts, Instagram carousels, blog posts, email newsletters). Use Descript for transcription, Canva for design, and Notion for workflow management. Price: $2,500/month per client. You need just 8 clients for $20K MRR.',
       priceInCents: 599,
-      category: 'Business',
+      category: 'Startup & Business Ideas',
       tags: ['Agency', 'Content', 'Marketing'],
       unlockType: 'MULTI' as const,
+      maturityLevel: 'BLUEPRINT' as const,
       published: true,
     },
     {
@@ -90,9 +95,10 @@ async function main() {
       hiddenContent:
         'Pick a niche with high-value B2B readers (e.g., "AI for HR professionals"). Use SparkLoop for paid referrals, beehiiv for hosting. Monetize via: (1) Sponsored posts at $500-2,000/issue, (2) Premium tier at $10/month, (3) Community at $29/month. Growth hack: Cross-promote with 5 non-competing newsletters in adjacent niches.',
       priceInCents: 999,
-      category: 'Creative',
+      category: 'Content & Creator Economy',
       tags: ['Newsletter', 'Media', 'Growth'],
       unlockType: 'MULTI' as const,
+      maturityLevel: 'CONCEPT' as const,
       published: true,
     },
     {
@@ -102,9 +108,10 @@ async function main() {
       hiddenContent:
         'Build a Chrome extension that adds a "Save to read later" button on every webpage and sends a daily digest email of saved articles with AI-generated summaries. Free tier: 5 saves/day. Pro tier: unlimited + AI summaries + Kindle export. Tech stack: Plasmo framework, Supabase, Resend.',
       priceInCents: 399,
-      category: 'Technology',
+      category: 'Software & Technology',
       tags: ['SaaS', 'Chrome Extension', 'AI'],
       unlockType: 'MULTI' as const,
+      maturityLevel: 'CONCEPT' as const,
       published: true,
     },
   ];
@@ -151,6 +158,9 @@ async function main() {
     });
   }
 
+  // Seed categories and subcategories
+  await seedCategories(prisma);
+
   console.log('✅ Seed completed!');
   console.log(`   Created creator: ${creator.email}`);
   console.log(`   Created buyer: ${buyer.email}`);
@@ -166,3 +176,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+

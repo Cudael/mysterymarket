@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Lock, DollarSign, Wallet, Code, TrendingUp, Palette, Briefcase, Star, Quote, Flame, Lightbulb, Users } from "lucide-react";
+import { ArrowRight, Lock, DollarSign, Wallet, Code, Bot, Palette, Rocket, Star, Quote, Flame, Lightbulb, Users } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { Hero } from "@/components/layout/hero";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 
 const CATEGORIES = [
-  { icon: TrendingUp, name: "SaaS Growth", desc: "Scaling strategies & MRR hacks", slug: "marketing" },
-  { icon: Briefcase, name: "Business Strategy", desc: "Operations & executive insights", slug: "business" },
-  { icon: Code, name: "Engineering", desc: "High-value scripts & architecture", slug: "technology" },
-  { icon: Palette, name: "Design Secrets", desc: "UX patterns & creative workflows", slug: "design" },
+  { icon: Rocket, name: "Startup Ideas", desc: "Venture concepts & business models", slug: "startup-business-ideas" },
+  { icon: Bot, name: "AI & Automation", desc: "AI apps, agents & prompt libraries", slug: "ai-automation" },
+  { icon: Code, name: "Software & Tech", desc: "SaaS, apps & developer tools", slug: "software-technology" },
+  { icon: Palette, name: "Design & Arts", desc: "Creative direction & visual concepts", slug: "design-visual-arts" },
 ];
 
 const SOCIAL_PROOF = [

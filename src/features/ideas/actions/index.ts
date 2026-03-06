@@ -20,11 +20,20 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
 
   const validated = createIdeaSchema.parse(input);
 
+  const { subcategory: subcategoryName, maturityLevel, ...rest } = validated;
+
   const sanitized = {
-    ...validated,
-    teaserText: validated.teaserText ? sanitizeHtml(validated.teaserText) : validated.teaserText,
-    hiddenContent: sanitizeHtml(validated.hiddenContent),
+    ...rest,
+    teaserText: rest.teaserText ? sanitizeHtml(rest.teaserText) : rest.teaserText,
+    hiddenContent: sanitizeHtml(rest.hiddenContent),
   };
+
+  // Resolve subcategoryId from slug if provided (slug has a unique index)
+  let subcategoryId: string | undefined;
+  if (subcategoryName) {
+    const subcat = await prisma.subcategory.findUnique({ where: { slug: subcategoryName } });
+    if (subcat) subcategoryId = subcat.id;
+  }
 
   const idea = await prisma.idea.create({
     data: {
@@ -33,6 +42,8 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
       tags: sanitized.tags ?? [],
       published: sanitized.published ?? false,
       creatorId: user.id,
+      ...(subcategoryId && { subcategoryId }),
+      ...(maturityLevel && { maturityLevel }),
     },
   });
 
@@ -73,11 +84,25 @@ export async function updateIdea(
     ...(input.hiddenContent !== undefined && { hiddenContent: sanitizeHtml(input.hiddenContent) }),
   };
 
+  // Resolve subcategoryId from slug if provided (slug has a unique index)
+  const { subcategory: subcategoryName, maturityLevel, ...restInput } = sanitizedInput;
+  let subcategoryId: string | undefined | null;
+  if (subcategoryName !== undefined) {
+    if (subcategoryName) {
+      const subcat = await prisma.subcategory.findUnique({ where: { slug: subcategoryName } });
+      subcategoryId = subcat?.id ?? null;
+    } else {
+      subcategoryId = null;
+    }
+  }
+
   const updated = await prisma.idea.update({
     where: { id: ideaId },
     data: {
-      ...sanitizedInput,
-      teaserImageUrl: sanitizedInput.teaserImageUrl !== undefined ? (sanitizedInput.teaserImageUrl || null) : undefined,
+      ...restInput,
+      teaserImageUrl: restInput.teaserImageUrl !== undefined ? (restInput.teaserImageUrl || null) : undefined,
+      ...(subcategoryId !== undefined && { subcategoryId }),
+      ...(maturityLevel !== undefined && { maturityLevel }),
     },
   });
 

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
 import { ImagePlus, Lock, Eye, EyeOff, Wallet, CheckCircle2, Circle, AlertCircle } from "lucide-react";
-import { CATEGORIES } from "@/lib/constants";
+import { CATEGORIES, IDEA_MATURITY_LEVELS, getSubcategoriesByCategory } from "@/lib/constants";
 
 const ideaFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(200),
@@ -21,7 +21,9 @@ const ideaFormSchema = z.object({
   priceInCents: z.number().int().min(99, "Minimum price is $0.99").max(100000),
   unlockType: z.enum(["EXCLUSIVE", "MULTI"]),
   maxUnlocks: z.number().int().min(1).optional().nullable(),
-  category: z.string().max(50).optional(),
+  category: z.string().max(100).optional(),
+  subcategory: z.string().max(100).optional(),
+  maturityLevel: z.enum(["SEED", "CONCEPT", "BLUEPRINT", "PROTOTYPE_READY"]).optional(),
   tags: z.array(z.string()).max(10).optional(),
   published: z.boolean().optional(),
 });
@@ -62,12 +64,16 @@ export function IdeaForm({
     initialData?.maxUnlocks?.toString() ?? ""
   );
   const [category, setCategory] = useState(initialData?.category ?? "");
+  const [subcategory, setSubcategory] = useState(initialData?.subcategory ?? "");
+  const [maturityLevel, setMaturityLevel] = useState(initialData?.maturityLevel ?? "");
   const [tagsStr, setTagsStr] = useState(
     initialData?.tags?.join(", ") ?? ""
   );
   const [publishNow, setPublishNow] = useState(
     initialData?.published ?? true
   );
+
+  const availableSubcategories = useMemo(() => getSubcategoriesByCategory(category), [category]);
 
   // Listing quality score (0-5)
   const qualityItems = useMemo(() => {
@@ -137,6 +143,8 @@ export function IdeaForm({
             ? parseInt(maxUnlocks)
             : null,
         category: category || undefined,
+        subcategory: subcategory || undefined,
+        maturityLevel: (maturityLevel || undefined) as "SEED" | "CONCEPT" | "BLUEPRINT" | "PROTOTYPE_READY" | undefined,
         tags,
         published: isCreateMode ? publishNow : undefined,
       });
@@ -485,13 +493,100 @@ export function IdeaForm({
           <select
             id="category"
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setSubcategory("");
+            }}
             className={`${inputClasses} cursor-pointer appearance-none pr-10`}
           >
             <option value="">Select a category...</option>
             {CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
+              </option>
+            ))}
+          </select>
+          <svg
+            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Subcategory — only shown when a category with subcategories is selected */}
+      {availableSubcategories.length > 0 && (
+        <div className="space-y-2">
+          <Label
+            htmlFor="subcategory"
+            className="text-[14px] font-semibold text-[#1A1A1A]"
+          >
+            Subcategory{" "}
+            <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+              — optional
+            </span>
+          </Label>
+          <div className="relative">
+            <select
+              id="subcategory"
+              value={subcategory}
+              onChange={(e) => setSubcategory(e.target.value)}
+              className={`${inputClasses} cursor-pointer appearance-none pr-10`}
+            >
+              <option value="">Select a subcategory...</option>
+              {availableSubcategories.map((sub) => (
+                <option key={sub.slug} value={sub.slug}>
+                  {sub.name}
+                </option>
+              ))}
+            </select>
+            <svg
+              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* Maturity Level */}
+      <div className="space-y-2">
+        <Label
+          htmlFor="maturityLevel"
+          className="text-[14px] font-semibold text-[#1A1A1A]"
+        >
+          Maturity Level{" "}
+          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+            — optional
+          </span>
+        </Label>
+        <div className="relative">
+          <select
+            id="maturityLevel"
+            value={maturityLevel}
+            onChange={(e) => setMaturityLevel(e.target.value)}
+            className={`${inputClasses} cursor-pointer appearance-none pr-10`}
+          >
+            <option value="">Select maturity level...</option>
+            {IDEA_MATURITY_LEVELS.map((level) => (
+              <option key={level.value} value={level.value}>
+                {level.label} — {level.description}
               </option>
             ))}
           </select>
