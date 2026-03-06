@@ -57,11 +57,11 @@ export function CategoryDropdown() {
         <div
           role="dialog"
           aria-label="Categories menu"
-          className="absolute left-1/2 top-full mt-3 -translate-x-1/2 z-50 w-[640px] rounded-[16px] border border-[#D9DCE3] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.10)] overflow-hidden"
+          className="absolute left-1/2 top-full mt-3 -translate-x-1/2 z-50 w-[900px] rounded-[16px] border border-[#D9DCE3] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.10)] overflow-hidden"
         >
           <div className="flex">
             {/* Left: category list */}
-            <div className="w-[220px] shrink-0 border-r border-[#D9DCE3] bg-[#F8F9FC] p-3 flex flex-col gap-0.5">
+            <div className="w-[280px] shrink-0 border-r border-[#D9DCE3] bg-[#F8F9FC] p-3 flex flex-col gap-0.5">
               {NAV_CATEGORIES.map((cat) => {
                 const Icon = cat.icon;
                 const isActive = cat.slug === activeCategory.slug;
@@ -73,14 +73,14 @@ export function CategoryDropdown() {
                     onFocus={() => setActiveCategory(cat)}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[13.5px] font-medium transition-all duration-150 w-full",
+                      "flex items-start gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[13.5px] font-medium transition-all duration-150 w-full",
                       isActive
                         ? "bg-[#3A5FCD] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
                         : "text-[#1A1A1A]/70 hover:bg-white hover:text-[#1A1A1A]"
                     )}
                   >
-                    <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-white" : "text-[#3A5FCD]")} />
-                    <span className="line-clamp-1">{cat.name}</span>
+                    <Icon className={cn("h-4 w-4 shrink-0 mt-[2px]", isActive ? "text-white" : "text-[#3A5FCD]")} />
+                    <span>{cat.name}</span>
                   </button>
                 );
               })}
@@ -108,23 +108,25 @@ export function CategoryDropdown() {
                 </div>
               </Link>
 
-              {/* Quick links */}
+              {/* Subcategories */}
               {activeCategory.quickLinks.length > 0 && (
-                <div className="flex-1">
+                <div className="flex-1 min-h-0">
                   <p className="mb-2.5 text-[11px] font-semibold uppercase tracking-wider text-[#1A1A1A]/40">
-                    Popular subcategories
+                    Subcategories
                   </p>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {activeCategory.quickLinks.map((sub) => (
-                      <Link
-                        key={sub.slug}
-                        href={`/ideas/category/${activeCategory.slug}?subcategory=${sub.slug}`}
-                        onClick={() => setOpen(false)}
-                        className="rounded-[8px] border border-transparent px-3 py-2 text-[12.5px] font-medium text-[#1A1A1A]/65 transition-all duration-150 hover:border-[#D9DCE3] hover:bg-[#F8F9FC] hover:text-[#3A5FCD] line-clamp-1"
-                      >
-                        {sub.name}
-                      </Link>
-                    ))}
+                  <div className="max-h-[280px] overflow-y-auto pr-1 -mr-1">
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {activeCategory.quickLinks.map((sub) => (
+                        <Link
+                          key={sub.slug}
+                          href={`/ideas/category/${activeCategory.slug}?subcategory=${sub.slug}`}
+                          onClick={() => setOpen(false)}
+                          className="rounded-[8px] border border-transparent px-3 py-2 text-[12.5px] font-medium text-[#1A1A1A]/65 leading-snug transition-all duration-150 hover:border-[#D9DCE3] hover:bg-[#F8F9FC] hover:text-[#3A5FCD]"
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
