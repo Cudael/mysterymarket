@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
-import { ImagePlus, Lock, Eye, EyeOff, Wallet } from "lucide-react";
+import { ImagePlus, Lock, Eye, EyeOff, Wallet, CheckCircle2, Circle, AlertCircle } from "lucide-react";
 import { CATEGORIES } from "@/lib/constants";
 
 const ideaFormSchema = z.object({
@@ -68,6 +68,48 @@ export function IdeaForm({
   const [publishNow, setPublishNow] = useState(
     initialData?.published ?? true
   );
+
+  // Listing quality score (0-5)
+  const qualityItems = useMemo(() => {
+    const price = parseFloat(priceStr);
+    return [
+      {
+        label: "Compelling title",
+        met: title.trim().length >= 10,
+        hint: "At least 10 characters",
+      },
+      {
+        label: "Teaser text added",
+        met: teaserText.trim().length >= 40,
+        hint: "40+ characters builds curiosity",
+      },
+      {
+        label: "Teaser image uploaded",
+        met: !!teaserImageUrl,
+        hint: "Images increase click-through by 2×",
+      },
+      {
+        label: "Substantial hidden content",
+        met: hiddenContent.trim().length >= 150,
+        hint: "150+ characters delivers real value",
+      },
+      {
+        label: "Category selected",
+        met: !!category,
+        hint: "Helps buyers discover your idea",
+      },
+      {
+        label: "Reasonable price",
+        met: !isNaN(price) && price >= 0.99 && price <= 99,
+        hint: "$1–$99 is the sweet spot for conversions",
+      },
+    ];
+  }, [title, teaserText, teaserImageUrl, hiddenContent, category, priceStr]);
+
+  const qualityScore = qualityItems.filter((i) => i.met).length;
+  const qualityPercent = Math.round((qualityScore / qualityItems.length) * 100);
+  const qualityColor =
+    qualityScore <= 2 ? "#EF4444" : qualityScore <= 4 ? "#F59E0B" : "#10B981";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -158,6 +200,46 @@ export function IdeaForm({
         </div>
       )}
 
+      {/* Listing Quality Checklist */}
+      <div className="rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[13px] font-semibold text-[#1A1A1A]">Listing quality</p>
+          <span
+            className="text-[13px] font-bold"
+            style={{ color: qualityColor }}
+          >
+            {qualityPercent}%
+          </span>
+        </div>
+        <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-[#D9DCE3]">
+          <div
+            className="h-full rounded-full transition-all duration-300"
+            style={{ width: `${qualityPercent}%`, backgroundColor: qualityColor }}
+          />
+        </div>
+        <ul className="space-y-1.5">
+          {qualityItems.map((item) => (
+            <li key={item.label} className="flex items-start gap-2">
+              {item.met ? (
+                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" />
+              ) : (
+                <Circle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#1A1A1A]/25" />
+              )}
+              <span
+                className={`text-[12px] leading-snug ${
+                  item.met ? "text-[#1A1A1A]/70" : "text-[#1A1A1A]/45"
+                }`}
+              >
+                {item.label}
+                {!item.met && (
+                  <span className="block text-[11px] text-[#1A1A1A]/35">{item.hint}</span>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* Title */}
       <div className="space-y-2">
         <Label
@@ -191,14 +273,20 @@ export function IdeaForm({
           id="teaserText"
           value={teaserText}
           onChange={(e) => setTeaserText(e.target.value)}
-          placeholder="Tease your idea without giving it all away..."
+          placeholder="Hook buyers in 1–3 sentences. Hint at the value without giving away the secret — e.g. 'The exact cold-email template I used to land 3 enterprise clients in 30 days.'"
           rows={3}
           maxLength={500}
           className={textareaClasses}
         />
-        <p className="text-right text-[12px] text-[#1A1A1A]/40">
-          {teaserText.length}/500
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[12px] text-[#1A1A1A]/40">
+            <AlertCircle className="mb-0.5 mr-1 inline h-3 w-3" />
+            Great teasers create curiosity without revealing the answer
+          </p>
+          <p className="shrink-0 text-[12px] text-[#1A1A1A]/40">
+            {teaserText.length}/500
+          </p>
+        </div>
       </div>
 
       {/* Teaser Image */}
@@ -260,11 +348,19 @@ export function IdeaForm({
           id="hiddenContent"
           value={hiddenContent}
           onChange={(e) => setHiddenContent(e.target.value)}
-          placeholder="Share your full insight, methodology, or secret here..."
+          placeholder="Share your full insight, methodology, or secret here. Be specific and actionable — buyers pay for results, not vague advice. The more concrete and original, the better."
           rows={8}
           required
           className={textareaClasses}
         />
+        <p className="text-[12px] text-[#1A1A1A]/40">
+          {hiddenContent.length < 150 && (
+            <span className="text-amber-500">
+              Add {150 - hiddenContent.length} more characters for a quality listing ·{" "}
+            </span>
+          )}
+          {hiddenContent.length} characters
+        </p>
       </div>
 
       {/* Price */}
@@ -293,7 +389,8 @@ export function IdeaForm({
           />
         </div>
         <p className="text-[12px] text-[#1A1A1A]/40">
-          Minimum $0.99 · Maximum $1,000.00
+          Minimum $0.99 · Maximum $1,000.00 ·{" "}
+          <span className="text-[#3A5FCD]">$5–$49 converts best for most ideas</span>
         </p>
       </div>
 
@@ -323,7 +420,7 @@ export function IdeaForm({
                 Multi-unlock
               </p>
               <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
-                Multiple buyers can purchase this idea
+                Unlimited buyers — maximise reach and passive income
               </p>
             </div>
           </label>
@@ -347,7 +444,7 @@ export function IdeaForm({
                 Exclusive
               </p>
               <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
-                Only one buyer can unlock this idea
+                One buyer only — commands a premium price point
               </p>
             </div>
           </label>

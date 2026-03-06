@@ -9,6 +9,8 @@ import {
   Users,
   TrendingUp,
   Calendar,
+  Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { SpendingChart } from "@/features/analytics/components/spending-chart";
 import { CategoryBreakdown } from "@/features/analytics/components/category-breakdown";
@@ -104,19 +106,31 @@ export default async function BuyerInsightsPage() {
       {/* Recommended Ideas */}
       {recommendedIdeas.length > 0 && (
         <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Recommended for You</h2>
+          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[#3A5FCD]" />
+              <h2 className="text-[16px] font-semibold text-[#1A1A1A]">Recommended for You</h2>
+            </div>
+            <Link
+              href="/ideas"
+              className="flex items-center gap-1 text-[13px] font-medium text-[#3A5FCD] hover:text-[#6D7BE0] transition-colors"
+            >
+              Explore all <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
           <div className="p-6">
+            <p className="text-[13px] text-[#1A1A1A]/50 mb-4">
+              Based on your purchase history and interests
+            </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {recommendedIdeas.map((idea) => (
                 <Link
                   key={idea.id}
                   href={`/ideas/${idea.id}`}
-                  className="group rounded-[10px] border border-[#D9DCE3] bg-[#F8F9FC] p-4 transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
+                  className="group rounded-[10px] border border-[#D9DCE3] bg-[#F8F9FC] p-4 transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)] flex flex-col"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors line-clamp-2">
+                    <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors line-clamp-2 flex-1">
                       {idea.title}
                     </p>
                     <span className="shrink-0 text-[13px] font-bold text-[#3A5FCD]">
@@ -124,18 +138,32 @@ export default async function BuyerInsightsPage() {
                     </span>
                   </div>
                   {idea.teaserText && (
-                    <p className="text-[12px] text-[#1A1A1A]/50 line-clamp-2 mb-2">
+                    <p className="text-[12px] text-[#1A1A1A]/50 line-clamp-2 mb-3 flex-1">
                       {idea.teaserText}
                     </p>
                   )}
                   <div className="flex items-center gap-2 mt-auto flex-wrap">
+                    {idea.unlockType && (
+                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium border ${
+                        idea.unlockType === "EXCLUSIVE"
+                          ? "border-amber-200 bg-amber-50 text-amber-700"
+                          : "border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A]/60"
+                      }`}>
+                        {idea.unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
+                      </span>
+                    )}
                     {idea.category && (
                       <span className="inline-flex items-center rounded-full border border-[#D9DCE3] bg-[#FFFFFF] px-2 py-0.5 text-[11px] font-medium text-[#1A1A1A]/60">
                         {idea.category}
                       </span>
                     )}
-                    {idea.creatorName && (
+                    {idea.purchaseCount > 0 && (
                       <span className="text-[11px] text-[#1A1A1A]/40">
+                        {idea.purchaseCount} unlock{idea.purchaseCount !== 1 ? "s" : ""}
+                      </span>
+                    )}
+                    {idea.creatorName && (
+                      <span className="text-[11px] text-[#1A1A1A]/40 ml-auto">
                         by {idea.creatorName}
                       </span>
                     )}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Lock, Calendar, Users } from "lucide-react";
+import { ArrowLeft, Lock, Calendar, Users, ShieldCheck, RefreshCw, Wallet, Star, CheckCircle2, FileText, Lightbulb } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -44,8 +44,9 @@ export default async function IdeaDetailPage({
   const idea = await prisma.idea.findUnique({
     where: { id },
     include: {
-      creator: { select: { id: true, name: true, avatarUrl: true } },
-      _count: { select: { purchases: true } },
+      creator: { select: { id: true, name: true, avatarUrl: true, createdAt: true } },
+      _count: { select: { purchases: true, reviews: true } },
+      reviews: { select: { rating: true }, take: 200 },
     },
   });
 
@@ -87,15 +88,33 @@ export default async function IdeaDetailPage({
   const exclusiveClaimed =
     idea.unlockType === "EXCLUSIVE" && idea._count.purchases > 0 && !isPurchased;
 
-  // Fetch wallet balance for authenticated non-owner users
+  // Fetch wallet balance and creator stats in parallel
   let walletBalance: number | null = null;
+  let creatorPublishedCount = 0;
+  let creatorTotalSales = 0;
+
+  const parallelFetches: Promise<unknown>[] = [
+    prisma.idea.count({ where: { creatorId: idea.creatorId, published: true } })
+      .then((c) => { creatorPublishedCount = c; }),
+    prisma.purchase.count({ where: { idea: { creatorId: idea.creatorId }, status: "COMPLETED" } })
+      .then((c) => { creatorTotalSales = c; }),
+  ];
+
   if (currentUser && !isOwner) {
-    const wallet = await prisma.wallet.findUnique({
-      where: { userId: currentUser.id },
-      select: { balanceInCents: true },
-    });
-    walletBalance = wallet?.balanceInCents ?? null;
+    parallelFetches.push(
+      prisma.wallet.findUnique({
+        where: { userId: currentUser.id },
+        select: { balanceInCents: true },
+      }).then((w) => { walletBalance = w?.balanceInCents ?? null; })
+    );
   }
+
+  await Promise.all(parallelFetches);
+
+  // Compute average rating for this idea
+  const avgRating = idea.reviews.length > 0
+    ? idea.reviews.reduce((sum, r) => sum + r.rating, 0) / idea.reviews.length
+    : null;
 
   const showContent = isOwner || isPurchased;
 
@@ -174,12 +193,17 @@ export default async function IdeaDetailPage({
               </p>
             )}
 
-            <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Users className="h-4 w-4" />
-                {idea._count.purchases} purchase
-                {idea._count.purchases !== 1 ? "s" : ""}
+                {idea._count.purchases} unlock{idea._count.purchases !== 1 ? "s" : ""}
               </span>
+              {avgRating !== null && (
+                <span className="flex items-center gap-1">
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  {avgRating.toFixed(1)} ({idea._count.reviews} review{idea._count.reviews !== 1 ? "s" : ""})
+                </span>
+              )}
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
                 {new Date(idea.createdAt).toLocaleDateString("en-US", {
@@ -189,6 +213,36 @@ export default async function IdeaDetailPage({
                 })}
               </span>
             </div>
+
+            {/* What you'll get — shown only to non-purchasers, non-owners */}
+            {!showContent && !exclusiveClaimed && (
+              <div className="mt-8 rounded-xl border border-border bg-card p-5">
+                <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground">
+                  <Lightbulb className="h-4 w-4 text-primary" />
+                  What you&apos;ll get
+                </h2>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+                    <span>Full access to the complete hidden idea — revealed instantly after unlock</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+                    <span>Lifetime access — revisit this idea any time from your dashboard</span>
+                  </li>
+                  {idea.unlockType === "EXCLUSIVE" && (
+                    <li className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+                      <span>Exclusive rights — only one buyer ever gets this idea</span>
+                    </li>
+                  )}
+                  <li className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                    <span>Option to leave a review and share your experience with others</span>
+                  </li>
+                </ul>
+              </div>
+            )}
 
             {/* Hidden content section */}
             <div className="mt-8">
@@ -235,16 +289,35 @@ export default async function IdeaDetailPage({
           <div className="flex flex-col gap-4">
             {/* Price & unlock card */}
             <div className="rounded-xl border border-border bg-card p-6">
-              <div className="mb-4 text-center">
+              <div className="mb-1 text-center">
                 <span className="text-3xl font-bold text-foreground">
                   {formatPrice(idea.priceInCents)}
                 </span>
-                {idea.unlockType === "EXCLUSIVE" && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    One-time exclusive unlock
-                  </p>
+                {idea.unlockType === "EXCLUSIVE" ? (
+                  <p className="mt-1 text-xs text-muted-foreground">One-time exclusive unlock</p>
+                ) : (
+                  <p className="mt-1 text-xs text-muted-foreground">One-time purchase · lifetime access</p>
                 )}
               </div>
+
+              {/* Rating summary near CTA */}
+              {avgRating !== null && (
+                <div className="mb-4 mt-3 flex items-center justify-center gap-1.5 text-sm">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`h-3.5 w-3.5 ${
+                        star <= Math.round(avgRating)
+                          ? "fill-amber-400 text-amber-400"
+                          : "fill-muted text-muted"
+                      }`}
+                    />
+                  ))}
+                  <span className="text-xs text-muted-foreground ml-1">
+                    {avgRating.toFixed(1)} · {idea._count.reviews} review{idea._count.reviews !== 1 ? "s" : ""}
+                  </span>
+                </div>
+              )}
 
               <UnlockButton
                 ideaId={id}
@@ -256,9 +329,27 @@ export default async function IdeaDetailPage({
                 exclusiveClaimed={exclusiveClaimed}
                 walletBalance={walletBalance}
               />
+
+              {/* Reassurance cues */}
+              {!isOwner && !isPurchased && !exclusiveClaimed && (
+                <div className="mt-4 space-y-2 border-t border-border pt-4">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-green-500" />
+                    Secure checkout powered by Stripe
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Wallet className="h-3.5 w-3.5 shrink-0 text-primary" />
+                    Pay with wallet balance or card
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <RefreshCw className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    Not satisfied? Refund requests accepted
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Creator card */}
+            {/* Creator credibility card */}
             <div className="rounded-xl border border-border bg-card p-6">
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Creator
@@ -287,6 +378,25 @@ export default async function IdeaDetailPage({
                   <p className="text-xs text-muted-foreground">View profile →</p>
                 </div>
               </Link>
+
+              {/* Creator stats */}
+              <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4">
+                <div className="text-center">
+                  <p className="text-lg font-bold text-foreground">{creatorPublishedCount}</p>
+                  <p className="text-xs text-muted-foreground">Ideas published</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-lg font-bold text-foreground">{creatorTotalSales}</p>
+                  <p className="text-xs text-muted-foreground">Total unlocks</p>
+                </div>
+              </div>
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                Member since{" "}
+                {new Date(idea.creator.createdAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                })}
+              </p>
             </div>
 
             {isOwner && (

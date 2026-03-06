@@ -126,12 +126,12 @@ export default async function DashboardPage() {
                   <Link
                     key={idea.id}
                     href={`/ideas/${idea.id}`}
-                    className="rounded-[10px] border border-[#D9DCE3] bg-white p-4 transition-colors hover:border-[#3A5FCD]"
+                    className="group rounded-[10px] border border-[#D9DCE3] bg-white p-4 transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
                   >
-                    <p className="line-clamp-2 text-sm font-semibold text-[#1A1A1A]">{idea.title}</p>
+                    <p className="line-clamp-2 text-sm font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">{idea.title}</p>
                     <div className="mt-2 flex items-center justify-between text-xs text-[#1A1A1A]/60">
                       <span>{idea.category ?? "General"}</span>
-                      <span>{formatPrice(idea.priceInCents)}</span>
+                      <span className="font-bold text-[#3A5FCD]">{formatPrice(idea.priceInCents)}</span>
                     </div>
                   </Link>
                 ))}

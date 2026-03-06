@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters-client";
@@ -30,7 +31,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   const search = params?.search ?? "";
   const category = params?.category ?? "";
   const unlockType = params?.unlockType ?? "";
-  const sortBy = params?.sortBy ?? "";
+  const sortBy = params?.sortBy ?? "newest";
   const page = Math.max(1, parseInt(params?.page ?? "1", 10));
 
   const where = {
@@ -44,25 +45,47 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
       : {}),
   };
 
+  // For best-rated, we fetch with review averages and sort in memory (Prisma
+  // does not support _avg in orderBy for findMany); paginate afterwards.
+  const isBestRated = sortBy === "best-rated";
+
   const orderBy =
     sortBy === "price-low"
       ? { priceInCents: "asc" as const }
       : sortBy === "price-high"
         ? { priceInCents: "desc" as const }
-        : { createdAt: "desc" as const };
+        : sortBy === "most-purchased"
+          ? { purchases: { _count: "desc" as const } }
+          : { createdAt: "desc" as const };
 
-  // Fetch ideas + bookmark IDs for authenticated user in parallel
-  const [ideas, total, bookmarkedIdeaIds] = await Promise.all([
-    prisma.idea.findMany({
-      where,
-      include: {
-        creator: { select: { id: true, name: true, avatarUrl: true } },
-        _count: { select: { purchases: true } },
-      },
-      orderBy,
-      skip: (page - 1) * ITEMS_PER_PAGE,
-      take: ITEMS_PER_PAGE,
-    }),
+  // For best-rated, fetch all matching ideas (up to 300) with review data so
+  // we can sort by average rating before paginating.
+  const bestRatedInclude = {
+    creator: { select: { id: true, name: true, avatarUrl: true } },
+    _count: { select: { purchases: true } },
+    reviews: { select: { rating: true } },
+  } as const;
+
+  const defaultInclude = {
+    creator: { select: { id: true, name: true, avatarUrl: true } },
+    _count: { select: { purchases: true } },
+  } as const;
+
+  const [rawIdeas, total, bookmarkedIdeaIds] = await Promise.all([
+    isBestRated
+      ? prisma.idea.findMany({
+          where,
+          include: bestRatedInclude,
+          orderBy: { createdAt: "desc" as const },
+          take: 300,
+        })
+      : prisma.idea.findMany({
+          where,
+          include: defaultInclude,
+          orderBy,
+          skip: (page - 1) * ITEMS_PER_PAGE,
+          take: ITEMS_PER_PAGE,
+        }),
     prisma.idea.count({ where }),
     clerkId
       ? prisma.bookmark
@@ -74,10 +97,22 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
       : Promise.resolve(new Set<string>()),
   ]);
 
-  const sortedIdeas =
-    sortBy === "most-purchased"
-      ? [...ideas].sort((a, b) => b._count.purchases - a._count.purchases)
-      : ideas;
+  // Sort and paginate for best-rated
+  let sortedIdeas: typeof rawIdeas;
+  if (isBestRated) {
+    const withAvg = (rawIdeas as Array<typeof rawIdeas[0] & { reviews: { rating: number }[] }>)
+      .map((idea) => {
+        const reviews = idea.reviews ?? [];
+        const avg = reviews.length > 0
+          ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
+          : -1;
+        return { ...idea, _avgRating: avg };
+      })
+      .sort((a, b) => b._avgRating - a._avgRating);
+    sortedIdeas = withAvg.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  } else {
+    sortedIdeas = rawIdeas;
+  }
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
@@ -110,6 +145,14 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
             <p className="mt-2 text-[15px] text-[#1A1A1A]/60">
               Try adjusting your filters or search terms to find what you&apos;re looking for.
             </p>
+            {(search || category || unlockType) && (
+              <Link
+                href="/ideas"
+                className="mt-4 text-[14px] font-medium text-[#3A5FCD] underline underline-offset-2 hover:text-[#6D7BE0]"
+              >
+                Clear all filters
+              </Link>
+            )}
           </div>
         ) : (
           <>
