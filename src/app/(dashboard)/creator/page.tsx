@@ -49,7 +49,6 @@ export default async function CreatorPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
           { label: "Creator Studio" },
         ]}
       />
@@ -95,7 +94,7 @@ export default async function CreatorPage() {
         <StatCard label="Total Sales" value={totalSales} icon={TrendingUp} />
       </div>
 
-      {/* Seller workspace quick links */}
+      {/* Creator workspace quick links */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Link
           href="/creator/analytics"
@@ -119,7 +118,7 @@ export default async function CreatorPage() {
             <CreditCard className="h-5 w-5 text-[#3A5FCD]" />
           </div>
           <div className="min-w-0">
-            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">Stripe Connect</p>
+            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">Payouts</p>
             <p className="text-[12px] text-[#1A1A1A]/50">Payouts & account setup</p>
           </div>
           <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-[#1A1A1A]/30 group-hover:text-[#3A5FCD] transition-colors" />

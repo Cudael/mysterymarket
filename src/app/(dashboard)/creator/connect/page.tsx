@@ -102,9 +102,8 @@ export default function ConnectPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
-          { label: "Creator Studio", href: "/creator" },
-          { label: "Stripe Connect" },
+          { label: "Creator", href: "/creator" },
+          { label: "Payouts" },
         ]}
       />
       <PageHeader

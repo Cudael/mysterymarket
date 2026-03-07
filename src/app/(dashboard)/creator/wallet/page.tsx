@@ -28,9 +28,8 @@ export default async function WalletPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
-          { label: "Creator Studio", href: "/creator" },
-          { label: "Earnings & Wallet" },
+          { label: "Creator", href: "/creator" },
+          { label: "Earnings" },
         ]}
       />
       <PageHeader
