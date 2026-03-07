@@ -39,24 +39,29 @@ export function Hero() {
               </Button>
             </div>
 
-            <div className="mt-8 flex flex-col gap-3 text-sm text-[#1A1A1A]/62 sm:flex-row sm:flex-wrap sm:gap-6">
-              <div className="flex items-center gap-2">
+            <div className="mt-10 inline-flex flex-wrap items-center gap-4 rounded-2xl border border-[#D9DCE3]/60 bg-white/50 px-5 py-4 text-sm text-[#1A1A1A]/70 shadow-sm sm:flex-nowrap sm:gap-6">
+              <div className="flex items-center gap-2 font-medium">
                 <ShieldCheck className="h-4 w-4 text-[#3A5FCD]" />
                 Secure payments
               </div>
-              <div className="flex items-center gap-2">
+              <div className="hidden h-4 w-px bg-[#D9DCE3] sm:block" />
+              <div className="flex items-center gap-2 font-medium">
                 <Users className="h-4 w-4 text-[#3A5FCD]" />
-                Professional creator community
+                Pro community
               </div>
-              <div className="flex items-center gap-2">
+              <div className="hidden h-4 w-px bg-[#D9DCE3] sm:block" />
+              <div className="flex items-center gap-2 font-medium">
                 <Sparkles className="h-4 w-4 text-[#3A5FCD]" />
-                Curated premium positioning
+                Curated quality
               </div>
             </div>
           </div>
 
           <div className="relative">
-            <div className="rounded-[24px] border border-[#D9DCE3] bg-white p-6 shadow-[0_24px_80px_rgba(17,24,39,0.10)]">
+            <div className="absolute -right-8 -top-8 -z-10 h-64 w-64 rounded-full bg-[#3A5FCD]/10 blur-3xl" />
+            <div className="absolute -bottom-8 -left-8 -z-10 h-64 w-64 rounded-full bg-[#E8C26A]/10 blur-3xl" />
+            
+            <div className="rounded-[24px] border border-[#D9DCE3] border-t-[6px] border-t-[#3A5FCD] bg-white p-6 shadow-[0_24px_80px_rgba(17,24,39,0.08)]">
               <div className="rounded-[18px] border border-[#E6EAF2] bg-[#F8F9FC] p-5">
                 <div className="flex items-center justify-between">
                   <span className="rounded-full bg-[#3A5FCD]/10 px-3 py-1 text-xs font-semibold text-[#3A5FCD]">
