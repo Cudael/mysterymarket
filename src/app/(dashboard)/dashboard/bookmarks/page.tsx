@@ -3,6 +3,7 @@ import { Bookmark } from "lucide-react";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { PageHeader } from "@/components/shared/page-header";
 import { getBookmarks } from "@/features/bookmarks/actions";
 
 export const metadata: Metadata = {
@@ -22,16 +23,15 @@ export default async function BookmarksPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
+          { label: "Buyer Overview", href: "/dashboard" },
           { label: "Saved Ideas" },
         ]}
       />
-      <div className="mb-8 border-b border-[#D9DCE3] pb-6">
-        <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">Saved Ideas</h1>
-        <p className="mt-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
-          Ideas you&apos;ve saved to revisit and unlock later.
-        </p>
-      </div>
+      <PageHeader
+        title="Saved Ideas"
+        description="Ideas you've saved to revisit and unlock later."
+        icon={<Bookmark className="h-6 w-6 text-[#FFFFFF]" />}
+      />
 
       {bookmarks.length === 0 ? (
         <EmptyState

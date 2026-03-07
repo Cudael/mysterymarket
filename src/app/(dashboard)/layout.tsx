@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/layout/navbar";
-import { CreatorSidebar } from "@/components/layout/creator-sidebar";
+import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,7 @@ export default function DashboardLayout({
     <div className="flex min-h-[100dvh] flex-col bg-[#F5F6FA] text-[#1A1A1A] font-sans antialiased selection:bg-[#3A5FCD] selection:text-white">
       <Navbar />
       <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col md:flex-row">
-        <CreatorSidebar />
+        <DashboardSidebar />
         <main className="flex-1 overflow-auto p-6 md:p-10 lg:p-12">
           <div className="mx-auto max-w-6xl">
             {children}

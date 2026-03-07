@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ShoppingBag, DollarSign, Calendar, MessageSquare } from "lucide-react";
+import {
+  ShoppingBag,
+  DollarSign,
+  Calendar,
+  MessageSquare,
+  PieChart,
+  Bookmark,
+  Wallet2,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -10,12 +20,13 @@ import { InlineStatCard } from "@/components/shared/stat-card";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import { getPurchasesByUser } from "@/features/purchases/actions";
 import { getRefundRequestsForUser } from "@/features/refunds/actions";
+import { getBookmarks } from "@/features/bookmarks/actions";
 import { formatPrice } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { RefundDialog } from "@/features/refunds/components/refund-dialog";
 
 export const metadata: Metadata = {
-  title: "My Purchases - MysteryMarket",
+  title: "Buyer Overview - MysteryMarket",
 };
 
 type RefundStatus = "PENDING" | "APPROVED" | "DENIED";
@@ -32,9 +43,12 @@ const REFUND_LABEL: Record<RefundStatus, string> = {
   DENIED: "Refund Denied",
 };
 
+const RECENT_PURCHASES_LIMIT = 5;
+
 export default async function DashboardPage() {
   let purchases: Awaited<ReturnType<typeof getPurchasesByUser>> = [];
   let refundRequests: Awaited<ReturnType<typeof getRefundRequestsForUser>> = [];
+  let bookmarkCount = 0;
 
   try {
     [purchases, refundRequests] = await Promise.all([
@@ -43,6 +57,13 @@ export default async function DashboardPage() {
     ]);
   } catch {
     // User not authenticated or not found — show empty state
+  }
+
+  try {
+    const bookmarks = await getBookmarks();
+    bookmarkCount = bookmarks.length;
+  } catch {
+    // Not authenticated
   }
 
   let recommendedIdeas: Array<{
@@ -73,26 +94,84 @@ export default async function DashboardPage() {
   );
 
   const totalSpent = purchases.reduce((sum, p) => sum + p.amountInCents, 0);
+  const recentPurchases = purchases.slice(0, RECENT_PURCHASES_LIMIT);
+  const hasMorePurchases = purchases.length > RECENT_PURCHASES_LIMIT;
 
   return (
     <div className="mx-auto max-w-5xl pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
-          { label: "My Purchases" },
+          { label: "Buyer Overview" },
         ]}
       />
       <PageHeader
-        title="My Purchases"
-        description="A collection of all the high-value ideas and insights you have unlocked."
+        title="Buyer Overview"
+        description="Your purchases, insights, and saved ideas — all in one place."
+        action={
+          <Button asChild variant="outline">
+            <Link href="/ideas">
+              <Sparkles className="mr-2 h-4 w-4" />
+              Explore Ideas
+            </Link>
+          </Button>
+        }
       />
 
+      {/* Stats */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <InlineStatCard label="Total Purchases" value={purchases.length} icon={ShoppingBag} />
         <InlineStatCard label="Total Spent" value={formatPrice(totalSpent)} icon={DollarSign} />
       </div>
 
+      {/* Workspace quick links */}
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Link
+          href="/dashboard/insights"
+          className="group flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10">
+            <PieChart className="h-5 w-5 text-[#3A5FCD]" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">Buyer Insights</p>
+            <p className="text-[12px] text-[#1A1A1A]/50">Spending & analytics</p>
+          </div>
+          <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-[#1A1A1A]/30 group-hover:text-[#3A5FCD] transition-colors" />
+        </Link>
+
+        <Link
+          href="/dashboard/bookmarks"
+          className="group flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10">
+            <Bookmark className="h-5 w-5 text-[#3A5FCD]" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">Saved Ideas</p>
+            <p className="text-[12px] text-[#1A1A1A]/50">
+              {bookmarkCount > 0 ? `${bookmarkCount} saved` : "Wishlist & bookmarks"}
+            </p>
+          </div>
+          <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-[#1A1A1A]/30 group-hover:text-[#3A5FCD] transition-colors" />
+        </Link>
+
+        <Link
+          href="/dashboard/wallet"
+          className="group flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10">
+            <Wallet2 className="h-5 w-5 text-[#3A5FCD]" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">My Wallet</p>
+            <p className="text-[12px] text-[#1A1A1A]/50">Balance & transactions</p>
+          </div>
+          <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-[#1A1A1A]/30 group-hover:text-[#3A5FCD] transition-colors" />
+        </Link>
+      </div>
+
+      {/* Recent purchases */}
       {purchases.length === 0 ? (
         <div className="mt-10 rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#F8F9FC] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
           <EmptyState
@@ -124,9 +203,14 @@ export default async function DashboardPage() {
           )}
         </div>
       ) : (
-        <DashboardCard title="Purchase History" bodyClassName="p-0" className="mt-10">
+        <DashboardCard
+          title="Recent Purchases"
+          bodyClassName="p-0"
+          className="mt-10"
+          headerClassName="flex items-center justify-between"
+        >
           <div className="divide-y divide-[#D9DCE3]">
-            {purchases.map((purchase) => {
+            {recentPurchases.map((purchase) => {
               const refundStatus = refundByPurchaseId.get(purchase.id);
               const hasReviewed = purchase.idea.reviews.length > 0;
 
@@ -186,8 +270,20 @@ export default async function DashboardPage() {
               );
             })}
           </div>
+
+          {hasMorePurchases && (
+            <div className="border-t border-[#D9DCE3] px-6 py-4">
+              <p className="text-[13px] text-[#1A1A1A]/50">
+                Showing {RECENT_PURCHASES_LIMIT} of {purchases.length} purchases.{" "}
+                <Link href="/dashboard/insights" className="font-medium text-[#3A5FCD] hover:text-[#6D7BE0]">
+                  View full history in Buyer Insights →
+                </Link>
+              </p>
+            </div>
+          )}
         </DashboardCard>
       )}
     </div>
   );
 }
+
