@@ -8,8 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DashboardCard } from "@/components/shared/dashboard-card";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { PageHeader } from "@/components/shared/page-header";
 import { updateProfile, getUserByClerkId } from "@/features/users/actions";
-import { CheckCircle2, AlertCircle, Save, ExternalLink } from "lucide-react";
+import { CheckCircle2, AlertCircle, Save, ExternalLink, Settings } from "lucide-react";
 
 export default function SettingsPage() {
   const { user: clerkUser } = useUser();
@@ -100,14 +102,17 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
-      
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">Settings</h1>
-        <p className="mt-2 text-[15px] text-[#1A1A1A]/60">
-          Manage your public profile and account preferences.
-        </p>
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Settings" },
+        ]}
+      />
+      <PageHeader
+        title="Settings"
+        description="Manage your public profile and account preferences."
+        icon={<Settings className="h-6 w-6 text-[#FFFFFF]" />}
+      />
 
       <div className="space-y-8">
         {/* Profile Card */}

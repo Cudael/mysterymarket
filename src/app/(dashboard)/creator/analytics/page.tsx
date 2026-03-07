@@ -34,8 +34,7 @@ export default async function CreatorAnalyticsPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
-          { label: "Creator Studio", href: "/creator" },
+          { label: "Creator", href: "/creator" },
           { label: "Analytics" },
         ]}
       />
