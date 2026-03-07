@@ -10,8 +10,6 @@ import {
   Rocket,
   Quote,
   Lightbulb,
-  ShieldCheck,
-  TrendingUp,
   CheckCircle2,
 } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
@@ -65,27 +63,6 @@ const HOW_IT_WORKS = [
     title: "Get paid as buyers unlock",
     description:
       "Use Stripe-powered payouts and monetize expertise with transparent economics.",
-  },
-];
-
-const SOCIAL_PROOF = [
-  {
-    quote:
-      "I paid for a hidden SEO idea on MysteryMarket and got a practical angle I could test immediately. That level of specificity is hard to find elsewhere.",
-    author: "Sarah Jenkins",
-    role: "Startup Founder",
-  },
-  {
-    quote:
-      "The platform makes premium knowledge feel like an asset class. It’s one of the few places where concise expertise can be packaged and sold well.",
-    author: "David Chen",
-    role: "SaaS Operator",
-  },
-  {
-    quote:
-      "What stands out is the presentation. The marketplace makes ideas feel curated, credible, and worth paying attention to.",
-    author: "Elena Rodriguez",
-    role: "Marketing Director",
   },
 ];
 
@@ -182,40 +159,44 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto max-w-[1400px] px-6 py-20 lg:px-8">
-        <SectionHeader
-          eyebrow="How it works"
-          title="A premium marketplace model built around clarity and value"
-          description="MysteryMarket helps experts package high-value knowledge while giving buyers a faster path to useful, actionable ideas."
-        />
+      {/* Alternating Background: White */}
+      <div className="bg-white py-24 mt-20">
+        <section className="container mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="How it works"
+            title="A premium marketplace model built around clarity and value"
+            description="MysteryMarket helps experts package high-value knowledge while giving buyers a faster path to useful, actionable ideas."
+          />
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {HOW_IT_WORKS.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.title}
-                className="relative rounded-[20px] border border-[#D9DCE3] bg-white p-7 shadow-[0_10px_35px_rgba(17,24,39,0.04)]"
-              >
-                <div className="absolute right-5 top-5 text-xs font-bold text-[#3A5FCD]/25">
-                  0{index + 1}
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {HOW_IT_WORKS.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.title}
+                  className="relative rounded-[20px] border border-[#D9DCE3] bg-[#F8F9FC] p-7 shadow-[0_10px_35px_rgba(17,24,39,0.03)]"
+                >
+                  <div className="absolute right-5 top-5 text-xs font-bold text-[#3A5FCD]/25">
+                    0{index + 1}
+                  </div>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10 text-[#3A5FCD]">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-5 text-xl font-semibold text-[#111827]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-[15px] leading-7 text-[#1A1A1A]/65">
+                    {item.description}
+                  </p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10 text-[#3A5FCD]">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-5 text-xl font-semibold text-[#111827]">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-[15px] leading-7 text-[#1A1A1A]/65">
-                  {item.description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
+      </div>
 
-      <section className="container mx-auto max-w-[1400px] px-6 pb-20 lg:px-8">
+      {/* Back to light gray background */}
+      <section className="container mx-auto max-w-[1400px] px-6 py-24 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#3A5FCD]">
@@ -237,29 +218,35 @@ export default async function HomePage() {
           </Button>
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-3">
-          {featuredIdeas.map((idea) => (
-            <IdeaCard
-              key={idea.id}
-              id={idea.id}
-              title={idea.title}
-              teaserText={idea.teaserText}
-              teaserImageUrl={idea.teaserImageUrl}
-              priceInCents={idea.priceInCents}
-              unlockType={idea.unlockType}
-              category={idea.category}
-              creatorId={idea.creator.id}
-              creatorName={idea.creator.name}
-              creatorAvatarUrl={idea.creator.avatarUrl}
-              purchaseCount={idea._count.purchases}
-              initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
-              isAuthenticated={!!clerkId}
-            />
-          ))}
-        </div>
+        {featuredIdeas.length === 0 ? (
+          <div className="mt-10 rounded-xl border border-dashed border-[#D9DCE3] bg-white p-12 text-center text-[#1A1A1A]/55">
+            <p>New ideas are being curated. Check back soon!</p>
+          </div>
+        ) : (
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {featuredIdeas.map((idea) => (
+              <IdeaCard
+                key={idea.id}
+                id={idea.id}
+                title={idea.title}
+                teaserText={idea.teaserText}
+                teaserImageUrl={idea.teaserImageUrl}
+                priceInCents={idea.priceInCents}
+                unlockType={idea.unlockType}
+                category={idea.category}
+                creatorId={idea.creator.id}
+                creatorName={idea.creator.name}
+                creatorAvatarUrl={idea.creator.avatarUrl}
+                purchaseCount={idea._count.purchases}
+                initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
+                isAuthenticated={!!clerkId}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
-      <section className="container mx-auto max-w-[1400px] px-6 pb-20 lg:px-8">
+      <section className="container mx-auto max-w-[1400px] px-6 pb-24 lg:px-8">
         <div className="overflow-hidden rounded-[28px] border border-[#D9DCE3] bg-[linear-gradient(180deg,#EEF3FF_0%,#F8F9FC_100%)] shadow-[0_20px_60px_rgba(58,95,205,0.08)]">
           <div className="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
             <div className="p-8 sm:p-10 lg:p-12">
@@ -280,7 +267,7 @@ export default async function HomePage() {
                       className="group rounded-[18px] border border-white/70 bg-white/80 p-5 backdrop-blur-sm transition-all hover:-translate-y-[2px] hover:border-[#3A5FCD]/25 hover:bg-white"
                     >
                       <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10 text-[#3A5FCD]">
-                        <Icon className="h-5 w-5" />
+                        <Icon className="h-5 w-5" aria-hidden="true" />
                       </div>
                       <h3 className="mt-4 text-base font-semibold text-[#111827] group-hover:text-[#3A5FCD]">
                         {category.name}
@@ -308,7 +295,7 @@ export default async function HomePage() {
               <div className="mt-8 space-y-4">
                 {CREATOR_POINTS.map((point) => (
                   <div key={point} className="flex items-start gap-3">
-                    <div className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#3A5FCD] text-white">
+                    <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#3A5FCD] text-white">
                       <CheckCircle2 className="h-3.5 w-3.5" />
                     </div>
                     <p className="text-[15px] leading-7 text-[#1A1A1A]/72">{point}</p>
@@ -320,7 +307,7 @@ export default async function HomePage() {
                 <Button asChild className="rounded-[10px] bg-[#3A5FCD] hover:bg-[#2D4FB0]">
                   <Link href="/sign-up">Start selling</Link>
                 </Button>
-                <Button asChild variant="outline" className="rounded-[10px] border-[#C9D5F1] bg-white/80">
+                <Button asChild variant="outline" className="rounded-[10px] border-[#C9D5F1] bg-white/80 hover:bg-white">
                   <Link href="/ideas">See marketplace</Link>
                 </Button>
               </div>
@@ -329,33 +316,40 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto max-w-[1400px] px-6 pb-20 lg:px-8">
-        <SectionHeader
-          eyebrow="What people value"
-          title="A marketplace experience that feels more focused"
-          description="Social proof works better when it supports the page, not when it overwhelms it."
-        />
+      {/* Alternating Background: White for Community Section */}
+      <div className="bg-white py-24 border-y border-[#D9DCE3]">
+        <section className="container mx-auto max-w-[1400px] px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="Community"
+            title="What our early adopters are saying"
+            description="We're currently in early access. Be among the first to share your experience buying or selling on MysteryMarket."
+          />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {SOCIAL_PROOF.map((item) => (
-            <div
-              key={item.author}
-              className="rounded-[18px] border border-[#D9DCE3] bg-white p-6 shadow-[0_8px_24px_rgba(17,24,39,0.04)]"
-            >
-              <Quote className="h-6 w-6 text-[#3A5FCD]/35" />
-              <p className="mt-4 text-[15px] leading-7 text-[#1A1A1A]/72">
-                “{item.quote}”
+          <div className="mt-10 mx-auto max-w-3xl">
+            <div className="flex flex-col items-center justify-center rounded-[24px] border-2 border-dashed border-[#D9DCE3] bg-[#F8F9FC] px-6 py-12 text-center sm:px-12">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#3A5FCD]/10 text-[#3A5FCD]">
+                <Quote className="h-5 w-5" />
+              </div>
+              <h3 className="mt-5 text-xl font-semibold text-[#111827]">
+                Have you unlocked an idea?
+              </h3>
+              <p className="mt-3 max-w-md text-[15px] leading-7 text-[#1A1A1A]/65">
+                Help us build trust in the marketplace. Share how a concept you purchased helped your business, or how selling on the platform has worked for you.
               </p>
-              <div className="mt-5 border-t border-[#E7EAF1] pt-4">
-                <p className="font-semibold text-[#111827]">{item.author}</p>
-                <p className="mt-1 text-sm text-[#1A1A1A]/55">{item.role}</p>
+              <div className="mt-8">
+                <Button asChild className="rounded-[10px] bg-[#111827] px-6 text-white hover:bg-[#111827]/90">
+                  <Link href="mailto:hello@mysterymarket.com?subject=My%20MysteryMarket%20Review">
+                    Submit a review
+                  </Link>
+                </Button>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      </div>
 
-      <section className="pb-24">
+      {/* Bottom CTA on default background */}
+      <section className="py-24 bg-[#F8F9FC]">
         <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
           <div className="relative overflow-hidden rounded-[30px] bg-[linear-gradient(135deg,#2447A8_0%,#3A5FCD_45%,#6D7BE0_100%)] px-8 py-14 text-white shadow-[0_28px_80px_rgba(36,71,168,0.30)] sm:px-12 sm:py-16">
             <div className="absolute right-0 top-0 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
