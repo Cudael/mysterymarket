@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { getUnreadCount } from "@/features/notifications/actions";
 
 const BUYER_TABS = [
-  { href: "/my", label: "Overview", icon: ShoppingBag, exact: true },
+  { href: "/my", label: "My Library", icon: ShoppingBag, exact: true },
   { href: "/my/activity", label: "Activity", icon: PieChart, exact: false },
   { href: "/my/saved", label: "Saved Ideas", icon: Bookmark, exact: false },
   { href: "/my/wallet", label: "Wallet", icon: Wallet2, exact: false },

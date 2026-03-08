@@ -29,7 +29,7 @@ const NAV_LINKS = [
 ];
 
 const MOBILE_BUYER_LINKS = [
-  { href: "/my", label: "Overview", icon: ShoppingBag },
+  { href: "/my", label: "My Library", icon: ShoppingBag },
   { href: "/my/activity", label: "Activity", icon: PieChart },
   { href: "/my/saved", label: "Saved Ideas", icon: Bookmark },
   { href: "/my/wallet", label: "Wallet", icon: Wallet2 },

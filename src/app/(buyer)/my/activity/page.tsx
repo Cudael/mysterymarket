@@ -33,8 +33,8 @@ export default async function ActivityPage() {
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
-        title="Purchase history &amp; interests"
-        description="Everything you've unlocked — your ideas, your journey."
+        title="Activity"
+        description="Your purchase history and unlocked ideas, all in one place."
         icon={<Clock className="h-6 w-6 text-white" />}
       />
 

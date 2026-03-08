@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/dashboard", "/creator", "/settings", "/api/"],
+      disallow: ["/my", "/studio", "/account", "/dashboard", "/creator", "/settings", "/api/"],
     },
     sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://mysteryidea.com"}/sitemap.xml`,
   };
