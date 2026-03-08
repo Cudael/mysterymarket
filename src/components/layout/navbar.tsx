@@ -67,7 +67,7 @@ export function Navbar() {
         <div className="hidden items-center gap-4 md:flex">
           <SignedIn>
             <Button asChild variant="ghost" className="h-10 text-[15px] font-medium text-[#1A1A1A]/70 hover:text-[#3A5FCD] hover:bg-[#F8F9FC]">
-              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/dashboard">My Account</Link>
             </Button>
             <div className="h-5 w-px bg-[#D9DCE3] mx-2"></div>
             <NotificationBell />
@@ -183,7 +183,7 @@ export function Navbar() {
                 <SignedIn>
                    <div className="mt-4 pt-6 border-t border-[#D9DCE3]">
                       <Button asChild className="w-full justify-center bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white">
-                        <Link href="/dashboard">Go to Dashboard</Link>
+                        <Link href="/dashboard">My Account</Link>
                       </Button>
                    </div>
                 </SignedIn>

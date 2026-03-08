@@ -32,7 +32,7 @@ export default async function NotificationsPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
+          { label: "Overview", href: "/dashboard" },
           { label: "Notifications" },
         ]}
       />

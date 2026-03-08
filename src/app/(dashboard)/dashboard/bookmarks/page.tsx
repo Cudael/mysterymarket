@@ -24,7 +24,7 @@ export default async function BookmarksPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
+          { label: "Overview", href: "/dashboard" },
           { label: "Saved Ideas" },
         ]}
       />

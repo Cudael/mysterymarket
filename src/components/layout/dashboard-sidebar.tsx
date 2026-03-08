@@ -53,8 +53,8 @@ function getWorkspaceFromPath(pathname: string): Workspace {
 function getWorkspaceMeta(workspace: Workspace) {
   if (workspace === "creator") {
     return {
-      title: "Creator workspace",
-      description: "Manage ideas, payouts, and performance.",
+      title: "Creator Studio",
+      description: "Manage your ideas, payouts, and performance.",
       icon: Lightbulb,
       switchHref: "/dashboard",
       switchLabel: "Switch to Buyer",
@@ -63,8 +63,8 @@ function getWorkspaceMeta(workspace: Workspace) {
   }
 
   return {
-    title: "Buyer workspace",
-    description: "Track purchases, bookmarks, and wallet activity.",
+    title: "My Account",
+    description: "Purchases, saved ideas, and wallet.",
     icon: ShoppingBag,
     switchHref: "/creator",
     switchLabel: "Switch to Creator",
@@ -162,10 +162,6 @@ export function DashboardSidebar() {
     <>
       <aside className="hidden w-[280px] shrink-0 border-r border-[#D9DCE3] bg-[#F5F6FA] md:sticky md:top-[72px] md:flex md:h-[calc(100dvh-72px)] md:flex-col">
         <div className="border-b border-[#D9DCE3] px-4 py-4">
-          <p className="mb-2 px-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#1A1A1A]/35">
-            Workspace
-          </p>
-
           <div className="rounded-[14px] border border-[#D9DCE3] bg-[#FFFFFF] p-2 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
             <div className="flex gap-1.5 rounded-[10px] bg-[#F3F4F7] p-1">
               <button
@@ -221,7 +217,7 @@ export function DashboardSidebar() {
 
         <nav className="flex flex-1 flex-col overflow-y-auto px-4 py-3">
           <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#1A1A1A]/35">
-            {isBuyer ? "Buyer" : "Creator"}
+            {isBuyer ? "Menu" : "Creator"}
           </p>
 
           <div className="flex flex-col gap-1">

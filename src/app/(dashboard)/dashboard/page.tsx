@@ -27,7 +27,7 @@ import prisma from "@/lib/prisma";
 import { RefundDialog } from "@/features/refunds/components/refund-dialog";
 
 export const metadata: Metadata = {
-  title: "Dashboard - MysteryMarket",
+  title: "Overview - MysteryMarket",
 };
 
 type RefundStatus = "PENDING" | "APPROVED" | "DENIED";
@@ -53,19 +53,19 @@ const quickLinks = [
   {
     href: "/dashboard/insights",
     title: "Insights",
-    description: "Spending trends and buyer analytics",
+    description: "Your spending activity and trends",
     icon: PieChart,
   },
   {
     href: "/dashboard/bookmarks",
     title: "Saved Ideas",
-    description: "Ideas to revisit later",
+    description: "Your curated collection",
     icon: Bookmark,
   },
   {
     href: "/dashboard/wallet",
     title: "Wallet",
-    description: "Balance and transactions",
+    description: "Your balance and transaction history",
     icon: Wallet2,
   },
 ];
@@ -127,13 +127,13 @@ export default async function DashboardPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard" },
+          { label: "Overview" },
         ]}
       />
 
       <PageHeader
-        title="Buyer Dashboard"
-        description="Your purchases, saved ideas, wallet activity, and insights — all in one place."
+        title="Overview"
+        description="Your purchases, saved ideas, and wallet — everything in one place."
         action={
           <Button asChild variant="outline">
             <Link href="/ideas">
@@ -151,11 +151,10 @@ export default async function DashboardPage() {
           </div>
           <div>
             <h2 className="text-[18px] font-semibold text-[#1A1A1A]">
-              Your buyer workspace
+              Your account at a glance
             </h2>
             <p className="mt-1 text-[14px] leading-6 text-[#1A1A1A]/60">
-              Review your recent unlocks, keep an eye on spending, and save ideas
-              you want to come back to later.
+              Everything you need — recent unlocks, spending insights, saved ideas, and your wallet balance.
             </p>
           </div>
         </div>

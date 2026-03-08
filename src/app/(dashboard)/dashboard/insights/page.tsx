@@ -91,7 +91,7 @@ export default async function BuyerInsightsPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
+          { label: "Overview", href: "/dashboard" },
           { label: "Insights" },
         ]}
       />

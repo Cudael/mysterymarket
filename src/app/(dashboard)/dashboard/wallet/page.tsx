@@ -43,7 +43,7 @@ export default async function BuyerWalletPage({
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Dashboard", href: "/dashboard" },
+          { label: "Overview", href: "/dashboard" },
           { label: "Wallet" },
         ]}
       />
