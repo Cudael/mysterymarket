@@ -10,6 +10,7 @@ import {
   Wallet2,
   ArrowRight,
   Sparkles,
+  Compass,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,12 +27,15 @@ import prisma from "@/lib/prisma";
 import { RefundDialog } from "@/features/refunds/components/refund-dialog";
 
 export const metadata: Metadata = {
-  title: "Buyer Overview - MysteryMarket",
+  title: "Dashboard - MysteryMarket",
 };
 
 type RefundStatus = "PENDING" | "APPROVED" | "DENIED";
 
-const REFUND_BADGE_VARIANT: Record<RefundStatus, "secondary" | "default" | "destructive"> = {
+const REFUND_BADGE_VARIANT: Record<
+  RefundStatus,
+  "secondary" | "default" | "destructive"
+> = {
   PENDING: "secondary",
   APPROVED: "default",
   DENIED: "destructive",
@@ -44,6 +48,27 @@ const REFUND_LABEL: Record<RefundStatus, string> = {
 };
 
 const RECENT_PURCHASES_LIMIT = 5;
+
+const quickLinks = [
+  {
+    href: "/dashboard/insights",
+    title: "Insights",
+    description: "Spending trends and buyer analytics",
+    icon: PieChart,
+  },
+  {
+    href: "/dashboard/bookmarks",
+    title: "Saved Ideas",
+    description: "Ideas to revisit later",
+    icon: Bookmark,
+  },
+  {
+    href: "/dashboard/wallet",
+    title: "Wallet",
+    description: "Balance and transactions",
+    icon: Wallet2,
+  },
+];
 
 export default async function DashboardPage() {
   let purchases: Awaited<ReturnType<typeof getPurchasesByUser>> = [];
@@ -98,16 +123,17 @@ export default async function DashboardPage() {
   const hasMorePurchases = purchases.length > RECENT_PURCHASES_LIMIT;
 
   return (
-    <div className="mx-auto max-w-5xl pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Buyer Overview" },
+          { label: "Dashboard" },
         ]}
       />
+
       <PageHeader
-        title="Buyer Overview"
-        description="Your purchases, insights, and saved ideas — all in one place."
+        title="Buyer Dashboard"
+        description="Your purchases, saved ideas, wallet activity, and insights — all in one place."
         action={
           <Button asChild variant="outline">
             <Link href="/ideas">
@@ -118,96 +144,114 @@ export default async function DashboardPage() {
         }
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <InlineStatCard label="Total Purchases" value={purchases.length} icon={ShoppingBag} />
-        <InlineStatCard label="Total Spent" value={formatPrice(totalSpent)} icon={DollarSign} />
-      </div>
-
-      {/* Workspace quick links */}
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Link
-          href="/dashboard/insights"
-          className="group flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10">
-            <PieChart className="h-5 w-5 text-[#3A5FCD]" />
+      <DashboardCard bodyClassName="p-6">
+        <div className="flex items-start gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
+            <Compass className="h-5 w-5 text-[#3A5FCD]" />
           </div>
-          <div className="min-w-0">
-            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">Buyer Insights</p>
-            <p className="text-[12px] text-[#1A1A1A]/50">Spending & analytics</p>
-          </div>
-          <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-[#1A1A1A]/30 group-hover:text-[#3A5FCD] transition-colors" />
-        </Link>
-
-        <Link
-          href="/dashboard/bookmarks"
-          className="group flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10">
-            <Bookmark className="h-5 w-5 text-[#3A5FCD]" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">Saved Ideas</p>
-            <p className="text-[12px] text-[#1A1A1A]/50">
-              {bookmarkCount > 0 ? `${bookmarkCount} saved` : "Wishlist & bookmarks"}
+          <div>
+            <h2 className="text-[18px] font-semibold text-[#1A1A1A]">
+              Your buyer workspace
+            </h2>
+            <p className="mt-1 text-[14px] leading-6 text-[#1A1A1A]/60">
+              Review your recent unlocks, keep an eye on spending, and save ideas
+              you want to come back to later.
             </p>
           </div>
-          <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-[#1A1A1A]/30 group-hover:text-[#3A5FCD] transition-colors" />
-        </Link>
+        </div>
+      </DashboardCard>
 
-        <Link
-          href="/dashboard/wallet"
-          className="group flex items-center gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10">
-            <Wallet2 className="h-5 w-5 text-[#3A5FCD]" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[14px] font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">My Wallet</p>
-            <p className="text-[12px] text-[#1A1A1A]/50">Balance & transactions</p>
-          </div>
-          <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-[#1A1A1A]/30 group-hover:text-[#3A5FCD] transition-colors" />
-        </Link>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <InlineStatCard
+          label="Total Purchases"
+          value={purchases.length}
+          icon={ShoppingBag}
+        />
+        <InlineStatCard
+          label="Total Spent"
+          value={formatPrice(totalSpent)}
+          icon={DollarSign}
+        />
       </div>
 
-      {/* Recent purchases */}
+      <DashboardCard title="Quick Actions" bodyClassName="p-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {quickLinks.map((item) => {
+            const Icon = item.icon;
+            const helperText =
+              item.href === "/dashboard/bookmarks" && bookmarkCount > 0
+                ? `${bookmarkCount} saved`
+                : item.description;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="group flex items-start gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 transition-all hover:border-[#3A5FCD]/35 hover:bg-[#F8F9FC] hover:shadow-[0_6px_20px_rgba(58,95,205,0.08)]"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
+                  <Icon className="h-5 w-5 text-[#3A5FCD]" />
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <p className="text-[15px] font-semibold text-[#1A1A1A] transition-colors group-hover:text-[#3A5FCD]">
+                    {item.title}
+                  </p>
+                  <p className="mt-1 text-[13px] leading-5 text-[#1A1A1A]/55">
+                    {helperText}
+                  </p>
+                </div>
+
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[#1A1A1A]/30 transition-colors group-hover:text-[#3A5FCD]" />
+              </Link>
+            );
+          })}
+        </div>
+      </DashboardCard>
+
       {purchases.length === 0 ? (
-        <div className="mt-10 rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#F8F9FC] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-          <EmptyState
-            icon={<ShoppingBag className="h-9 w-9 text-[#1A1A1A]/40" />}
-            title="No purchases yet"
-            description="Browse the marketplace to find and unlock high-value hidden ideas from top creators."
-            action={{ label: "Explore Marketplace", href: "/ideas" }}
-          />
+        <DashboardCard bodyClassName="p-0">
+          <div className="rounded-[16px] bg-[#F8F9FC] p-2">
+            <EmptyState
+              icon={<ShoppingBag className="h-9 w-9 text-[#1A1A1A]/40" />}
+              title="No purchases yet"
+              description="Browse the marketplace to unlock premium ideas from creators across different categories."
+              action={{ label: "Explore Marketplace", href: "/ideas" }}
+            />
+          </div>
 
           {recommendedIdeas.length > 0 && (
-            <div className="border-t border-[#D9DCE3] pt-6">
-              <h2 className="text-[14px] font-bold uppercase tracking-wider text-[#1A1A1A]/50">Recommended to start with</h2>
+            <div className="border-t border-[#D9DCE3] px-6 py-6">
+              <h2 className="text-[14px] font-bold uppercase tracking-[0.08em] text-[#1A1A1A]/45">
+                Recommended to start with
+              </h2>
+
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {recommendedIdeas.map((idea) => (
                   <Link
                     key={idea.id}
                     href={`/ideas/${idea.id}`}
-                    className="group rounded-[10px] border border-[#D9DCE3] bg-white p-4 transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
+                    className="group rounded-[12px] border border-[#D9DCE3] bg-white p-4 transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
                   >
-                    <p className="line-clamp-2 text-sm font-semibold text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">{idea.title}</p>
+                    <p className="line-clamp-2 text-sm font-semibold text-[#1A1A1A] transition-colors group-hover:text-[#3A5FCD]">
+                      {idea.title}
+                    </p>
                     <div className="mt-2 flex items-center justify-between text-xs text-[#1A1A1A]/60">
                       <span>{idea.category ?? "General"}</span>
-                      <span className="font-bold text-[#3A5FCD]">{formatPrice(idea.priceInCents)}</span>
+                      <span className="font-bold text-[#3A5FCD]">
+                        {formatPrice(idea.priceInCents)}
+                      </span>
                     </div>
                   </Link>
                 ))}
               </div>
             </div>
           )}
-        </div>
+        </DashboardCard>
       ) : (
         <DashboardCard
           title="Recent Purchases"
           bodyClassName="p-0"
-          className="mt-10"
-          headerClassName="flex items-center justify-between"
         >
           <div className="divide-y divide-[#D9DCE3]">
             {recentPurchases.map((purchase) => {
@@ -226,10 +270,17 @@ export default async function DashboardPage() {
                       </Link>
 
                       <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <Badge variant="outline" className="border-[#D9DCE3] text-[#1A1A1A]/80">
+                        <Badge
+                          variant="outline"
+                          className="border-[#D9DCE3] text-[#1A1A1A]/80"
+                        >
                           {formatPrice(purchase.amountInCents)} paid
                         </Badge>
-                        <Badge variant="outline" className="border-[#D9DCE3] text-[#1A1A1A]/80">
+
+                        <Badge
+                          variant="outline"
+                          className="border-[#D9DCE3] text-[#1A1A1A]/80"
+                        >
                           <Calendar className="mr-1 h-3 w-3" />
                           {new Date(purchase.createdAt).toLocaleDateString("en-US", {
                             month: "short",
@@ -237,6 +288,7 @@ export default async function DashboardPage() {
                             year: "numeric",
                           })}
                         </Badge>
+
                         {refundStatus && (
                           <Badge variant={REFUND_BADGE_VARIANT[refundStatus]}>
                             {REFUND_LABEL[refundStatus]}
@@ -245,13 +297,17 @@ export default async function DashboardPage() {
                       </div>
 
                       {purchase.idea.teaserText && (
-                        <p className="mt-3 line-clamp-2 text-sm text-[#1A1A1A]/60">{purchase.idea.teaserText}</p>
+                        <p className="mt-3 line-clamp-2 text-sm text-[#1A1A1A]/60">
+                          {purchase.idea.teaserText}
+                        </p>
                       )}
                     </div>
 
                     <div className="flex shrink-0 flex-wrap items-center gap-2">
-                      <Button asChild size="sm" className="bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white">
-                        <Link href={`/ideas/${purchase.idea.id}`}>View unlocked idea</Link>
+                      <Button asChild size="sm">
+                        <Link href={`/ideas/${purchase.idea.id}`}>
+                          View unlocked idea
+                        </Link>
                       </Button>
 
                       {!hasReviewed && (
@@ -263,7 +319,10 @@ export default async function DashboardPage() {
                         </Button>
                       )}
 
-                      <RefundDialog purchaseId={purchase.id} existingStatus={refundStatus} />
+                      <RefundDialog
+                        purchaseId={purchase.id}
+                        existingStatus={refundStatus}
+                      />
                     </div>
                   </div>
                 </div>
@@ -275,8 +334,11 @@ export default async function DashboardPage() {
             <div className="border-t border-[#D9DCE3] px-6 py-4">
               <p className="text-[13px] text-[#1A1A1A]/50">
                 Showing {RECENT_PURCHASES_LIMIT} of {purchases.length} purchases.{" "}
-                <Link href="/dashboard/insights" className="font-medium text-[#3A5FCD] hover:text-[#6D7BE0]">
-                  View full history in Buyer Insights →
+                <Link
+                  href="/dashboard/insights"
+                  className="font-medium text-[#3A5FCD] hover:text-[#6D7BE0]"
+                >
+                  View more in Insights →
                 </Link>
               </p>
             </div>
@@ -286,4 +348,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-
