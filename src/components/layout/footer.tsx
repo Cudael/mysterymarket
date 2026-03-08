@@ -31,6 +31,7 @@ export function Footer() {
               <li><Link href="/studio" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Creator Studio</Link></li>
               <li><Link href="/my" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">My Library</Link></li>
               <li><Link href="/my/saved" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Saved Ideas</Link></li>
+              <li><Link href="/account" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Account</Link></li>
             </ul>
           </div>
 

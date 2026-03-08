@@ -6,7 +6,6 @@ import { getWalletWithTransactions } from "@/features/wallet/actions";
 import { WalletTransactions } from "@/features/wallet/components/wallet-transactions";
 import { DepositDialog } from "@/features/wallet/components/deposit-dialog";
 import { formatPrice } from "@/lib/utils";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import prisma from "@/lib/prisma";
@@ -40,14 +39,6 @@ export default async function BuyerWalletPage({
 
   return (
     <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "My Library", href: "/my" },
-          { label: "Wallet" },
-        ]}
-      />
-
       <PageHeader
         title="Wallet"
         description="Add funds, manage your balance, and pay for premium ideas without leaving the platform."

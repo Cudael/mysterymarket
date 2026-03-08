@@ -17,7 +17,6 @@ import { SpendingChart } from "@/features/analytics/components/spending-chart";
 import { CategoryBreakdown } from "@/features/analytics/components/category-breakdown";
 import { PurchaseTimeline } from "@/features/analytics/components/purchase-timeline";
 import { getBuyerAnalytics } from "@/features/analytics/actions";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { DashboardCard } from "@/components/shared/dashboard-card";
@@ -88,14 +87,6 @@ export default async function ActivityPage() {
 
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "My Library", href: "/my" },
-          { label: "Activity" },
-        ]}
-      />
-
       <PageHeader
         title="Activity"
         description="Understand your spending patterns, purchase habits, and where your interests are trending."

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Bookmark, Compass } from "lucide-react";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import { getBookmarks } from "@/features/bookmarks/actions";
@@ -21,14 +20,6 @@ export default async function SavedPage() {
 
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "My Library", href: "/my" },
-          { label: "Saved Ideas" },
-        ]}
-      />
-
       <PageHeader
         title="Saved Ideas"
         description="Keep track of ideas you want to revisit, compare, or unlock later."

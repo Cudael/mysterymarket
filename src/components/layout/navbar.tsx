@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Menu, ChevronDown, ChevronRight } from "lucide-react";
+import { Sparkles, Menu, ChevronDown, ChevronRight, Lightbulb, ShoppingBag, PieChart, Bookmark, Wallet2, Bell, Settings } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
@@ -28,12 +28,21 @@ const NAV_LINKS = [
   { href: "/about", label: "About" },
 ];
 
+const MOBILE_BUYER_LINKS = [
+  { href: "/my", label: "Overview", icon: ShoppingBag },
+  { href: "/my/activity", label: "Activity", icon: PieChart },
+  { href: "/my/saved", label: "Saved Ideas", icon: Bookmark },
+  { href: "/my/wallet", label: "Wallet", icon: Wallet2 },
+  { href: "/my/notifications", label: "Notifications", icon: Bell },
+];
+
 export function Navbar() {
   const [authModal, setAuthModal] = useState<{ open: boolean; tab: "sign-in" | "sign-up" }>({
     open: false,
     tab: "sign-in",
   });
   const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
+  const [mobileLibraryOpen, setMobileLibraryOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#D9DCE3] bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300">
@@ -64,12 +73,22 @@ export function Navbar() {
         </nav>
 
         {/* Desktop auth buttons */}
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           <SignedIn>
-            <Button asChild variant="ghost" className="h-10 text-[15px] font-medium text-[#1A1A1A]/70 hover:text-[#3A5FCD] hover:bg-[#F8F9FC]">
-              <Link href="/my">My Library</Link>
-            </Button>
-            <div className="h-5 w-px bg-[#D9DCE3] mx-2"></div>
+            <Link
+              href="/my"
+              className="text-[15px] font-medium text-[#1A1A1A]/70 transition-all duration-200 hover:text-[#3A5FCD] hover:-translate-y-[1px]"
+            >
+              My Library
+            </Link>
+            <Link
+              href="/studio"
+              className="flex items-center gap-1.5 text-[15px] font-medium text-[#1A1A1A]/70 transition-all duration-200 hover:text-[#3A5FCD] hover:-translate-y-[1px]"
+            >
+              <Lightbulb className="h-4 w-4 shrink-0" />
+              Creator Studio
+            </Link>
+            <div className="h-5 w-px bg-[#D9DCE3] mx-1"></div>
             <NotificationBell />
             <UserButton 
               afterSignOutUrl="/" 
@@ -181,11 +200,57 @@ export function Navbar() {
                 </SignedOut>
                 
                 <SignedIn>
-                   <div className="mt-4 pt-6 border-t border-[#D9DCE3]">
-                      <Button asChild className="w-full justify-center bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white">
-                        <Link href="/my">My Library</Link>
-                      </Button>
-                   </div>
+                  <div className="border-t border-[#D9DCE3] pt-4 mt-1 flex flex-col gap-1">
+                    {/* My Library section */}
+                    <button
+                      type="button"
+                      onClick={() => setMobileLibraryOpen((v) => !v)}
+                      className="flex w-full items-center justify-between py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                    >
+                      <span className="flex items-center gap-2">
+                        <ShoppingBag className="h-4 w-4 shrink-0" />
+                        My Library
+                      </span>
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform duration-200 ${mobileLibraryOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    {mobileLibraryOpen && (
+                      <div className="mt-1 flex flex-col gap-0.5 pl-2">
+                        {MOBILE_BUYER_LINKS.map((link) => {
+                          const Icon = link.icon;
+                          return (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              className="flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-[14px] font-medium text-[#1A1A1A]/70 hover:bg-[#F5F6FA] hover:text-[#3A5FCD] transition-colors"
+                            >
+                              <Icon className="h-4 w-4 shrink-0 text-[#3A5FCD]" />
+                              {link.label}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Creator Studio */}
+                    <Link
+                      href="/studio"
+                      className="flex items-center gap-2 py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                    >
+                      <Lightbulb className="h-4 w-4 shrink-0" />
+                      Creator Studio
+                    </Link>
+
+                    {/* Account */}
+                    <Link
+                      href="/account"
+                      className="flex items-center gap-2 py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                    >
+                      <Settings className="h-4 w-4 shrink-0" />
+                      Account
+                    </Link>
+                  </div>
                 </SignedIn>
               </div>
             </SheetContent>
@@ -200,3 +265,4 @@ export function Navbar() {
     </header>
   );
 }
+

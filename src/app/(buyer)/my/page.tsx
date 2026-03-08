@@ -5,23 +5,16 @@ import {
   DollarSign,
   Calendar,
   MessageSquare,
-  PieChart,
-  Bookmark,
-  Wallet2,
-  ArrowRight,
   Sparkles,
-  Compass,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { InlineStatCard } from "@/components/shared/stat-card";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import { getPurchasesByUser } from "@/features/purchases/actions";
 import { getRefundRequestsForUser } from "@/features/refunds/actions";
-import { getBookmarks } from "@/features/bookmarks/actions";
 import { formatPrice } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { RefundDialog } from "@/features/refunds/components/refund-dialog";
@@ -49,31 +42,9 @@ const REFUND_LABEL: Record<RefundStatus, string> = {
 
 const RECENT_PURCHASES_LIMIT = 5;
 
-const quickLinks = [
-  {
-    href: "/my/activity",
-    title: "Activity",
-    description: "Your spending activity and trends",
-    icon: PieChart,
-  },
-  {
-    href: "/my/saved",
-    title: "Saved Ideas",
-    description: "Your curated collection",
-    icon: Bookmark,
-  },
-  {
-    href: "/my/wallet",
-    title: "Wallet",
-    description: "Your balance and transaction history",
-    icon: Wallet2,
-  },
-];
-
 export default async function MyPage() {
   let purchases: Awaited<ReturnType<typeof getPurchasesByUser>> = [];
   let refundRequests: Awaited<ReturnType<typeof getRefundRequestsForUser>> = [];
-  let bookmarkCount = 0;
 
   try {
     [purchases, refundRequests] = await Promise.all([
@@ -82,13 +53,6 @@ export default async function MyPage() {
     ]);
   } catch {
     // User not authenticated or not found — show empty state
-  }
-
-  try {
-    const bookmarks = await getBookmarks();
-    bookmarkCount = bookmarks.length;
-  } catch {
-    // Not authenticated
   }
 
   let recommendedIdeas: Array<{
@@ -124,16 +88,9 @@ export default async function MyPage() {
 
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "My Library" },
-        ]}
-      />
-
       <PageHeader
         title="My Library"
-        description="Your purchases, saved ideas, and wallet — everything in one place."
+        description="Your unlocked ideas, saved collections, and account activity."
         action={
           <Button asChild variant="outline">
             <Link href="/ideas">
@@ -143,22 +100,6 @@ export default async function MyPage() {
           </Button>
         }
       />
-
-      <DashboardCard bodyClassName="p-6">
-        <div className="flex items-start gap-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
-            <Compass className="h-5 w-5 text-[#3A5FCD]" />
-          </div>
-          <div>
-            <h2 className="text-[18px] font-semibold text-[#1A1A1A]">
-              Your account at a glance
-            </h2>
-            <p className="mt-1 text-[14px] leading-6 text-[#1A1A1A]/60">
-              Everything you need — recent unlocks, spending insights, saved ideas, and your wallet balance.
-            </p>
-          </div>
-        </div>
-      </DashboardCard>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <InlineStatCard
@@ -172,41 +113,6 @@ export default async function MyPage() {
           icon={DollarSign}
         />
       </div>
-
-      <DashboardCard title="Quick Actions" bodyClassName="p-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {quickLinks.map((item) => {
-            const Icon = item.icon;
-            const helperText =
-              item.href === "/my/saved" && bookmarkCount > 0
-                ? `${bookmarkCount} saved`
-                : item.description;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group flex items-start gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 transition-all hover:border-[#3A5FCD]/35 hover:bg-[#F8F9FC] hover:shadow-[0_6px_20px_rgba(58,95,205,0.08)]"
-              >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
-                  <Icon className="h-5 w-5 text-[#3A5FCD]" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <p className="text-[15px] font-semibold text-[#1A1A1A] transition-colors group-hover:text-[#3A5FCD]">
-                    {item.title}
-                  </p>
-                  <p className="mt-1 text-[13px] leading-5 text-[#1A1A1A]/55">
-                    {helperText}
-                  </p>
-                </div>
-
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[#1A1A1A]/30 transition-colors group-hover:text-[#3A5FCD]" />
-              </Link>
-            );
-          })}
-        </div>
-      </DashboardCard>
 
       {purchases.length === 0 ? (
         <DashboardCard bodyClassName="p-0">
