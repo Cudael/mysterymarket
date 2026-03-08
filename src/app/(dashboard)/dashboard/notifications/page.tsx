@@ -8,6 +8,7 @@ import {
 import { NotificationsClient } from "@/features/notifications/components/notifications-client";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
+import { DashboardCard } from "@/components/shared/dashboard-card";
 import type { Notification } from "@prisma/client";
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export default async function NotificationsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
@@ -35,10 +36,11 @@ export default async function NotificationsPage() {
           { label: "Notifications" },
         ]}
       />
+
       <PageHeader
         title="Notifications"
-        description="Stay up to date with activity on your account."
-        icon={<Bell className="h-6 w-6 text-[#FFFFFF]" />}
+        description="Stay up to date with activity across your account."
+        icon={<Bell className="h-6 w-6 text-white" />}
         action={
           unreadCount > 0 ? (
             <form
@@ -59,10 +61,26 @@ export default async function NotificationsPage() {
         }
       />
 
-      <NotificationsClient
-        initialNotifications={notifications}
-        initialUnreadCount={unreadCount}
-      />
+      <DashboardCard
+        title="Inbox"
+        bodyClassName="p-0"
+        action={
+          unreadCount > 0 ? (
+            <span className="rounded-full bg-[#3A5FCD]/10 px-2.5 py-1 text-[12px] font-medium text-[#3A5FCD]">
+              {unreadCount} unread
+            </span>
+          ) : (
+            <span className="rounded-full bg-[#F5F6FA] px-2.5 py-1 text-[12px] font-medium text-[#1A1A1A]/50">
+              All caught up
+            </span>
+          )
+        }
+      >
+        <NotificationsClient
+          initialNotifications={notifications}
+          initialUnreadCount={unreadCount}
+        />
+      </DashboardCard>
     </div>
   );
 }
