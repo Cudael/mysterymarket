@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import {
   createConnectAccount,
   getConnectAccountStatus,
@@ -160,7 +160,7 @@ export default function PayoutsPage() {
       )}
 
       <div className="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
-        <DashboardCard title="Stripe Connection" bodyClassName="p-0">
+        <ContentCard title="Stripe Connection" bodyClassName="p-0">
           {loading ? (
             <div className="flex flex-col items-center gap-3 py-20">
               <Loader2 className="h-8 w-8 animate-spin text-[#3A5FCD]" />
@@ -289,10 +289,10 @@ export default function PayoutsPage() {
               </Button>
             </div>
           )}
-        </DashboardCard>
+        </ContentCard>
 
         <div className="space-y-6">
-          <DashboardCard title="Why connect payouts?" bodyClassName="p-6">
+          <ContentCard title="Why connect payouts?" bodyClassName="p-6">
             <div className="space-y-4">
               <div className="flex gap-3">
                 <Wallet2 className="mt-0.5 h-5 w-5 text-[#3A5FCD]" />
@@ -319,14 +319,14 @@ export default function PayoutsPage() {
                 </div>
               </div>
             </div>
-          </DashboardCard>
+          </ContentCard>
 
-          <DashboardCard title="Platform fee" bodyClassName="p-6">
+          <ContentCard title="Platform fee" bodyClassName="p-6">
             <p className="text-[14px] leading-6 text-[#1A1A1A]/60">
               A 15% platform fee applies to each transaction. Your analytics and
               wallet views already reflect net creator earnings where applicable.
             </p>
-          </DashboardCard>
+          </ContentCard>
         </div>
       </div>
     </div>

@@ -83,7 +83,7 @@ export function WalletTransactions({ transactions }: WalletTransactionsProps) {
       <CardContent>
         {transactions.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No transactions yet.
+            No transactions yet. Add funds to your wallet to get started.
           </p>
         ) : (
           <ul className="divide-y divide-border">

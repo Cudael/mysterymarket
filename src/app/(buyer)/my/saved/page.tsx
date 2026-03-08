@@ -3,7 +3,7 @@ import { Bookmark, Compass } from "lucide-react";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { getBookmarks } from "@/features/bookmarks/actions";
 
 export const metadata: Metadata = {
@@ -22,18 +22,18 @@ export default async function SavedPage() {
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
         title="Saved Ideas"
-        description="Keep track of ideas you want to revisit, compare, or unlock later."
+        description="Ideas you've bookmarked for later. Your personal shortlist."
         icon={<Bookmark className="h-6 w-6 text-white" />}
       />
 
       {bookmarks.length === 0 ? (
-        <DashboardCard bodyClassName="p-0">
+        <ContentCard bodyClassName="p-0">
           <div className="rounded-[16px] bg-[#F8F9FC] p-2">
             <EmptyState
               icon={<Bookmark className="h-9 w-9 text-[#1A1A1A]/40" />}
-              title="No saved ideas yet"
-              description="Bookmark ideas as you browse the marketplace so you can come back to them when you're ready."
-              action={{ label: "Explore Marketplace", href: "/ideas" }}
+              title="Your shortlist is empty"
+              description="Save ideas you're interested in while browsing the marketplace. They'll appear here for easy access."
+              action={{ label: "Browse Ideas", href: "/ideas" }}
             />
           </div>
 
@@ -51,9 +51,9 @@ export default async function SavedPage() {
               </div>
             </div>
           </div>
-        </DashboardCard>
+        </ContentCard>
       ) : (
-        <DashboardCard
+        <ContentCard
           title="Your Saved Ideas"
           bodyClassName="p-0 sm:p-6"
         >
@@ -77,7 +77,7 @@ export default async function SavedPage() {
               />
             ))}
           </div>
-        </DashboardCard>
+        </ContentCard>
       )}
     </div>
   );

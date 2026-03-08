@@ -18,7 +18,7 @@ import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog
 import { CreatorPublishToggle } from "@/features/ideas/components/creator-publish-toggle";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { getIdeasByCreator } from "@/features/ideas/actions";
 import { getWalletWithTransactions } from "@/features/wallet/actions";
 import { formatPrice } from "@/lib/utils";
@@ -91,7 +91,7 @@ export default async function StudioPage() {
         }
       />
 
-      <DashboardCard bodyClassName="p-6">
+      <ContentCard bodyClassName="p-6">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10">
@@ -145,7 +145,7 @@ export default async function StudioPage() {
             </Link>
           </Button>
         </div>
-      </DashboardCard>
+      </ContentCard>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total Ideas" value={ideas.length} subLabel="All ideas created" icon={Lightbulb} />
@@ -154,7 +154,7 @@ export default async function StudioPage() {
         <StatCard label="Total Sales" value={totalSales} subLabel="Completed purchases" icon={TrendingUp} />
       </div>
 
-      <DashboardCard title="Quick Actions" bodyClassName="p-6">
+      <ContentCard title="Quick Actions" bodyClassName="p-6">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {quickLinks.map((item) => {
             const Icon = item.icon;
@@ -183,9 +183,9 @@ export default async function StudioPage() {
             );
           })}
         </div>
-      </DashboardCard>
+      </ContentCard>
 
-      <DashboardCard
+      <ContentCard
         title="Your Ideas"
         bodyClassName={ideas.length === 0 ? "p-6" : "p-0"}
         action={
@@ -346,16 +346,16 @@ export default async function StudioPage() {
             </div>
           </>
         )}
-      </DashboardCard>
+      </ContentCard>
 
       {draftIdeas > 0 && (
-        <DashboardCard title="Publishing Tip" bodyClassName="p-6">
+        <ContentCard title="Publishing Tip" bodyClassName="p-6">
           <p className="text-[14px] leading-6 text-[#1A1A1A]/65">
             You currently have <span className="font-semibold text-[#1A1A1A]">{draftIdeas}</span>{" "}
             draft {draftIdeas === 1 ? "idea" : "ideas"}. If an idea is ready,
             publishing it can improve visibility and sales momentum.
           </p>
-        </DashboardCard>
+        </ContentCard>
       )}
     </div>
   );

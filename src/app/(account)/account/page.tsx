@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { updateProfile, getUserByClerkId } from "@/features/users/actions";
@@ -116,7 +116,7 @@ export default function AccountPage() {
 
       <div className="space-y-8">
         {/* Profile Card */}
-        <DashboardCard title="Public Profile">
+        <ContentCard title="Public Profile">
           <form onSubmit={handleSave} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-[14px] font-medium text-[#1A1A1A]">Display Name</Label>
@@ -157,10 +157,10 @@ export default function AccountPage() {
               </Button>
             </div>
           </form>
-        </DashboardCard>
+        </ContentCard>
 
         {/* Social Links Card */}
-        <DashboardCard title="Social Links">
+        <ContentCard title="Social Links">
           <form onSubmit={handleSaveSocial} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="twitterUrl" className="text-[14px] font-medium text-[#1A1A1A]">Twitter / X URL</Label>
@@ -211,10 +211,10 @@ export default function AccountPage() {
               </Button>
             </div>
           </form>
-        </DashboardCard>
+        </ContentCard>
 
         {/* Account Info Card */}
-        <DashboardCard title="Account Details">
+        <ContentCard title="Account Details">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
             <div className="sm:col-span-1">
               <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Email Address</dt>
@@ -243,10 +243,10 @@ export default function AccountPage() {
               </dd>
             </div>
           </dl>
-        </DashboardCard>
+        </ContentCard>
 
         {/* Stripe Connect Card */}
-        <DashboardCard title="Payouts & Stripe">
+        <ContentCard title="Payouts & Stripe">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             {dbUser?.stripeOnboarded ? (
@@ -286,7 +286,7 @@ export default function AccountPage() {
             )}
           </Button>
           </div>
-        </DashboardCard>
+        </ContentCard>
 
       </div>
     </div>

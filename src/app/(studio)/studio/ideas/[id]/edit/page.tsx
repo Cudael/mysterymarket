@@ -5,7 +5,7 @@ import { Pencil, AlertCircle } from "lucide-react";
 import { IdeaForm } from "@/features/ideas/components/idea-form";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
 import { PageHeader } from "@/components/shared/page-header";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { getIdeaById, updateIdea } from "@/features/ideas/actions";
 
 export const metadata: Metadata = {
@@ -44,7 +44,7 @@ export default async function EditIdeaPage({
       />
 
       {idea._count.purchases > 0 && (
-        <DashboardCard bodyClassName="p-4">
+        <ContentCard bodyClassName="p-4">
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 text-[#B8860B]" />
             <div>
@@ -57,10 +57,10 @@ export default async function EditIdeaPage({
               </p>
             </div>
           </div>
-        </DashboardCard>
+        </ContentCard>
       )}
 
-      <DashboardCard bodyClassName="p-6 sm:p-8">
+      <ContentCard bodyClassName="p-6 sm:p-8">
         <IdeaForm
           initialData={{
             title: idea.title,
@@ -76,7 +76,7 @@ export default async function EditIdeaPage({
           onSubmit={handleUpdate}
           submitLabel="Save Changes"
         />
-      </DashboardCard>
+      </ContentCard>
     </div>
   );
 }
