@@ -27,7 +27,7 @@ import prisma from "@/lib/prisma";
 import { RefundDialog } from "@/features/refunds/components/refund-dialog";
 
 export const metadata: Metadata = {
-  title: "Overview - MysteryMarket",
+  title: "My Library - MysteryMarket",
 };
 
 type RefundStatus = "PENDING" | "APPROVED" | "DENIED";
@@ -51,26 +51,26 @@ const RECENT_PURCHASES_LIMIT = 5;
 
 const quickLinks = [
   {
-    href: "/dashboard/insights",
-    title: "Insights",
+    href: "/my/activity",
+    title: "Activity",
     description: "Your spending activity and trends",
     icon: PieChart,
   },
   {
-    href: "/dashboard/bookmarks",
+    href: "/my/saved",
     title: "Saved Ideas",
     description: "Your curated collection",
     icon: Bookmark,
   },
   {
-    href: "/dashboard/wallet",
+    href: "/my/wallet",
     title: "Wallet",
     description: "Your balance and transaction history",
     icon: Wallet2,
   },
 ];
 
-export default async function DashboardPage() {
+export default async function MyPage() {
   let purchases: Awaited<ReturnType<typeof getPurchasesByUser>> = [];
   let refundRequests: Awaited<ReturnType<typeof getRefundRequestsForUser>> = [];
   let bookmarkCount = 0;
@@ -127,12 +127,12 @@ export default async function DashboardPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Overview" },
+          { label: "My Library" },
         ]}
       />
 
       <PageHeader
-        title="Overview"
+        title="My Library"
         description="Your purchases, saved ideas, and wallet — everything in one place."
         action={
           <Button asChild variant="outline">
@@ -178,7 +178,7 @@ export default async function DashboardPage() {
           {quickLinks.map((item) => {
             const Icon = item.icon;
             const helperText =
-              item.href === "/dashboard/bookmarks" && bookmarkCount > 0
+              item.href === "/my/saved" && bookmarkCount > 0
                 ? `${bookmarkCount} saved`
                 : item.description;
 
@@ -334,10 +334,10 @@ export default async function DashboardPage() {
               <p className="text-[13px] text-[#1A1A1A]/50">
                 Showing {RECENT_PURCHASES_LIMIT} of {purchases.length} purchases.{" "}
                 <Link
-                  href="/dashboard/insights"
+                  href="/my/activity"
                   className="font-medium text-[#3A5FCD] hover:text-[#6D7BE0]"
                 >
-                  View more in Insights →
+                  View more in Activity →
                 </Link>
               </p>
             </div>

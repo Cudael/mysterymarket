@@ -36,7 +36,7 @@ export default async function EditIdeaPage({
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Creator", href: "/creator" },
+          { label: "Creator Studio", href: "/studio" },
           { label: "Edit Idea" },
         ]}
       />

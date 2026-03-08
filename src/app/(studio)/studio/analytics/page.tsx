@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title: "Analytics - MysteryMarket",
 };
 
-export default async function CreatorAnalyticsPage() {
+export default async function StudioAnalyticsPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
@@ -81,7 +81,7 @@ export default async function CreatorAnalyticsPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Creator", href: "/creator" },
+          { label: "Creator Studio", href: "/studio" },
           { label: "Analytics" },
         ]}
       />

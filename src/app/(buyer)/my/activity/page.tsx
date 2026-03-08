@@ -24,10 +24,10 @@ import { DashboardCard } from "@/components/shared/dashboard-card";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Insights - MysteryMarket",
+  title: "Activity - MysteryMarket",
 };
 
-export default async function BuyerInsightsPage() {
+export default async function ActivityPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
@@ -91,13 +91,13 @@ export default async function BuyerInsightsPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Overview", href: "/dashboard" },
-          { label: "Insights" },
+          { label: "My Library", href: "/my" },
+          { label: "Activity" },
         ]}
       />
 
       <PageHeader
-        title="Insights"
+        title="Activity"
         description="Understand your spending patterns, purchase habits, and where your interests are trending."
         icon={<PieChart className="h-6 w-6 text-white" />}
       />
@@ -112,7 +112,7 @@ export default async function BuyerInsightsPage() {
               Buying activity snapshot
             </h2>
             <p className="mt-1 text-[14px] leading-6 text-[#1A1A1A]/60">
-              Use these metrics to see how much you’ve spent, which categories you
+              Use these metrics to see how much you&apos;ve spent, which categories you
               gravitate toward, and what kinds of ideas might be worth exploring next.
             </p>
           </div>

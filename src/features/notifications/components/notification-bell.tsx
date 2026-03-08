@@ -187,7 +187,7 @@ export function NotificationBell() {
         {/* Footer */}
         <div className="border-t border-[#D9DCE3] bg-[#F8F9FC] px-4 py-2.5">
           <Link
-            href="/dashboard/notifications"
+            href="/my/notifications"
             className="block text-center text-[12px] font-medium text-[#3A5FCD] hover:underline"
             onClick={() => setOpen(false)}
           >

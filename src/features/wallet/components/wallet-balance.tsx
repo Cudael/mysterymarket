@@ -67,7 +67,7 @@ export function WalletBalance({
           <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3">
             <p className="text-sm text-muted-foreground">
               <Link
-                href="/creator/connect"
+                href="/studio/payouts"
                 className="font-medium text-foreground underline hover:no-underline"
               >
                 Connect Stripe
@@ -92,7 +92,7 @@ export function WalletBalance({
             </Button>
           )}
           <Button asChild variant="outline" size="sm">
-            <Link href="/creator/connect">
+            <Link href="/studio/payouts">
               {stripeConnected ? "Stripe Settings" : "Connect Stripe"}
             </Link>
           </Button>

@@ -24,29 +24,29 @@ import { getUnreadCount } from "@/features/notifications/actions";
 import { getIsAdmin } from "@/features/admin/actions";
 
 const BUYER_LINKS = [
-  { href: "/dashboard", label: "Overview", icon: ShoppingBag, exact: true },
-  { href: "/dashboard/insights", label: "Insights", icon: PieChart, exact: false },
-  { href: "/dashboard/bookmarks", label: "Saved Ideas", icon: Bookmark, exact: false },
-  { href: "/dashboard/wallet", label: "Wallet", icon: Wallet2, exact: false },
-  { href: "/dashboard/notifications", label: "Notifications", icon: Bell, exact: false },
+  { href: "/my", label: "Overview", icon: ShoppingBag, exact: true },
+  { href: "/my/activity", label: "Activity", icon: PieChart, exact: false },
+  { href: "/my/saved", label: "Saved Ideas", icon: Bookmark, exact: false },
+  { href: "/my/wallet", label: "Wallet", icon: Wallet2, exact: false },
+  { href: "/my/notifications", label: "Notifications", icon: Bell, exact: false },
 ];
 
 const CREATOR_LINKS = [
-  { href: "/creator", label: "Overview", icon: LayoutDashboard, exact: true },
-  { href: "/creator/analytics", label: "Analytics", icon: BarChart3, exact: false },
-  { href: "/creator/wallet", label: "Wallet", icon: Wallet2, exact: false },
-  { href: "/creator/ideas/new", label: "New Idea", icon: PlusCircle, exact: true },
-  { href: "/creator/connect", label: "Payouts", icon: CreditCard, exact: false },
+  { href: "/studio", label: "Overview", icon: LayoutDashboard, exact: true },
+  { href: "/studio/analytics", label: "Analytics", icon: BarChart3, exact: false },
+  { href: "/studio/wallet", label: "Wallet", icon: Wallet2, exact: false },
+  { href: "/studio/ideas/new", label: "New Idea", icon: PlusCircle, exact: true },
+  { href: "/studio/payouts", label: "Payouts", icon: CreditCard, exact: false },
 ];
 
 const ACCOUNT_LINKS = [
-  { href: "/settings", label: "Settings", icon: Settings, exact: false },
+  { href: "/account", label: "Account", icon: Settings, exact: false },
 ];
 
 type Workspace = "buyer" | "creator";
 
 function getWorkspaceFromPath(pathname: string): Workspace {
-  if (pathname.startsWith("/creator")) return "creator";
+  if (pathname.startsWith("/studio")) return "creator";
   return "buyer";
 }
 
@@ -56,17 +56,17 @@ function getWorkspaceMeta(workspace: Workspace) {
       title: "Creator Studio",
       description: "Manage your ideas, payouts, and performance.",
       icon: Lightbulb,
-      switchHref: "/dashboard",
+      switchHref: "/my",
       switchLabel: "Switch to Buyer",
       switchIcon: ShoppingBag,
     };
   }
 
   return {
-    title: "My Account",
+    title: "My Library",
     description: "Purchases, saved ideas, and wallet.",
     icon: ShoppingBag,
-    switchHref: "/creator",
+    switchHref: "/studio",
     switchLabel: "Switch to Creator",
     switchIcon: Lightbulb,
   };
@@ -123,7 +123,7 @@ export function DashboardSidebar() {
     muted?: boolean;
   }) {
     const isActive = exact ? pathname === href : pathname.startsWith(href);
-    const isNotifications = href === "/dashboard/notifications";
+    const isNotifications = href === "/my/notifications";
 
     return (
       <Link
@@ -168,7 +168,7 @@ export function DashboardSidebar() {
                 type="button"
                 onClick={() => {
                   setActiveWorkspace("buyer");
-                  router.push("/dashboard");
+                  router.push("/my");
                 }}
                 className={cn(
                   "flex flex-1 items-center justify-center gap-2 rounded-[8px] px-3 py-2 text-[13px] font-semibold transition-all duration-200",
@@ -185,7 +185,7 @@ export function DashboardSidebar() {
                 type="button"
                 onClick={() => {
                   setActiveWorkspace("creator");
-                  router.push("/creator");
+                  router.push("/studio");
                 }}
                 className={cn(
                   "flex flex-1 items-center justify-center gap-2 rounded-[8px] px-3 py-2 text-[13px] font-semibold transition-all duration-200",
@@ -288,7 +288,7 @@ export function DashboardSidebar() {
                 type="button"
                 onClick={() => {
                   setActiveWorkspace("buyer");
-                  router.push("/dashboard");
+                  router.push("/my");
                 }}
                 className={cn(
                   "flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-[12px] font-semibold transition-all duration-200",
@@ -305,7 +305,7 @@ export function DashboardSidebar() {
                 type="button"
                 onClick={() => {
                   setActiveWorkspace("creator");
-                  router.push("/creator");
+                  router.push("/studio");
                 }}
                 className={cn(
                   "flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-[12px] font-semibold transition-all duration-200",
@@ -326,7 +326,7 @@ export function DashboardSidebar() {
             {(isBuyer ? BUYER_LINKS : CREATOR_LINKS).map(
               ({ href, label, icon: Icon, exact }) => {
                 const isActive = exact ? pathname === href : pathname.startsWith(href);
-                const isNotifications = href === "/dashboard/notifications";
+                const isNotifications = href === "/my/notifications";
 
                 return (
                   <Link

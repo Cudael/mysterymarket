@@ -13,7 +13,7 @@ export default async function AdminLayout({
   try {
     await requireAdmin();
   } catch {
-    redirect("/dashboard");
+    redirect("/my");
   }
 
   return (

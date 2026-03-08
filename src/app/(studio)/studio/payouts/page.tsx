@@ -58,7 +58,7 @@ function StatusRow({
   );
 }
 
-export default function ConnectPage() {
+export default function PayoutsPage() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<ConnectStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -143,7 +143,7 @@ export default function ConnectPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Creator", href: "/creator" },
+          { label: "Creator Studio", href: "/studio" },
           { label: "Payouts" },
         ]}
       />
@@ -198,7 +198,7 @@ export default function ConnectPage() {
                     Secure onboarding
                   </p>
                   <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/55">
-                    You’ll be redirected to Stripe to complete verification and
+                    You&apos;ll be redirected to Stripe to complete verification and
                     account setup.
                   </p>
                 </div>

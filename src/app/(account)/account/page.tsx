@@ -13,7 +13,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { updateProfile, getUserByClerkId } from "@/features/users/actions";
 import { CheckCircle2, AlertCircle, Save, ExternalLink, Settings } from "lucide-react";
 
-export default function SettingsPage() {
+export default function AccountPage() {
   const { user: clerkUser } = useUser();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
@@ -63,7 +63,7 @@ export default function SettingsPage() {
       await updateProfile({ name: name || undefined, bio: bio || undefined });
       toast.success("Profile saved successfully");
     } catch (err) {
-      console.error("[settings] Profile save failed:", err);
+      console.error("[account] Profile save failed:", err);
       toast.error("Failed to save profile");
     } finally {
       setIsSaving(false);
@@ -93,7 +93,7 @@ export default function SettingsPage() {
       });
       toast.success("Social links saved successfully");
     } catch (err) {
-      console.error("[settings] Social links save failed:", err);
+      console.error("[account] Social links save failed:", err);
       toast.error("Failed to save social links");
     } finally {
       setIsSavingSocial(false);
@@ -105,11 +105,11 @@ export default function SettingsPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Settings" },
+          { label: "Account" },
         ]}
       />
       <PageHeader
-        title="Settings"
+        title="Account"
         description="Manage your public profile and account preferences."
         icon={<Settings className="h-6 w-6 text-[#FFFFFF]" />}
       />
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                 View Stripe Dashboard <ExternalLink className="ml-2 h-4 w-4" />
               </a>
             ) : (
-              <a href="/creator/connect">
+              <a href="/studio/payouts">
                 Connect Stripe
               </a>
             )}

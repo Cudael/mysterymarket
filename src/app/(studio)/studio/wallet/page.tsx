@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Wallet - MysteryMarket",
 };
 
-export default async function WalletPage() {
+export default async function StudioWalletPage() {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
 
@@ -32,7 +32,7 @@ export default async function WalletPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Creator", href: "/creator" },
+          { label: "Creator Studio", href: "/studio" },
           { label: "Wallet" },
         ]}
       />
@@ -62,7 +62,7 @@ export default async function WalletPage() {
             </div>
 
             <Button asChild variant="outline">
-              <Link href="/creator/connect" className="gap-2">
+              <Link href="/studio/payouts" className="gap-2">
                 Open Payout Settings
                 <ArrowRight className="h-4 w-4" />
               </Link>

@@ -104,7 +104,7 @@ export default async function CheckoutSuccessPage({
           </p>
           <div className="mt-8 flex flex-col gap-3">
             <Button asChild className="w-full h-11 bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white">
-              <Link href="/dashboard">View My Purchases</Link>
+              <Link href="/my">View My Purchases</Link>
             </Button>
             <Button asChild variant="outline" className="w-full h-11 border-[#D9DCE3] bg-[#F8F9FC] text-[#1A1A1A]">
               <Link href="/ideas">Return to Marketplace</Link>
@@ -152,7 +152,7 @@ export default async function CheckoutSuccessPage({
             </Link>
           </Button>
           <Button asChild variant="outline" className="w-full sm:w-1/2 h-12 border-[#D9DCE3] text-[#1A1A1A] hover:bg-[#F8F9FC]">
-            <Link href="/dashboard">My Purchases</Link>
+            <Link href="/my">My Purchases</Link>
           </Button>
         </div>
 

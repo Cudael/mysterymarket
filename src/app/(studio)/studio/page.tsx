@@ -30,32 +30,32 @@ export const metadata: Metadata = {
 
 const quickLinks = [
   {
-    href: "/creator/analytics",
+    href: "/studio/analytics",
     title: "Analytics",
     description: "Track performance, reviews, and revenue trends.",
     icon: BarChart3,
   },
   {
-    href: "/creator/wallet",
+    href: "/studio/wallet",
     title: "Wallet",
     description: "Review your balance, earnings, and transactions.",
     icon: Wallet2,
   },
   {
-    href: "/creator/connect",
+    href: "/studio/payouts",
     title: "Payouts",
     description: "Connect Stripe and manage payout settings.",
     icon: CreditCard,
   },
   {
-    href: "/creator/ideas/new",
+    href: "/studio/ideas/new",
     title: "New Idea",
     description: "Publish a new premium insight for buyers.",
     icon: PlusCircle,
   },
 ];
 
-export default async function CreatorPage() {
+export default async function StudioPage() {
   const [ideas, { wallet }] = await Promise.all([
     getIdeasByCreator(),
     getWalletWithTransactions(0),
@@ -81,7 +81,7 @@ export default async function CreatorPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Creator" },
+          { label: "Creator Studio" },
         ]}
       />
 
@@ -91,7 +91,7 @@ export default async function CreatorPage() {
         icon={<Lightbulb className="h-6 w-6 text-white" />}
         action={
           <Button asChild>
-            <Link href="/creator/ideas/new" className="gap-2">
+            <Link href="/studio/ideas/new" className="gap-2">
               <PlusCircle className="h-4 w-4" />
               New Idea
             </Link>
@@ -140,14 +140,14 @@ export default async function CreatorPage() {
 
         <div className="mt-6 flex flex-col gap-3 border-t border-[#D9DCE3] pt-6 sm:flex-row">
           <Button asChild className="sm:w-auto">
-            <Link href="/creator/ideas/new" className="gap-2">
+            <Link href="/studio/ideas/new" className="gap-2">
               <PlusCircle className="h-4 w-4" />
               Publish New Idea
             </Link>
           </Button>
 
           <Button asChild variant="outline" className="sm:w-auto">
-            <Link href="/creator/wallet" className="gap-2">
+            <Link href="/studio/wallet" className="gap-2">
               <ReceiptText className="h-4 w-4" />
               View Wallet
             </Link>
@@ -199,7 +199,7 @@ export default async function CreatorPage() {
         action={
           ideas.length > 0 ? (
             <Button asChild size="sm" variant="outline">
-              <Link href="/creator/ideas/new" className="gap-2">
+              <Link href="/studio/ideas/new" className="gap-2">
                 <PlusCircle className="h-3.5 w-3.5" />
                 New Idea
               </Link>
@@ -217,10 +217,10 @@ export default async function CreatorPage() {
             </p>
             <p className="mt-2 max-w-lg text-[14px] leading-6 text-[#1A1A1A]/60">
               Start with one strong idea. Add a clear teaser, set a fair price,
-              and publish when you’re ready. You can always edit drafts later.
+              and publish when you&apos;re ready. You can always edit drafts later.
             </p>
             <Button asChild className="mt-6">
-              <Link href="/creator/ideas/new">Create Your First Idea</Link>
+              <Link href="/studio/ideas/new">Create Your First Idea</Link>
             </Button>
           </div>
         ) : (
@@ -285,7 +285,7 @@ export default async function CreatorPage() {
                             published={idea.published}
                           />
                           <Button asChild size="sm" variant="outline" className="h-8">
-                            <Link href={`/creator/ideas/${idea.id}/edit`}>
+                            <Link href={`/studio/ideas/${idea.id}/edit`}>
                               <Pencil className="mr-1 h-3 w-3" />
                               Edit
                             </Link>
@@ -340,7 +340,7 @@ export default async function CreatorPage() {
                       published={idea.published}
                     />
                     <Button asChild size="sm" variant="outline" className="h-8">
-                      <Link href={`/creator/ideas/${idea.id}/edit`}>
+                      <Link href={`/studio/ideas/${idea.id}/edit`}>
                         <Pencil className="mr-1 h-3 w-3" />
                         Edit
                       </Link>

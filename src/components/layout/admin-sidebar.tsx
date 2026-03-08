@@ -86,7 +86,7 @@ export function AdminSidebar() {
             <div className="h-px bg-[#D9DCE3]" />
             <div className="pt-4">
               <Link
-                href="/dashboard"
+                href="/my"
                 className="flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[14px] font-medium text-[#1A1A1A]/60 transition-all hover:bg-[#FFFFFF] hover:text-[#1A1A1A]"
               >
                 <ArrowLeft className="h-4 w-4 text-[#1A1A1A]/40" />
@@ -120,7 +120,7 @@ export function AdminSidebar() {
           })}
 
           <Link
-            href="/dashboard"
+            href="/my"
             className="flex shrink-0 items-center gap-2 rounded-[9px] bg-[#F5F6FA] px-4 py-2.5 text-[14px] font-medium text-[#1A1A1A]/70 transition-colors hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
           >
             <ArrowLeft className="h-4 w-4" />

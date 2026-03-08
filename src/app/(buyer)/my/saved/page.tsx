@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Saved Ideas - MysteryMarket",
 };
 
-export default async function BookmarksPage() {
+export default async function SavedPage() {
   let bookmarks: Awaited<ReturnType<typeof getBookmarks>> = [];
   try {
     bookmarks = await getBookmarks();
@@ -24,7 +24,7 @@ export default async function BookmarksPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Overview", href: "/dashboard" },
+          { label: "My Library", href: "/my" },
           { label: "Saved Ideas" },
         ]}
       />
@@ -54,7 +54,7 @@ export default async function BookmarksPage() {
                   Quick tip
                 </p>
                 <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/60">
-                  Use bookmarks to shortlist ideas before buying. It’s an easy way
+                  Use bookmarks to shortlist ideas before buying. It&apos;s an easy way
                   to compare pricing, categories, and creators.
                 </p>
               </div>
@@ -63,7 +63,7 @@ export default async function BookmarksPage() {
         </DashboardCard>
       ) : (
         <DashboardCard
-          title="Your Bookmarks"
+          title="Your Saved Ideas"
           bodyClassName="p-0 sm:p-6"
         >
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">

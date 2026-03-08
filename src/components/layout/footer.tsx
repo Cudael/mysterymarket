@@ -28,9 +28,9 @@ export function Footer() {
             </h3>
             <ul className="space-y-3.5">
               <li><Link href="/ideas" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Explore Ideas</Link></li>
-              <li><Link href="/creator" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Creator Studio</Link></li>
-              <li><Link href="/dashboard" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">My Account</Link></li>
-              <li><Link href="/dashboard/bookmarks" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Saved Ideas</Link></li>
+              <li><Link href="/studio" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Creator Studio</Link></li>
+              <li><Link href="/my" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">My Library</Link></li>
+              <li><Link href="/my/saved" className="text-[15px] font-medium text-[#1A1A1A]/60 transition-colors hover:text-[#3A5FCD]">Saved Ideas</Link></li>
             </ul>
           </div>
 

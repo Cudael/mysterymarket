@@ -19,6 +19,22 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ["@prisma/client"],
+  async redirects() {
+    return [
+      { source: "/dashboard", destination: "/my", permanent: true },
+      { source: "/dashboard/insights", destination: "/my/activity", permanent: true },
+      { source: "/dashboard/bookmarks", destination: "/my/saved", permanent: true },
+      { source: "/dashboard/wallet", destination: "/my/wallet", permanent: true },
+      { source: "/dashboard/notifications", destination: "/my/notifications", permanent: true },
+      { source: "/creator", destination: "/studio", permanent: true },
+      { source: "/creator/analytics", destination: "/studio/analytics", permanent: true },
+      { source: "/creator/wallet", destination: "/studio/wallet", permanent: true },
+      { source: "/creator/ideas/new", destination: "/studio/ideas/new", permanent: true },
+      { source: "/creator/connect", destination: "/studio/payouts", permanent: true },
+      { source: "/creator/ideas/:id/edit", destination: "/studio/ideas/:id/edit", permanent: true },
+      { source: "/settings", destination: "/account", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

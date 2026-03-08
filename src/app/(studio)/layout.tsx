@@ -3,7 +3,7 @@ import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
 
 export const dynamic = "force-dynamic";
 
-export default function DashboardLayout({
+export default function StudioLayout({
   children,
 }: {
   children: React.ReactNode;

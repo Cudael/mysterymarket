@@ -21,14 +21,14 @@ export default async function NewIdeaPage() {
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Creator", href: "/creator" },
+          { label: "Creator Studio", href: "/studio" },
           { label: "New Idea" },
         ]}
       />
 
       <PageHeader
         title="Create New Idea"
-        description="Share your insight, set your price, and publish when you’re ready. Payout setup can be completed later."
+        description="Share your insight, set your price, and publish when you're ready. Payout setup can be completed later."
         icon={<Lightbulb className="h-6 w-6 text-white" />}
       />
 
