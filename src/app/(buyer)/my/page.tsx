@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PageHeader } from "@/components/shared/page-header";
 import { InlineStatCard } from "@/components/shared/stat-card";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { getPurchasesByUser } from "@/features/purchases/actions";
 import { getRefundRequestsForUser } from "@/features/refunds/actions";
 import { formatPrice } from "@/lib/utils";
@@ -90,7 +90,7 @@ export default async function MyPage() {
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
         title="My Library"
-        description="Your unlocked ideas, saved collections, and account activity."
+        description="Your unlocked ideas and collections — all in one place."
         action={
           <Button asChild variant="outline">
             <Link href="/ideas">
@@ -103,7 +103,7 @@ export default async function MyPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <InlineStatCard
-          label="Total Purchases"
+          label="Ideas Unlocked"
           value={purchases.length}
           icon={ShoppingBag}
         />
@@ -115,12 +115,12 @@ export default async function MyPage() {
       </div>
 
       {purchases.length === 0 ? (
-        <DashboardCard bodyClassName="p-0">
+        <ContentCard bodyClassName="p-0">
           <div className="rounded-[16px] bg-[#F8F9FC] p-2">
             <EmptyState
               icon={<ShoppingBag className="h-9 w-9 text-[#1A1A1A]/40" />}
-              title="No purchases yet"
-              description="Browse the marketplace to unlock premium ideas from creators across different categories."
+              title="Start your collection"
+              description="Discover premium ideas from top creators. Every idea you unlock becomes part of your personal library."
               action={{ label: "Explore Marketplace", href: "/ideas" }}
             />
           </div>
@@ -128,7 +128,7 @@ export default async function MyPage() {
           {recommendedIdeas.length > 0 && (
             <div className="border-t border-[#D9DCE3] px-6 py-6">
               <h2 className="text-[14px] font-bold uppercase tracking-[0.08em] text-[#1A1A1A]/45">
-                Recommended to start with
+                Recommended for you
               </h2>
 
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -152,9 +152,9 @@ export default async function MyPage() {
               </div>
             </div>
           )}
-        </DashboardCard>
+        </ContentCard>
       ) : (
-        <DashboardCard
+        <ContentCard
           title="Recent Purchases"
           bodyClassName="p-0"
         >
@@ -248,7 +248,7 @@ export default async function MyPage() {
               </p>
             </div>
           )}
-        </DashboardCard>
+        </ContentCard>
       )}
     </div>
   );

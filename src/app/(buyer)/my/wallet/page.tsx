@@ -7,7 +7,7 @@ import { WalletTransactions } from "@/features/wallet/components/wallet-transact
 import { DepositDialog } from "@/features/wallet/components/deposit-dialog";
 import { formatPrice } from "@/lib/utils";
 import { PageHeader } from "@/components/shared/page-header";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import prisma from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -41,7 +41,7 @@ export default async function BuyerWalletPage({
     <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
         title="Wallet"
-        description="Add funds, manage your balance, and pay for premium ideas without leaving the platform."
+        description="Your MysteryMarket balance. Add funds to unlock ideas instantly."
         icon={<Wallet2 className="h-6 w-6 text-white" />}
         action={<DepositDialog />}
       />
@@ -55,7 +55,7 @@ export default async function BuyerWalletPage({
         </div>
       )}
 
-      <DashboardCard title="Balance Overview" titleIcon={Wallet2} bodyClassName="p-6 md:p-8">
+      <ContentCard title="Your Balance" titleIcon={Wallet2} bodyClassName="p-6 md:p-8">
         <div className="space-y-8">
           <div>
             <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/45">
@@ -92,11 +92,11 @@ export default async function BuyerWalletPage({
             </div>
           </div>
         </div>
-      </DashboardCard>
+      </ContentCard>
 
-      <DashboardCard title="Transaction History" bodyClassName="p-0 sm:p-6">
+      <ContentCard title="Transactions" bodyClassName="p-0 sm:p-6">
         <WalletTransactions transactions={transactions} />
-      </DashboardCard>
+      </ContentCard>
     </div>
   );
 }

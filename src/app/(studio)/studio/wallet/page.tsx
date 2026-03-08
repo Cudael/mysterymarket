@@ -8,7 +8,7 @@ import { getConnectAccountStatus } from "@/features/stripe/actions";
 import { WalletBalance } from "@/features/wallet/components/wallet-balance";
 import { WalletTransactions } from "@/features/wallet/components/wallet-transactions";
 import { PageHeader } from "@/components/shared/page-header";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default async function StudioWalletPage() {
       />
 
       {!stripeReady && (
-        <DashboardCard bodyClassName="p-5">
+        <ContentCard bodyClassName="p-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
@@ -59,21 +59,21 @@ export default async function StudioWalletPage() {
               </Link>
             </Button>
           </div>
-        </DashboardCard>
+        </ContentCard>
       )}
 
-      <DashboardCard title="Balance Overview" titleIcon={Wallet2} bodyClassName="p-6">
+      <ContentCard title="Balance Overview" titleIcon={Wallet2} bodyClassName="p-6">
         <WalletBalance
           balanceInCents={wallet.balanceInCents}
           totalEarnedInCents={wallet.totalEarnedInCents}
           totalWithdrawnInCents={wallet.totalWithdrawnInCents}
           stripeConnected={stripeReady}
         />
-      </DashboardCard>
+      </ContentCard>
 
-      <DashboardCard title="Recent Transactions" titleIcon={ReceiptText} bodyClassName="p-0 sm:p-6">
+      <ContentCard title="Recent Transactions" titleIcon={ReceiptText} bodyClassName="p-0 sm:p-6">
         <WalletTransactions transactions={transactions} />
-      </DashboardCard>
+      </ContentCard>
     </div>
   );
 }

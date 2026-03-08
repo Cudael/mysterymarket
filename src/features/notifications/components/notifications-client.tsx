@@ -97,8 +97,8 @@ export function NotificationsClient({
     return (
       <EmptyState
         icon={<Bell className="h-9 w-9 text-[#1A1A1A]/40" />}
-        title="All caught up!"
-        description="You have no notifications right now. We'll let you know when something important happens."
+        title="All caught up"
+        description="You'll see notifications here when there's activity on your purchases or account."
       />
     );
   }

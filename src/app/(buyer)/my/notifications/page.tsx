@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { getNotifications, markAllRead } from "@/features/notifications/actions";
 import { NotificationsClient } from "@/features/notifications/components/notifications-client";
 import { PageHeader } from "@/components/shared/page-header";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import type { Notification } from "@prisma/client";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default async function NotificationsPage() {
     <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
         title="Notifications"
-        description="Stay up to date with activity across your account."
+        description="Stay up to date with your purchases, reviews, and account activity."
         icon={<Bell className="h-6 w-6 text-white" />}
         action={
           unreadCount > 0 ? (
@@ -49,7 +49,7 @@ export default async function NotificationsPage() {
         }
       />
 
-      <DashboardCard
+      <ContentCard
         title="Inbox"
         bodyClassName="p-0"
         action={
@@ -68,7 +68,7 @@ export default async function NotificationsPage() {
           initialNotifications={notifications}
           initialUnreadCount={unreadCount}
         />
-      </DashboardCard>
+      </ContentCard>
     </div>
   );
 }

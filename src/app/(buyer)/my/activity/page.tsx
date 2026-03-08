@@ -7,8 +7,6 @@ import {
   DollarSign,
   ShoppingBag,
   Tag,
-  Users,
-  TrendingUp,
   Calendar,
   Sparkles,
   ArrowRight,
@@ -18,8 +16,8 @@ import { CategoryBreakdown } from "@/features/analytics/components/category-brea
 import { PurchaseTimeline } from "@/features/analytics/components/purchase-timeline";
 import { getBuyerAnalytics } from "@/features/analytics/actions";
 import { PageHeader } from "@/components/shared/page-header";
-import { StatCard } from "@/components/shared/stat-card";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { InlineStatCard } from "@/components/shared/stat-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -50,37 +48,21 @@ export default async function ActivityPage() {
     {
       label: "Total Spent",
       value: formatPrice(stats.totalSpent),
-      sub: "Lifetime purchases",
       icon: DollarSign,
     },
     {
-      label: "Purchases",
+      label: "Ideas Unlocked",
       value: stats.totalPurchases,
-      sub: "Completed unlocks",
       icon: ShoppingBag,
     },
     {
-      label: "Categories",
+      label: "Categories Explored",
       value: stats.uniqueCategories,
-      sub: "Explored so far",
       icon: Tag,
-    },
-    {
-      label: "Creators",
-      value: stats.uniqueCreators,
-      sub: "Bought from",
-      icon: Users,
-    },
-    {
-      label: "Average Spend",
-      value: formatPrice(stats.averageSpent),
-      sub: "Per purchase",
-      icon: TrendingUp,
     },
     {
       label: "Member Since",
       value: memberSince,
-      sub: "First purchase",
       icon: Calendar,
     },
   ];
@@ -89,79 +71,54 @@ export default async function ActivityPage() {
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
         title="Activity"
-        description="Understand your spending patterns, purchase habits, and where your interests are trending."
+        description="A snapshot of your buying journey — what you've unlocked, explored, and spent."
         icon={<PieChart className="h-6 w-6 text-white" />}
       />
 
-      <DashboardCard bodyClassName="p-6">
-        <div className="flex items-start gap-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
-            <TrendingUp className="h-5 w-5 text-[#3A5FCD]" />
-          </div>
-          <div>
-            <h2 className="text-[18px] font-semibold text-[#1A1A1A]">
-              Buying activity snapshot
-            </h2>
-            <p className="mt-1 text-[14px] leading-6 text-[#1A1A1A]/60">
-              Use these metrics to see how much you&apos;ve spent, which categories you
-              gravitate toward, and what kinds of ideas might be worth exploring next.
-            </p>
-          </div>
-        </div>
-      </DashboardCard>
-
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {statsConfig.map((stat) => (
-          <StatCard
+          <InlineStatCard
             key={stat.label}
             label={stat.label}
             value={stat.value}
-            subLabel={stat.sub}
             icon={stat.icon}
           />
         ))}
       </div>
 
-      <DashboardCard title="Spending Over Time" bodyClassName="p-6">
-        <p className="mb-4 text-[13px] text-[#1A1A1A]/55">
-          Track how your spending changes month to month.
-        </p>
+      <ContentCard title="Monthly spending" bodyClassName="p-6">
         <div className="h-[320px]">
           <SpendingChart data={spendingByMonth} />
         </div>
-      </DashboardCard>
+      </ContentCard>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <DashboardCard title="Spending by Category" bodyClassName="p-6">
+        <ContentCard title="Categories you explore" bodyClassName="p-6">
           <CategoryBreakdown data={categoryBreakdown} />
-        </DashboardCard>
+        </ContentCard>
 
-        <DashboardCard
-          title="Recent Purchases"
+        <ContentCard
+          title="Purchase history"
           bodyClassName="max-h-[500px] overflow-y-auto p-6"
         >
           <PurchaseTimeline purchases={purchaseTimeline} />
-        </DashboardCard>
+        </ContentCard>
       </div>
 
       {recommendedIdeas.length > 0 && (
-        <DashboardCard
-          title="Recommended for You"
+        <ContentCard
+          title="Ideas you might like"
           titleIcon={Sparkles}
           action={
             <Link
               href="/ideas"
               className="flex items-center gap-1 text-[13px] font-medium text-[#3A5FCD] transition-colors hover:text-[#6D7BE0]"
             >
-              Explore all <ArrowRight className="h-3.5 w-3.5" />
+              More to explore <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           }
           bodyClassName="p-6"
         >
-          <p className="mb-4 text-[13px] text-[#1A1A1A]/55">
-            Based on your purchases and browsing interests.
-          </p>
-
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {recommendedIdeas.map((idea) => (
               <Link
@@ -218,7 +175,7 @@ export default async function ActivityPage() {
               </Link>
             ))}
           </div>
-        </DashboardCard>
+        </ContentCard>
       )}
     </div>
   );

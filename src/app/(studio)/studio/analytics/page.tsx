@@ -16,7 +16,7 @@ import { RecentSales } from "@/features/analytics/components/recent-sales";
 import { PayoutInfo } from "@/features/analytics/components/payout-info";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { getCreatorAnalytics } from "@/features/analytics/actions";
 import { getConnectAccountStatus } from "@/features/stripe/actions";
 import { formatPrice } from "@/lib/utils";
@@ -83,7 +83,7 @@ export default async function StudioAnalyticsPage() {
         icon={<BarChart3 className="h-6 w-6 text-white" />}
       />
 
-      <DashboardCard bodyClassName="p-6">
+      <ContentCard bodyClassName="p-6">
         <div className="flex items-start gap-4">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
             <TrendingUp className="h-5 w-5 text-[#3A5FCD]" />
@@ -98,7 +98,7 @@ export default async function StudioAnalyticsPage() {
             </p>
           </div>
         </div>
-      </DashboardCard>
+      </ContentCard>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
         {statsConfig.map((stat) => (
@@ -112,7 +112,7 @@ export default async function StudioAnalyticsPage() {
         ))}
       </div>
 
-      <DashboardCard title="Revenue Over Time" bodyClassName="p-6">
+      <ContentCard title="Revenue Over Time" bodyClassName="p-6">
         <div className="mb-4">
           <p className="text-[13px] text-[#1A1A1A]/55">
             Track monthly earnings to spot momentum and seasonality.
@@ -121,24 +121,24 @@ export default async function StudioAnalyticsPage() {
         <div className="h-[320px]">
           <RevenueChart data={revenueByMonth} />
         </div>
-      </DashboardCard>
+      </ContentCard>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <DashboardCard title="Top Performing Ideas" bodyClassName="p-0 sm:p-6">
+        <ContentCard title="Top Performing Ideas" bodyClassName="p-0 sm:p-6">
           <TopIdeasTable ideas={topIdeas} />
-        </DashboardCard>
+        </ContentCard>
 
-        <DashboardCard title="Recent Sales" bodyClassName="p-0 sm:p-6">
+        <ContentCard title="Recent Sales" bodyClassName="p-0 sm:p-6">
           <RecentSales sales={recentSales} />
-        </DashboardCard>
+        </ContentCard>
       </div>
 
-      <DashboardCard title="Payout Settings" bodyClassName="p-6">
+      <ContentCard title="Payout Settings" bodyClassName="p-6">
         <PayoutInfo
           connected={connectStatus.connected}
           onboarded={connectStatus.onboarded}
         />
-      </DashboardCard>
+      </ContentCard>
     </div>
   );
 }

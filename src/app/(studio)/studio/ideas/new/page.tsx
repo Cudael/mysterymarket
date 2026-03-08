@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Lightbulb, Sparkles } from "lucide-react";
 import { IdeaForm } from "@/features/ideas/components/idea-form";
 import { PageHeader } from "@/components/shared/page-header";
-import { DashboardCard } from "@/components/shared/dashboard-card";
+import { ContentCard } from "@/components/shared/content-card";
 import { createIdea } from "@/features/ideas/actions";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default async function NewIdeaPage() {
         icon={<Lightbulb className="h-6 w-6 text-white" />}
       />
 
-      <DashboardCard bodyClassName="p-6 sm:p-8">
+      <ContentCard bodyClassName="p-6 sm:p-8">
         <div className="mb-6 flex items-start gap-3 rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
           <Sparkles className="mt-0.5 h-5 w-5 text-[#3A5FCD]" />
           <div>
@@ -38,7 +38,7 @@ export default async function NewIdeaPage() {
         </div>
 
         <IdeaForm onSubmit={createIdea} />
-      </DashboardCard>
+      </ContentCard>
     </div>
   );
 }
