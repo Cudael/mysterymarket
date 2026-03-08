@@ -93,7 +93,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
       if (result.status === "complete") {
         await setSignInActive({ session: result.createdSessionId });
         onOpenChange(false);
-        router.push("/dashboard");
+        router.push("/my");
       }
     } catch (err: unknown) {
       const clerkError = err as { errors?: { message: string }[] };
@@ -108,7 +108,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
     await signIn.authenticateWithRedirect({
       strategy: "oauth_google",
       redirectUrl: "/sso-callback",
-      redirectUrlComplete: "/dashboard",
+      redirectUrlComplete: "/my",
     });
   }
 
@@ -143,7 +143,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
       if (result.status === "complete") {
         await setSignUpActive({ session: result.createdSessionId });
         onOpenChange(false);
-        router.push("/dashboard");
+        router.push("/my");
       }
     } catch (err: unknown) {
       const clerkError = err as { errors?: { message: string }[] };
@@ -158,7 +158,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
     await signUp.authenticateWithRedirect({
       strategy: "oauth_google",
       redirectUrl: "/sso-callback",
-      redirectUrlComplete: "/dashboard",
+      redirectUrlComplete: "/my",
     });
   }
 

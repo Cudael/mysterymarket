@@ -147,7 +147,7 @@ export default async function CheckoutSuccessPage({
 
         <div className="mt-8 flex flex-col sm:flex-row items-center gap-3">
           <Button asChild className="w-full sm:w-1/2 h-12 bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] gap-2">
-            <Link href={ideaId ? `/ideas/${ideaId}` : "/dashboard"}>
+            <Link href={ideaId ? `/ideas/${ideaId}` : "/my"}>
               Read the idea <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>

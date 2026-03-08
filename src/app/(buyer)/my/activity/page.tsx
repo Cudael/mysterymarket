@@ -3,20 +3,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import {
-  PieChart,
+  Clock,
   DollarSign,
   ShoppingBag,
-  Tag,
-  Calendar,
   Sparkles,
   ArrowRight,
 } from "lucide-react";
-import { SpendingChart } from "@/features/analytics/components/spending-chart";
-import { CategoryBreakdown } from "@/features/analytics/components/category-breakdown";
 import { PurchaseTimeline } from "@/features/analytics/components/purchase-timeline";
 import { getBuyerAnalytics } from "@/features/analytics/actions";
 import { PageHeader } from "@/components/shared/page-header";
-import { InlineStatCard } from "@/components/shared/stat-card";
 import { ContentCard } from "@/components/shared/content-card";
 import { formatPrice } from "@/lib/utils";
 
@@ -31,79 +26,38 @@ export default async function ActivityPage() {
   const analytics = await getBuyerAnalytics();
   const {
     stats,
-    spendingByMonth,
-    categoryBreakdown,
     purchaseTimeline,
     recommendedIdeas,
   } = analytics;
 
-  const memberSince = stats.firstPurchaseDate
-    ? new Date(stats.firstPurchaseDate).toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      })
-    : "—";
-
-  const statsConfig = [
-    {
-      label: "Total Spent",
-      value: formatPrice(stats.totalSpent),
-      icon: DollarSign,
-    },
-    {
-      label: "Ideas Unlocked",
-      value: stats.totalPurchases,
-      icon: ShoppingBag,
-    },
-    {
-      label: "Categories Explored",
-      value: stats.uniqueCategories,
-      icon: Tag,
-    },
-    {
-      label: "Member Since",
-      value: memberSince,
-      icon: Calendar,
-    },
-  ];
-
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
-        title="Activity"
-        description="A snapshot of your buying journey — what you've unlocked, explored, and spent."
-        icon={<PieChart className="h-6 w-6 text-white" />}
+        title="Purchase history &amp; interests"
+        description="Everything you've unlocked — your ideas, your journey."
+        icon={<Clock className="h-6 w-6 text-white" />}
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {statsConfig.map((stat) => (
-          <InlineStatCard
-            key={stat.label}
-            label={stat.label}
-            value={stat.value}
-            icon={stat.icon}
-          />
-        ))}
-      </div>
-
-      <ContentCard title="Monthly spending" bodyClassName="p-6">
-        <div className="h-[320px]">
-          <SpendingChart data={spendingByMonth} />
+      {/* Inline key stats */}
+      <div className="flex flex-wrap gap-6">
+        <div className="flex items-center gap-2.5 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] px-5 py-3.5">
+          <DollarSign className="h-4 w-4 text-[#3A5FCD]" />
+          <span className="text-[13px] text-[#1A1A1A]/60">Total spent</span>
+          <span className="text-[15px] font-bold text-[#1A1A1A]">{formatPrice(stats.totalSpent)}</span>
         </div>
-      </ContentCard>
-
-      <div className="grid gap-6 xl:grid-cols-2">
-        <ContentCard title="Categories you explore" bodyClassName="p-6">
-          <CategoryBreakdown data={categoryBreakdown} />
-        </ContentCard>
-
-        <ContentCard
-          title="Purchase history"
-          bodyClassName="max-h-[500px] overflow-y-auto p-6"
-        >
-          <PurchaseTimeline purchases={purchaseTimeline} />
-        </ContentCard>
+        <div className="flex items-center gap-2.5 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] px-5 py-3.5">
+          <ShoppingBag className="h-4 w-4 text-[#3A5FCD]" />
+          <span className="text-[13px] text-[#1A1A1A]/60">Ideas unlocked</span>
+          <span className="text-[15px] font-bold text-[#1A1A1A]">{stats.totalPurchases}</span>
+        </div>
       </div>
+
+      <ContentCard
+        title="Recent purchases"
+        bodyClassName="max-h-[600px] overflow-y-auto p-6"
+      >
+        <PurchaseTimeline purchases={purchaseTimeline} />
+      </ContentCard>
 
       {recommendedIdeas.length > 0 && (
         <ContentCard

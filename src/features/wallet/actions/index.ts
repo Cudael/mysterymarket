@@ -200,8 +200,8 @@ export async function createDepositSession(amountInCents: number) {
       },
     ],
     mode: "payment",
-    success_url: absoluteUrl("/dashboard/wallet?deposit=success"),
-    cancel_url: absoluteUrl("/dashboard/wallet"),
+    success_url: absoluteUrl("/my/wallet?deposit=success"),
+    cancel_url: absoluteUrl("/my/wallet"),
     metadata: {
       type: "wallet_deposit",
       userId: user.id,

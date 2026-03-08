@@ -23,7 +23,7 @@ export async function toggleBookmark(ideaId: string): Promise<{ bookmarked: bool
   if (existing) {
     await prisma.bookmark.delete({ where: { id: existing.id } });
     revalidatePath(`/ideas/${ideaId}`);
-    revalidatePath("/dashboard/bookmarks");
+    revalidatePath("/my/saved");
     return { bookmarked: false };
   }
 
@@ -48,7 +48,7 @@ export async function toggleBookmark(ideaId: string): Promise<{ bookmarked: bool
   }
 
   revalidatePath(`/ideas/${ideaId}`);
-  revalidatePath("/dashboard/bookmarks");
+  revalidatePath("/my/saved");
   return { bookmarked: true };
 }
 

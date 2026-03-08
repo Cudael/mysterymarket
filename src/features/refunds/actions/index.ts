@@ -89,6 +89,6 @@ export async function updateRefundStatus(
     type: "REFUND",
     title: "Refund Update",
     message: `Your refund request for '${refundRequest.purchase.idea.title}' has been ${statusLabel}`,
-    link: "/dashboard",
+    link: "/my",
   });
 }
