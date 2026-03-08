@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { Wallet2, ArrowDownCircle, ShoppingCart } from "lucide-react";
+import { Wallet2, ArrowDownCircle, ShoppingCart, CheckCircle2 } from "lucide-react";
 import { getWalletWithTransactions } from "@/features/wallet/actions";
 import { WalletTransactions } from "@/features/wallet/components/wallet-transactions";
 import { DepositDialog } from "@/features/wallet/components/deposit-dialog";
@@ -24,10 +24,8 @@ export default async function BuyerWalletPage({
   if (!userId) redirect("/sign-in");
 
   const { deposit } = await searchParams;
-
   const { wallet, transactions } = await getWalletWithTransactions(50);
 
-  // Compute totals from a single aggregation grouped by transaction type
   const typeTotals = await prisma.walletTransaction.groupBy({
     by: ["type"],
     where: { walletId: wallet.id },
@@ -41,66 +39,71 @@ export default async function BuyerWalletPage({
   const totalSpentInCents = getTotal("PURCHASE");
 
   return (
-    <div className="mx-auto max-w-5xl pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+    <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <Breadcrumbs
         items={[
           { label: "Home", href: "/" },
-          { label: "Buyer Overview", href: "/dashboard" },
+          { label: "Dashboard", href: "/dashboard" },
           { label: "Wallet" },
         ]}
       />
+
       <PageHeader
         title="Wallet"
-        description="Deposit funds and pay for premium ideas without leaving the platform."
-        icon={<Wallet2 className="h-6 w-6 text-[#FFFFFF]" />}
+        description="Add funds, manage your balance, and pay for premium ideas without leaving the platform."
+        icon={<Wallet2 className="h-6 w-6 text-white" />}
         action={<DepositDialog />}
       />
 
       {deposit === "success" && (
-        <div className="rounded-[8px] border border-[#C8E6C9] bg-[#E8F5E9] p-4 shadow-sm">
-          <p className="text-[14px] font-medium text-[#054F31] flex items-center gap-2">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#4CAF50] text-white text-xs">✓</span>
-            Funds added successfully! Your balance has been updated.
+        <div className="flex items-center gap-3 rounded-[12px] border border-[#C8E6C9] bg-[#E8F5E9] p-4 shadow-sm">
+          <CheckCircle2 className="h-5 w-5 text-[#054F31]" />
+          <p className="text-[14px] font-medium text-[#054F31]">
+            Funds added successfully. Your wallet balance has been updated.
           </p>
         </div>
       )}
 
-      <DashboardCard title="Balance Overview" titleIcon={Wallet2} bodyClassName="p-6 md:p-8 space-y-8">
-        <div>
-          <p className="text-[14px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Available Balance</p>
-          <p className="mt-2 text-5xl font-bold tracking-tight text-[#1A1A1A]">
-            {formatPrice(wallet.balanceInCents)}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="rounded-[10px] border border-[#D9DCE3] bg-[#F8F9FC] p-4 flex flex-col justify-center">
-            <div className="flex items-center gap-2 text-[#054F31] mb-2">
-              <ArrowDownCircle className="h-4 w-4" />
-              <span className="text-[12px] font-bold uppercase tracking-wider">
-                Total Deposited
-              </span>
-            </div>
-            <p className="text-xl font-bold text-[#1A1A1A]">
-              {formatPrice(totalDeposited)}
+      <DashboardCard title="Balance Overview" titleIcon={Wallet2} bodyClassName="p-6 md:p-8">
+        <div className="space-y-8">
+          <div>
+            <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/45">
+              Available Balance
+            </p>
+            <p className="mt-2 text-5xl font-bold tracking-tight text-[#1A1A1A]">
+              {formatPrice(wallet.balanceInCents)}
             </p>
           </div>
 
-          <div className="rounded-[10px] border border-[#D9DCE3] bg-[#F8F9FC] p-4 flex flex-col justify-center">
-            <div className="flex items-center gap-2 text-[#D32F2F] mb-2">
-              <ShoppingCart className="h-4 w-4" />
-              <span className="text-[12px] font-bold uppercase tracking-wider">
-                Total Spent
-              </span>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
+              <div className="mb-2 flex items-center gap-2 text-[#054F31]">
+                <ArrowDownCircle className="h-4 w-4" />
+                <span className="text-[12px] font-bold uppercase tracking-[0.08em]">
+                  Total Deposited
+                </span>
+              </div>
+              <p className="text-xl font-bold text-[#1A1A1A]">
+                {formatPrice(totalDeposited)}
+              </p>
             </div>
-            <p className="text-xl font-bold text-[#1A1A1A]">
-              {formatPrice(totalSpentInCents)}
-            </p>
+
+            <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
+              <div className="mb-2 flex items-center gap-2 text-[#D32F2F]">
+                <ShoppingCart className="h-4 w-4" />
+                <span className="text-[12px] font-bold uppercase tracking-[0.08em]">
+                  Total Spent
+                </span>
+              </div>
+              <p className="text-xl font-bold text-[#1A1A1A]">
+                {formatPrice(totalSpentInCents)}
+              </p>
+            </div>
           </div>
         </div>
       </DashboardCard>
 
-      <DashboardCard title="Transaction History" bodyClassName="p-6">
+      <DashboardCard title="Transaction History" bodyClassName="p-0 sm:p-6">
         <WalletTransactions transactions={transactions} />
       </DashboardCard>
     </div>
