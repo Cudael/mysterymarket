@@ -15,11 +15,7 @@ const allPosts: BlogPostWithContent[] = [
 
 export function getAllPosts(): BlogPost[] {
   return allPosts
-    .map((p) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { content: _, ...meta } = p;
-      return meta;
-    })
+    .map(({ content: _content, ...meta }): BlogPost => meta)
     .sort(
       (a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()

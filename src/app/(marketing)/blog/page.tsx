@@ -2,26 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Calendar, Clock, Tag } from "lucide-react";
 import { getAllPosts, getFeaturedPosts } from "@/content/blog/registry";
+import { CATEGORY_LABELS, CATEGORY_COLORS } from "@/content/blog/constants";
 import type { BlogPost } from "@/content/blog/index";
 
 export const metadata: Metadata = {
   title: "Blog - MysteryMarket",
   description:
     "Insights, guides, and creator stories from the MysteryMarket community. Learn how to price, sell, and discover premium ideas.",
-};
-
-const CATEGORY_LABELS: Record<string, string> = {
-  guides: "Guides",
-  insights: "Insights",
-  "creator-stories": "Creator Stories",
-  "platform-updates": "Platform Updates",
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  guides: "bg-[#3A5FCD]/10 text-[#3A5FCD] border-[#3A5FCD]/20",
-  insights: "bg-purple-50 text-purple-700 border-purple-200",
-  "creator-stories": "bg-green-50 text-green-700 border-green-200",
-  "platform-updates": "bg-orange-50 text-orange-700 border-orange-200",
 };
 
 function CategoryBadge({ category }: { category: string }) {

@@ -6,6 +6,7 @@ import {
   getPostBySlug,
   getPostsByCategory,
 } from "@/content/blog/registry";
+import { CATEGORY_LABELS, CATEGORY_COLORS } from "@/content/blog/constants";
 import { Button } from "@/components/ui/button";
 import { CopyLinkButton } from "./copy-link-button";
 
@@ -22,20 +23,6 @@ export async function generateMetadata({
     description: post.description,
   };
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-  guides: "Guides",
-  insights: "Insights",
-  "creator-stories": "Creator Stories",
-  "platform-updates": "Platform Updates",
-};
-
-const CATEGORY_COLORS: Record<string, string> = {
-  guides: "bg-[#3A5FCD]/10 text-[#3A5FCD] border-[#3A5FCD]/20",
-  insights: "bg-purple-50 text-purple-700 border-purple-200",
-  "creator-stories": "bg-green-50 text-green-700 border-green-200",
-  "platform-updates": "bg-orange-50 text-orange-700 border-orange-200",
-};
 
 export default async function BlogPostPage({
   params,

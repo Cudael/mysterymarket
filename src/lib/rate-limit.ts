@@ -15,7 +15,7 @@ interface RateLimitEntry {
 
 const rateLimitMap = new Map<string, RateLimitEntry>();
 
-// Periodically purge expired entries to prevent unbounded memory growth
+/** Removes expired entries from the rate-limit map to prevent unbounded memory growth. */
 function purgeExpired(): void {
   const now = Date.now();
   for (const [key, entry] of rateLimitMap) {
@@ -25,6 +25,12 @@ function purgeExpired(): void {
   }
 }
 
+/**
+ * Checks whether the given key is within its rate limit.
+ * @param key - A unique identifier for the caller (e.g., userId or IP).
+ * @param config - Rate-limit configuration: interval (ms) and maxRequests.
+ * @returns `true` if the request is allowed, `false` if the limit has been exceeded.
+ */
 export function rateLimit(key: string, config: RateLimitConfig): boolean {
   const now = Date.now();
 
@@ -48,6 +54,12 @@ export function rateLimit(key: string, config: RateLimitConfig): boolean {
   return true;
 }
 
+/**
+ * Enforces the rate limit for the given key, throwing an error if exceeded.
+ * @param key - A unique identifier for the caller (e.g., userId or IP).
+ * @param config - Rate-limit configuration: interval (ms) and maxRequests.
+ * @throws {Error} When the rate limit is exceeded.
+ */
 export function checkRateLimit(key: string, config: RateLimitConfig): void {
   if (!rateLimit(key, config)) {
     throw new Error("Too many requests. Please try again later.");

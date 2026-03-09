@@ -1,5 +1,8 @@
 "use client";
 
+// NOTE: This file imports @sentry/nextjs directly. Sentry is conditionally enabled
+// in next.config.ts via NEXT_PUBLIC_SENTRY_DSN. Ensure @sentry/nextjs is installed
+// even when Sentry is disabled, as this file is always bundled by Next.js.
 import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 

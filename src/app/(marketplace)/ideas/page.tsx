@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
-import { IdeaFilters } from "@/features/ideas/components/idea-filters-client";
+import { IdeaFilters } from "@/features/ideas/components/idea-filters";
 import { Pagination } from "@/components/shared/pagination";
 import { Lightbulb } from "lucide-react";
 import prisma from "@/lib/prisma";

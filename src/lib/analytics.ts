@@ -16,6 +16,7 @@ export type AnalyticsEventName =
 export type AnalyticsEventPayload = Record<string, string | number | boolean | null | undefined>;
 
 export function trackEvent(name: AnalyticsEventName, payload: AnalyticsEventPayload = {}) {
+  // TODO: Replace with a real analytics provider (e.g., PostHog, Amplitude) in production.
   logger.info("analytics.event", {
     event: name,
     ...payload,
