@@ -11,9 +11,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 const inputClass =
-  "h-11 rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20 placeholder:text-[#1A1A1A]/40 transition-colors";
+  "h-11 rounded-[8px] border border-border bg-muted text-[15px] text-foreground focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary/20 placeholder:text-muted-foreground transition-colors";
 
-const labelClass = "text-[13px] font-semibold text-[#1A1A1A]/70 mb-1.5";
+const labelClass = "text-[13px] font-semibold text-muted-foreground mb-1.5";
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
@@ -165,14 +165,14 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[440px] w-full p-0 border-0 bg-transparent shadow-none overflow-y-auto max-h-[90vh] [&>button]:hidden">
-        <div className="bg-[#FFFFFF] border border-[#D9DCE3] rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] w-full p-8">
+        <div className="bg-card border border-border rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] w-full p-8">
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <Link href="/" className="flex items-center gap-2" onClick={() => onOpenChange(false)}>
-              <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10 border border-[#3A5FCD]/20">
-                <Sparkles className="h-5 w-5 text-[#E8C26A]" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-primary/10 border border-primary/20">
+                <Sparkles className="h-5 w-5 text-[hsl(var(--gold))]" />
               </div>
-              <span className="text-[18px] font-bold text-[#1A1A1A] tracking-tight">
+              <span className="text-[18px] font-bold text-foreground tracking-tight">
                 MysteryMarket
               </span>
             </Link>
@@ -180,10 +180,10 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
 
           {tab === "sign-in" ? (
             <>
-              <h2 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] text-center">
+              <h2 className="text-[22px] font-bold tracking-tight text-foreground text-center">
                 Welcome back
               </h2>
-              <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-1">
+              <p className="text-[14px] text-muted-foreground text-center mt-1">
                 Sign in to your account to continue
               </p>
 
@@ -193,7 +193,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                   type="button"
                   onClick={handleSignInGoogle}
                   disabled={!signInLoaded}
-                  className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-[#D9DCE3] bg-[#FFFFFF] hover:bg-[#F8F9FC] text-[#1A1A1A] text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-border bg-card hover:bg-muted text-foreground text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <GoogleIcon />
                   Continue with Google
@@ -202,9 +202,9 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
 
               {/* Divider */}
               <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 h-px bg-[#D9DCE3]" />
-                <span className="text-[13px] text-[#1A1A1A]/50 font-medium">or</span>
-                <div className="flex-1 h-px bg-[#D9DCE3]" />
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-[13px] text-muted-foreground font-medium">or</span>
+                <div className="flex-1 h-px bg-border" />
               </div>
 
               {/* Form */}
@@ -232,7 +232,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                     </Label>
                     <Link
                       href="/forgot-password"
-                      className="text-[13px] text-[#3A5FCD] hover:text-[#6D7BE0]"
+                      className="text-[13px] text-primary hover:text-primary/80"
                       onClick={() => onOpenChange(false)}
                     >
                       Forgot password?
@@ -251,24 +251,24 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                 </div>
 
                 {siError && (
-                  <p className="text-[13px] text-[#D32F2F]">{siError}</p>
+                  <p className="text-[13px] text-destructive">{siError}</p>
                 )}
 
                 <Button
                   type="submit"
                   disabled={siLoading || !signInLoaded}
-                  className="w-full h-11 rounded-[8px] bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full h-11 rounded-[8px] bg-primary hover:bg-primary/90 text-white text-[15px] font-medium shadow-[var(--shadow-primary-glow)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {siLoading ? "Signing in..." : "Sign in"}
                 </Button>
               </form>
 
-              <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-6">
+              <p className="text-[14px] text-muted-foreground text-center mt-6">
                 Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   onClick={() => switchTab("sign-up")}
-                  className="text-[#3A5FCD] hover:text-[#6D7BE0] font-medium"
+                  className="text-primary hover:text-primary/80 font-medium"
                 >
                   Sign up
                 </button>
@@ -278,7 +278,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                 <button
                   type="button"
                   onClick={() => onOpenChange(false)}
-                  className="text-[13px] text-[#1A1A1A]/40 hover:text-[#1A1A1A]/70 transition-colors"
+                  className="text-[13px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
                 >
                   ✕ Close
                 </button>
@@ -288,12 +288,12 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
             <>
               {pendingVerification ? (
                 <>
-                  <h2 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] text-center">
+                  <h2 className="text-[22px] font-bold tracking-tight text-foreground text-center">
                     Check your email
                   </h2>
-                  <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-1">
+                  <p className="text-[14px] text-muted-foreground text-center mt-1">
                     We sent a 6-digit code to{" "}
-                    <span className="font-medium text-[#1A1A1A]">{suEmail}</span>
+                    <span className="font-medium text-foreground">{suEmail}</span>
                   </p>
 
                   <form onSubmit={handleVerify} className="mt-6 space-y-4">
@@ -310,18 +310,18 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         required
-                        className="h-14 rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] text-center text-[20px] tracking-[0.3em] font-mono text-[#1A1A1A] focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20 placeholder:text-[#1A1A1A]/40 transition-colors"
+                        className="h-14 rounded-[8px] border border-border bg-muted text-center text-[20px] tracking-[0.3em] font-mono text-foreground focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary/20 placeholder:text-muted-foreground transition-colors"
                       />
                     </div>
 
                     {suError && (
-                      <p className="text-[13px] text-[#D32F2F]">{suError}</p>
+                      <p className="text-[13px] text-destructive">{suError}</p>
                     )}
 
                     <Button
                       type="submit"
                       disabled={suLoading || !signUpLoaded}
-                      className="w-full h-11 rounded-[8px] bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full h-11 rounded-[8px] bg-primary hover:bg-primary/90 text-white text-[15px] font-medium shadow-[var(--shadow-primary-glow)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {suLoading ? "Verifying..." : "Verify email"}
                     </Button>
@@ -333,17 +333,17 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                       setPendingVerification(false);
                       setSuError(null);
                     }}
-                    className="mt-4 flex items-center gap-1 text-[13px] text-[#3A5FCD] hover:text-[#6D7BE0] font-medium"
+                    className="mt-4 flex items-center gap-1 text-[13px] text-primary hover:text-primary/80 font-medium"
                   >
                     ← Back to sign up
                   </button>
                 </>
               ) : (
                 <>
-                  <h2 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] text-center">
+                  <h2 className="text-[22px] font-bold tracking-tight text-foreground text-center">
                     Create your account
                   </h2>
-                  <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-1">
+                  <p className="text-[14px] text-muted-foreground text-center mt-1">
                     Join MysteryMarket and start exploring ideas
                   </p>
 
@@ -353,7 +353,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                       type="button"
                       onClick={handleSignUpGoogle}
                       disabled={!signUpLoaded}
-                      className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-[#D9DCE3] bg-[#FFFFFF] hover:bg-[#F8F9FC] text-[#1A1A1A] text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-border bg-card hover:bg-muted text-foreground text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       <GoogleIcon />
                       Continue with Google
@@ -362,9 +362,9 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
 
                   {/* Divider */}
                   <div className="flex items-center gap-3 my-5">
-                    <div className="flex-1 h-px bg-[#D9DCE3]" />
-                    <span className="text-[13px] text-[#1A1A1A]/50 font-medium">or</span>
-                    <div className="flex-1 h-px bg-[#D9DCE3]" />
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-[13px] text-muted-foreground font-medium">or</span>
+                    <div className="flex-1 h-px bg-border" />
                   </div>
 
                   {/* Form */}
@@ -418,24 +418,24 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                     </div>
 
                     {suError && (
-                      <p className="text-[13px] text-[#D32F2F]">{suError}</p>
+                      <p className="text-[13px] text-destructive">{suError}</p>
                     )}
 
                     <Button
                       type="submit"
                       disabled={suLoading || !signUpLoaded}
-                      className="w-full h-11 rounded-[8px] bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full h-11 rounded-[8px] bg-primary hover:bg-primary/90 text-white text-[15px] font-medium shadow-[var(--shadow-primary-glow)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {suLoading ? "Creating account..." : "Create account"}
                     </Button>
                   </form>
 
-                  <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-6">
+                  <p className="text-[14px] text-muted-foreground text-center mt-6">
                     Already have an account?{" "}
                     <button
                       type="button"
                       onClick={() => switchTab("sign-in")}
-                      className="text-[#3A5FCD] hover:text-[#6D7BE0] font-medium"
+                      className="text-primary hover:text-primary/80 font-medium"
                     >
                       Sign in
                     </button>
@@ -445,7 +445,7 @@ export function AuthModal({ open, onOpenChange, defaultTab = "sign-in" }: AuthMo
                     <button
                       type="button"
                       onClick={() => onOpenChange(false)}
-                      className="text-[13px] text-[#1A1A1A]/40 hover:text-[#1A1A1A]/70 transition-colors"
+                      className="text-[13px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
                     >
                       ✕ Close
                     </button>

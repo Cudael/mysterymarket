@@ -45,15 +45,15 @@ export function Navbar() {
   const [mobileLibraryOpen, setMobileLibraryOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#D9DCE3] bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300">
       <div className="container mx-auto flex h-[72px] items-center justify-between px-6 lg:px-8">
         
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#3A5FCD] transition-all duration-300 group-hover:bg-[#6D7BE0] group-hover:shadow-[0_4px_12px_rgba(58,95,205,0.3)]">
-            <Sparkles className="h-4.5 w-4.5 text-[#E8C26A] transition-transform duration-500 group-hover:scale-110" />
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-[8px] bg-primary transition-all duration-300 group-hover:bg-primary/90 group-hover:shadow-[var(--shadow-primary-glow)]">
+            <Sparkles className="h-4.5 w-4.5 text-[hsl(var(--gold))] transition-transform duration-500 group-hover:scale-110" />
           </div>
-          <span className="text-[19px] font-bold tracking-tight text-[#1A1A1A]">
+          <span className="text-[19px] font-bold tracking-tight text-foreground">
             MysteryMarket
           </span>
         </Link>
@@ -64,7 +64,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-[15px] font-medium text-[#1A1A1A]/70 transition-all duration-200 hover:text-[#3A5FCD] hover:-translate-y-[1px]"
+              className="text-[15px] font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:-translate-y-[1px]"
             >
               {link.label}
             </Link>
@@ -77,24 +77,24 @@ export function Navbar() {
           <SignedIn>
             <Link
               href="/my"
-              className="text-[15px] font-medium text-[#1A1A1A]/70 transition-all duration-200 hover:text-[#3A5FCD] hover:-translate-y-[1px]"
+              className="text-[15px] font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:-translate-y-[1px]"
             >
               My Library
             </Link>
             <Link
               href="/studio"
-              className="flex items-center gap-1.5 text-[15px] font-medium text-[#1A1A1A]/70 transition-all duration-200 hover:text-[#3A5FCD] hover:-translate-y-[1px]"
+              className="flex items-center gap-1.5 text-[15px] font-medium text-muted-foreground transition-all duration-200 hover:text-primary hover:-translate-y-[1px]"
             >
               <Lightbulb className="h-4 w-4 shrink-0" />
               Creator Studio
             </Link>
-            <div className="h-5 w-px bg-[#D9DCE3] mx-1"></div>
+            <div className="h-5 w-px bg-border mx-1"></div>
             <NotificationBell />
             <UserButton 
               afterSignOutUrl="/" 
               appearance={{
                 elements: {
-                  avatarBox: "h-9 w-9 ring-2 ring-[#F5F6FA] transition-all hover:ring-[#3A5FCD]/30"
+                  avatarBox: "h-9 w-9 ring-2 ring-muted transition-all hover:ring-primary/30"
                 }
               }}
             />
@@ -103,13 +103,13 @@ export function Navbar() {
             <Button
               variant="ghost"
               onClick={() => setAuthModal({ open: true, tab: "sign-in" })}
-              className="h-10 text-[15px] font-medium text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F8F9FC]"
+              className="h-10 text-[15px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted"
             >
               Log In
             </Button>
             <Button
               onClick={() => setAuthModal({ open: true, tab: "sign-up" })}
-              className="h-10 px-5 text-[15px] font-medium bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all hover:shadow-[0_4px_12px_rgba(58,95,205,0.35)] hover:-translate-y-[1px]"
+              className="h-10 px-5 text-[15px] font-medium bg-primary hover:bg-primary/90 text-white shadow-[var(--shadow-primary-glow)] transition-all hover:-translate-y-[1px]"
             >
               Start Creating
             </Button>
@@ -124,15 +124,15 @@ export function Navbar() {
           </SignedIn>
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-[#1A1A1A] hover:bg-[#F5F6FA]">
+              <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] border-l border-[#D9DCE3] bg-[#FFFFFF] p-6 shadow-[-8px_0_30px_rgba(0,0,0,0.04)]">
-              <SheetHeader className="border-b border-[#D9DCE3] pb-6 mb-6 text-left">
-                <SheetTitle className="text-[18px] font-bold text-[#1A1A1A] flex items-center gap-2">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-[#3A5FCD]">
-                    <Sparkles className="h-3.5 w-3.5 text-[#E8C26A]" />
+            <SheetContent side="right" className="w-[300px] border-l border-border bg-card p-6 shadow-[-8px_0_30px_rgba(0,0,0,0.04)]">
+              <SheetHeader className="border-b border-border pb-6 mb-6 text-left">
+                <SheetTitle className="text-[18px] font-bold text-foreground flex items-center gap-2">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-primary">
+                    <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />
                   </div>
                   MysteryMarket
                 </SheetTitle>
@@ -143,18 +143,18 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-[16px] font-medium text-[#1A1A1A]/80 transition-colors hover:text-[#3A5FCD] py-2"
+                    className="text-[16px] font-medium text-foreground/80 transition-colors hover:text-primary py-2"
                   >
                     {link.label}
                   </Link>
                 ))}
 
                 {/* Mobile Categories */}
-                <nav aria-label="Category navigation" className="border-t border-[#D9DCE3] pt-4 mt-1">
+                <nav aria-label="Category navigation" className="border-t border-border pt-4 mt-1">
                   <button
                     type="button"
                     onClick={() => setMobileCatsOpen((v) => !v)}
-                    className="flex w-full items-center justify-between py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                    className="flex w-full items-center justify-between py-2 text-[16px] font-medium text-foreground/80 hover:text-primary transition-colors"
                   >
                     <span>Categories</span>
                     <ChevronDown
@@ -169,11 +169,11 @@ export function Navbar() {
                           <Link
                             key={cat.slug}
                             href={`/ideas/category/${cat.slug}`}
-                            className="flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-[14px] font-medium text-[#1A1A1A]/70 hover:bg-[#F5F6FA] hover:text-[#3A5FCD] transition-colors"
+                            className="flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-[14px] font-medium text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
                           >
-                            <Icon className="h-4 w-4 shrink-0 text-[#3A5FCD]" />
+                            <Icon className="h-4 w-4 shrink-0 text-primary" />
                             {cat.name}
-                            <ChevronRight className="ml-auto h-3.5 w-3.5 text-[#1A1A1A]/30" />
+                            <ChevronRight className="ml-auto h-3.5 w-3.5 text-muted-foreground/40" />
                           </Link>
                         );
                       })}
@@ -182,16 +182,16 @@ export function Navbar() {
                 </nav>
                 
                 <SignedOut>
-                  <div className="mt-4 flex flex-col gap-3 pt-6 border-t border-[#D9DCE3]">
+                  <div className="mt-4 flex flex-col gap-3 pt-6 border-t border-border">
                     <Button
                       variant="outline"
-                      className="w-full justify-center border-[#D9DCE3]"
+                      className="w-full justify-center border-border"
                       onClick={() => setAuthModal({ open: true, tab: "sign-in" })}
                     >
                       Log In
                     </Button>
                     <Button
-                      className="w-full justify-center bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white"
+                      className="w-full justify-center bg-primary hover:bg-primary/90 text-white"
                       onClick={() => setAuthModal({ open: true, tab: "sign-up" })}
                     >
                       Start Creating
@@ -200,12 +200,12 @@ export function Navbar() {
                 </SignedOut>
                 
                 <SignedIn>
-                  <div className="border-t border-[#D9DCE3] pt-4 mt-1 flex flex-col gap-1">
+                  <div className="border-t border-border pt-4 mt-1 flex flex-col gap-1">
                     {/* My Library section */}
                     <button
                       type="button"
                       onClick={() => setMobileLibraryOpen((v) => !v)}
-                      className="flex w-full items-center justify-between py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                      className="flex w-full items-center justify-between py-2 text-[16px] font-medium text-foreground/80 hover:text-primary transition-colors"
                     >
                       <span className="flex items-center gap-2">
                         <ShoppingBag className="h-4 w-4 shrink-0" />
@@ -223,9 +223,9 @@ export function Navbar() {
                             <Link
                               key={link.href}
                               href={link.href}
-                              className="flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-[14px] font-medium text-[#1A1A1A]/70 hover:bg-[#F5F6FA] hover:text-[#3A5FCD] transition-colors"
+                              className="flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-[14px] font-medium text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
                             >
-                              <Icon className="h-4 w-4 shrink-0 text-[#3A5FCD]" />
+                              <Icon className="h-4 w-4 shrink-0 text-primary" />
                               {link.label}
                             </Link>
                           );
@@ -236,7 +236,7 @@ export function Navbar() {
                     {/* Creator Studio */}
                     <Link
                       href="/studio"
-                      className="flex items-center gap-2 py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                      className="flex items-center gap-2 py-2 text-[16px] font-medium text-foreground/80 hover:text-primary transition-colors"
                     >
                       <Lightbulb className="h-4 w-4 shrink-0" />
                       Creator Studio
@@ -245,7 +245,7 @@ export function Navbar() {
                     {/* Account */}
                     <Link
                       href="/account"
-                      className="flex items-center gap-2 py-2 text-[16px] font-medium text-[#1A1A1A]/80 hover:text-[#3A5FCD] transition-colors"
+                      className="flex items-center gap-2 py-2 text-[16px] font-medium text-foreground/80 hover:text-primary transition-colors"
                     >
                       <Settings className="h-4 w-4 shrink-0" />
                       Account

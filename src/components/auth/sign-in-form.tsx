@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 
 const inputClass =
-  "h-11 rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20 placeholder:text-[#1A1A1A]/40 transition-colors";
+  "h-11 rounded-[8px] border border-border bg-muted text-[15px] text-foreground focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary/20 placeholder:text-muted-foreground transition-colors";
 
-const labelClass = "text-[13px] font-semibold text-[#1A1A1A]/70 mb-1.5";
+const labelClass = "text-[13px] font-semibold text-muted-foreground mb-1.5";
 
 export function SignInForm() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -57,25 +57,25 @@ export function SignInForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F6FA] flex items-center justify-center px-4 py-12">
-      <div className="bg-[#FFFFFF] border border-[#D9DCE3] rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.04)] w-full max-w-[420px] p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="min-h-screen bg-[hsl(var(--surface))] flex items-center justify-center px-4 py-12">
+      <div className="bg-card border border-border rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.04)] w-full max-w-[420px] p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10 border border-[#3A5FCD]/20">
-              <Sparkles className="h-5 w-5 text-[#E8C26A]" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-primary/10 border border-primary/20">
+              <Sparkles className="h-5 w-5 text-[hsl(var(--gold))]" />
             </div>
-            <span className="text-[18px] font-bold text-[#1A1A1A] tracking-tight">
+            <span className="text-[18px] font-bold text-foreground tracking-tight">
               MysteryMarket
             </span>
           </Link>
         </div>
 
         {/* Title & subtitle */}
-        <h1 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] text-center">
+        <h1 className="text-[22px] font-bold tracking-tight text-foreground text-center">
           Welcome back
         </h1>
-        <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-1">
+        <p className="text-[14px] text-muted-foreground text-center mt-1">
           Sign in to your account to continue
         </p>
 
@@ -85,7 +85,7 @@ export function SignInForm() {
             type="button"
             onClick={handleGoogleOAuth}
             disabled={!isLoaded}
-            className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-[#D9DCE3] bg-[#FFFFFF] hover:bg-[#F8F9FC] text-[#1A1A1A] text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-border bg-card hover:bg-muted text-foreground text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
               <path
@@ -112,9 +112,9 @@ export function SignInForm() {
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-5">
-          <div className="flex-1 h-px bg-[#D9DCE3]" />
-          <span className="text-[13px] text-[#1A1A1A]/50 font-medium">or</span>
-          <div className="flex-1 h-px bg-[#D9DCE3]" />
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-[13px] text-muted-foreground font-medium">or</span>
+          <div className="flex-1 h-px bg-border" />
         </div>
 
         {/* Form */}
@@ -142,7 +142,7 @@ export function SignInForm() {
               </Label>
               <Link
                 href="/forgot-password"
-                className="text-[13px] text-[#3A5FCD] hover:text-[#6D7BE0]"
+                className="text-[13px] text-primary hover:text-primary/80"
               >
                 Forgot password?
               </Link>
@@ -160,24 +160,24 @@ export function SignInForm() {
           </div>
 
           {error && (
-            <p className="text-[13px] text-[#D32F2F]">{error}</p>
+            <p className="text-[13px] text-destructive">{error}</p>
           )}
 
           <Button
             type="submit"
             disabled={isLoading || !isLoaded}
-            className="w-full h-11 rounded-[8px] bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full h-11 rounded-[8px] bg-primary hover:bg-primary/90 text-white text-[15px] font-medium shadow-[var(--shadow-primary-glow)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 
         {/* Footer */}
-        <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-6">
+        <p className="text-[14px] text-muted-foreground text-center mt-6">
           Don&apos;t have an account?{" "}
           <Link
             href="/sign-up"
-            className="text-[#3A5FCD] hover:text-[#6D7BE0] font-medium"
+            className="text-primary hover:text-primary/80 font-medium"
           >
             Sign up
           </Link>

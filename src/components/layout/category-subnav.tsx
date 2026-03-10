@@ -54,8 +54,8 @@ function SubcategoryDropdown({
         className={cn(
           "flex items-center gap-1.5 whitespace-nowrap rounded-[9px] border px-3.5 py-2 text-[13px] font-medium transition-all duration-150",
           activeSubcategorySlug
-            ? "border-[#3A5FCD]/25 bg-[#3A5FCD]/10 text-[#3A5FCD]"
-            : "border-transparent text-[#1A1A1A]/60 hover:border-[#D9DCE3] hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+            ? "border-primary/25 bg-primary/10 text-primary"
+            : "border-transparent text-muted-foreground hover:border-border hover:bg-muted hover:text-foreground"
         )}
       >
         {activeSubcategory ? activeSubcategory.name : `All ${activeCategory.name}`}
@@ -71,7 +71,7 @@ function SubcategoryDropdown({
         <div
           role="dialog"
           aria-label="Subcategory filter"
-          className="absolute left-0 top-full z-50 mt-2 w-[300px] overflow-hidden rounded-[14px] border border-[#D9DCE3] bg-white py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.10)]"
+          className="absolute left-0 top-full z-50 mt-2 w-[300px] overflow-hidden rounded-[14px] border border-border bg-card py-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.10)]"
         >
           <Link
             href={`/ideas/category/${activeCategorySlug}`}
@@ -79,14 +79,14 @@ function SubcategoryDropdown({
             className={cn(
               "block px-4 py-2.5 text-[13px] font-medium transition-colors",
               !activeSubcategorySlug
-                ? "bg-[#3A5FCD]/[0.07] text-[#3A5FCD]"
-                : "text-[#1A1A1A]/70 hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+                ? "bg-primary/[0.07] text-primary"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             All {activeCategory.name}
           </Link>
 
-          <div className="my-1 h-px bg-[#D9DCE3]" />
+          <div className="my-1 h-px bg-border" />
 
           {activeCategory.quickLinks.map((sub) => (
             <Link
@@ -96,8 +96,8 @@ function SubcategoryDropdown({
               className={cn(
                 "block px-4 py-2.5 text-[13px] font-medium leading-snug transition-colors",
                 sub.slug === activeSubcategorySlug
-                  ? "bg-[#3A5FCD]/[0.07] text-[#3A5FCD]"
-                  : "text-[#1A1A1A]/70 hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+                  ? "bg-primary/[0.07] text-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               {sub.name}
@@ -119,7 +119,7 @@ function CategorySubnavContent() {
   return (
     <nav
       aria-label="Category navigation"
-      className="sticky top-[72px] z-40 w-full border-b border-[#D9DCE3] bg-white/95 backdrop-blur-sm"
+      className="sticky top-[72px] z-40 w-full border-b border-border bg-card/95 backdrop-blur-sm"
     >
       <div className="w-full px-4 lg:px-8">
         <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-hide">
@@ -128,15 +128,15 @@ function CategorySubnavContent() {
             className={cn(
               "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[9px] px-3.5 py-2 text-[13px] font-medium transition-all duration-150",
               isAllIdeas
-                ? "bg-[#3A5FCD] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
-                : "text-[#1A1A1A]/60 hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+                ? "bg-primary text-white shadow-[var(--shadow-primary-glow)]"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
             <LayoutGrid className="h-3.5 w-3.5 shrink-0" />
             All ideas
           </Link>
 
-          <div className="mx-1 h-4 w-px shrink-0 bg-[#D9DCE3]" />
+          <div className="mx-1 h-4 w-px shrink-0 bg-border" />
 
           {NAV_CATEGORIES.map((cat) => {
             const Icon = cat.icon;
@@ -149,14 +149,14 @@ function CategorySubnavContent() {
                 className={cn(
                   "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[9px] px-3.5 py-2 text-[13px] font-medium transition-all duration-150",
                   isActive
-                    ? "bg-[#3A5FCD] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
-                    : "text-[#1A1A1A]/60 hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+                    ? "bg-primary text-white shadow-[var(--shadow-primary-glow)]"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-3.5 w-3.5 shrink-0",
-                    isActive ? "text-white" : "text-[#3A5FCD]"
+                    isActive ? "text-white" : "text-primary"
                   )}
                 />
                 {cat.name}
@@ -166,10 +166,10 @@ function CategorySubnavContent() {
 
           {activeCategorySlug && (
             <>
-              <div className="mx-1 h-4 w-px shrink-0 bg-[#D9DCE3]" />
+              <div className="mx-1 h-4 w-px shrink-0 bg-border" />
               <Suspense
                 fallback={
-                  <div className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[9px] px-3.5 py-2 text-[13px] font-medium text-[#1A1A1A]/60">
+                  <div className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-[9px] px-3.5 py-2 text-[13px] font-medium text-muted-foreground">
                     All subcategories
                     <ChevronDown className="h-3.5 w-3.5 shrink-0" />
                   </div>
@@ -191,7 +191,7 @@ export function CategorySubnav() {
       fallback={
         <nav
           aria-label="Category navigation"
-          className="sticky top-[72px] z-40 w-full border-b border-[#D9DCE3] bg-white/95 backdrop-blur-sm"
+          className="sticky top-[72px] z-40 w-full border-b border-border bg-card/95 backdrop-blur-sm"
         >
           <div className="w-full px-4 lg:px-8">
             <div className="h-[56px]" />
