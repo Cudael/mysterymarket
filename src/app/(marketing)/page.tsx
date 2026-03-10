@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -9,9 +10,6 @@ import {
   Rocket,
   Sparkles,
   Wallet,
-  DollarSign,
-  Shield,
-  Layers3,
   Search,
 } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
@@ -116,11 +114,15 @@ function SectionHeader({
   dark?: boolean;
 }) {
   return (
-    <div className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl"}>
+    <div
+      className={
+        align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl"
+      }
+    >
       {eyebrow && (
         <p
           className={`mb-3 text-xs font-semibold uppercase tracking-[0.22em] ${
-            dark ? "text-white/60" : "text-[#4F46E5]"
+            dark ? "text-white/60" : "text-[#5B4BCF]"
           }`}
         >
           {eyebrow}
@@ -134,7 +136,11 @@ function SectionHeader({
         {title}
       </h2>
       {description && (
-        <p className={`mt-4 text-[17px] leading-8 ${dark ? "text-white/72" : "text-[#475569]"}`}> 
+        <p
+          className={`mt-4 text-[17px] leading-8 ${
+            dark ? "text-white/72" : "text-[#475569]"
+          }`}
+        >
           {description}
         </p>
       )}
@@ -142,7 +148,11 @@ function SectionHeader({
   );
 }
 
-function IconBadge({ icon: Icon }: { icon: React.ComponentType<{ className?: string }> }) {
+function IconBadge({
+  icon: Icon,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+}) {
   return (
     <div className="flex h-11 w-11 items-center justify-center rounded-full border border-current/15 text-current">
       <Icon className="h-4.5 w-4.5" aria-hidden="true" />
@@ -159,8 +169,12 @@ function ProofStat({
 }) {
   return (
     <div className="rounded-[20px] border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50">{label}</p>
-      <p className="mt-2 text-2xl font-bold tracking-tight text-white">{value}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50">
+        {label}
+      </p>
+      <p className="mt-2 text-2xl font-bold tracking-tight text-white">
+        {value}
+      </p>
     </div>
   );
 }
@@ -182,7 +196,7 @@ function HeroPreviewCard({
         muted
           ? "border-white/8 bg-white/[0.04]"
           : "border-white/12 bg-white/[0.06] shadow-[0_18px_60px_rgba(0,0,0,0.28)]"
-      }`} 
+      }`}
     >
       <div className="flex items-center justify-between gap-3">
         <span className="inline-flex items-center rounded-full border border-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/72">
@@ -190,8 +204,12 @@ function HeroPreviewCard({
         </span>
         <span className="text-sm font-semibold text-white">{price}</span>
       </div>
-      <h3 className="mt-4 text-[17px] font-semibold leading-7 text-white">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-white/56">Full idea stays hidden until purchase.</p>
+      <h3 className="mt-4 text-[17px] font-semibold leading-7 text-white">
+        {title}
+      </h3>
+      <p className="mt-3 text-sm leading-6 text-white/56">
+        Full idea stays hidden until purchase.
+      </p>
     </div>
   );
 }
@@ -200,31 +218,31 @@ export default async function HomePage() {
   const { userId: clerkId } = await auth();
 
   const [featuredIdeas, bookmarkedIdeaIds, totalIdeas, totalPurchases, totalCreators] =
-  await Promise.all([
-    prisma.idea.findMany({
-      where: { published: true },
-      include: {
-        creator: { select: { id: true, name: true, avatarUrl: true } },
-        _count: { select: { purchases: true } },
-      },
-      orderBy: { purchases: { _count: "desc" } },
-      take: 3,
-    }),
-    clerkId
-      ? prisma.bookmark
-          .findMany({
-            where: { user: { clerkId } },
-            select: { ideaId: true },
-          })
-          .then((bs) => new Set(bs.map((b) => b.ideaId)))
-      : Promise.resolve(new Set<string>()),
-    prisma.idea.count({ where: { published: true } }),
-    prisma.purchase.count({ where: { status: "COMPLETED" } }),
-    prisma.user.count({ where: { role: "CREATOR" } }),
-  ]);
+    await Promise.all([
+      prisma.idea.findMany({
+        where: { published: true },
+        include: {
+          creator: { select: { id: true, name: true, avatarUrl: true } },
+          _count: { select: { purchases: true } },
+        },
+        orderBy: { purchases: { _count: "desc" } },
+        take: 3,
+      }),
+      clerkId
+        ? prisma.bookmark
+            .findMany({
+              where: { user: { clerkId } },
+              select: { ideaId: true },
+            })
+            .then((bs) => new Set(bs.map((b) => b.ideaId)))
+        : Promise.resolve(new Set<string>()),
+      prisma.idea.count({ where: { published: true } }),
+      prisma.purchase.count({ where: { status: "COMPLETED" } }),
+      prisma.user.count({ where: { role: "CREATOR" } }),
+    ]);
 
   return (
-    <div className="bg-[#F8F9FC] text-[#0F172A]"> 
+    <div className="bg-[#F8F9FC] text-[#0F172A]">
       <section className="relative overflow-hidden bg-[#0B1020] text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.14),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.06),transparent_30%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:44px_44px] opacity-[0.14]" />
@@ -233,7 +251,7 @@ export default async function HomePage() {
           <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/72 backdrop-blur-sm">
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className="h-4 w-4 text-[#C4B5FD]" />
                 Curated creator marketplace
               </div>
 
@@ -242,11 +260,18 @@ export default async function HomePage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-[18px] leading-8 text-white/70 sm:text-[20px]">
-                MysteryMarket is a marketplace for high-signal strategies, concepts, and business insight. Browse what creators are willing to stand behind, unlock what is worth paying for, and understand the product without guessing how it works.
+                MysteryMarket is a marketplace for high-signal strategies,
+                concepts, and business insight. Browse what creators are willing
+                to stand behind, unlock what is worth paying for, and understand
+                the product without guessing how it works.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <Button asChild size="lg" className="h-12 rounded-[12px] bg-white px-7 text-[#111827] hover:bg-white/90">
+                <Button
+                  asChild
+                  size="lg"
+                  className="h-12 rounded-[12px] bg-white px-7 text-[#111827] hover:bg-white/90"
+                >
                   <Link href="/ideas">
                     Explore the marketplace
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -263,9 +288,18 @@ export default async function HomePage() {
               </div>
 
               <div className="mt-12 grid gap-4 sm:grid-cols-3">
-                <ProofStat label="Published ideas" value={totalIdeas.toLocaleString()} />
-                <ProofStat label="Successful unlocks" value={totalPurchases.toLocaleString()} />
-                <ProofStat label="Active creators" value={totalCreators.toLocaleString()} />
+                <ProofStat
+                  label="Published ideas"
+                  value={totalIdeas.toLocaleString()}
+                />
+                <ProofStat
+                  label="Successful unlocks"
+                  value={totalPurchases.toLocaleString()}
+                />
+                <ProofStat
+                  label="Active creators"
+                  value={totalCreators.toLocaleString()}
+                />
               </div>
             </div>
 
@@ -281,7 +315,8 @@ export default async function HomePage() {
                         Marketplace preview
                       </p>
                       <p className="mt-2 text-sm text-white/60">
-                        A premium way to browse ideas that are worth paying attention to.
+                        A premium way to browse ideas that are worth paying
+                        attention to.
                       </p>
                     </div>
                     <div className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/60">
@@ -314,41 +349,8 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="relative -mt-8 z-10">
-        <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
-          <div className="grid gap-4 rounded-[28px] border border-[#DCE3F1] bg-white p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] md:grid-cols-3 md:p-6">
-            {[
-              {
-                icon: Layers3,
-                title: "A product, not a feed",
-                description: "Ideas are packaged to be evaluated and purchased, not lost in an endless stream of content.",
-              },
-              {
-                icon: Shield,
-                title: "Built for trust",
-                description: "The marketplace is designed to make pricing, access, and buyer intent feel clearer from the start.",
-              },
-              {
-                icon: CheckCircle2,
-                title: "Made for both sides",
-                description: "Buyers can discover ideas efficiently while creators have a cleaner way to monetize expertise.",
-              },
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <div key={item.title} className="rounded-[22px] border border-[#E9EDF5] bg-[#F8FAFC] p-5">
-                  <div className="text-[#111827]">
-                    <IconBadge icon={Icon} />
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold text-[#0F172A]">{item.title}</h3>
-                  <p className="mt-3 text-[15px] leading-7 text-[#475569]">{item.description}</p>
-                </div>
-              );
-            })}
-          </div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-[linear-gradient(180deg,transparent,rgba(11,16,32,0.55))]" />
         </div>
       </section>
 
@@ -374,7 +376,9 @@ export default async function HomePage() {
                   <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-[#0F172A]">
                     {item.title}
                   </h3>
-                  <p className="mt-4 text-[15px] leading-7 text-[#475569]">{item.description}</p>
+                  <p className="mt-4 text-[15px] leading-7 text-[#475569]">
+                    {item.description}
+                  </p>
                 </article>
               );
             })}
@@ -386,18 +390,24 @@ export default async function HomePage() {
         <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#4F46E5]">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#5B4BCF]">
                 Featured marketplace picks
               </p>
               <h2 className="mt-3 text-[30px] font-bold tracking-[-0.03em] text-[#0F172A] sm:text-[40px]">
                 Popular ideas buyers are already unlocking
               </h2>
               <p className="mt-4 text-[17px] leading-8 text-[#475569]">
-                The strongest proof is the marketplace itself. Show visitors what high-value listings look like and let the product explain the promise.
+                The strongest proof is the marketplace itself. Show visitors
+                what high-value listings look like and let the product explain
+                the promise.
               </p>
             </div>
 
-            <Button asChild variant="outline" className="rounded-[12px] border-[#DCE3F1] bg-white">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-[12px] border-[#DCE3F1] bg-white"
+            >
               <Link href="/ideas">
                 Browse all ideas
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -452,13 +462,18 @@ export default async function HomePage() {
                     <div className="mt-0.5 text-white/84">
                       <IconBadge icon={CheckCircle2} />
                     </div>
-                    <p className="text-[15px] leading-7 text-white/72">{point}</p>
+                    <p className="text-[15px] leading-7 text-white/72">
+                      {point}
+                    </p>
                   </div>
                 ))}
               </div>
 
               <div className="mt-8">
-                <Button asChild className="rounded-[12px] bg-white text-[#111827] hover:bg-white/90">
+                <Button
+                  asChild
+                  className="rounded-[12px] bg-white text-[#111827] hover:bg-white/90"
+                >
                   <Link href="/ideas">Explore the marketplace</Link>
                 </Button>
               </div>
@@ -478,16 +493,25 @@ export default async function HomePage() {
                     <div className="mt-0.5 text-[#111827]">
                       <IconBadge icon={CheckCircle2} />
                     </div>
-                    <p className="text-[15px] leading-7 text-[#475569]">{point}</p>
+                    <p className="text-[15px] leading-7 text-[#475569]">
+                      {point}
+                    </p>
                   </div>
                 ))}
               </div>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button asChild className="rounded-[12px] bg-[#4F46E5] hover:bg-[#4338CA]">
+                <Button
+                  asChild
+                  className="rounded-[12px] bg-[#6D5AE6] hover:bg-[#5E4FD1]"
+                >
                   <Link href="/sign-up">Sell your ideas</Link>
                 </Button>
-                <Button asChild variant="outline" className="rounded-[12px] border-[#DCE3F1] bg-white">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-[12px] border-[#DCE3F1] bg-white"
+                >
                   <Link href="/ideas">See live listings</Link>
                 </Button>
               </div>
@@ -507,7 +531,7 @@ export default async function HomePage() {
                 align="left"
               />
 
-              <div className="mt-10 grid gap-4 sm:grid-cols-2"> 
+              <div className="mt-10 grid gap-4 sm:grid-cols-2">
                 {CATEGORIES.map((category) => {
                   const Icon = category.icon;
                   return (
@@ -519,8 +543,12 @@ export default async function HomePage() {
                       <div className="text-[#111827]">
                         <IconBadge icon={Icon} />
                       </div>
-                      <h3 className="mt-5 text-base font-semibold text-[#0F172A]">{category.name}</h3>
-                      <p className="mt-2 text-sm leading-6 text-[#475569]">{category.desc}</p>
+                      <h3 className="mt-5 text-base font-semibold text-[#0F172A]">
+                        {category.name}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-[#475569]">
+                        {category.desc}
+                      </p>
                     </Link>
                   );
                 })}
@@ -537,9 +565,16 @@ export default async function HomePage() {
 
               <div className="mt-10 space-y-4">
                 {FAQS.map((item) => (
-                  <div key={item.question} className="rounded-[22px] border border-[#E7EBF3] bg-[#F8FAFC] p-6">
-                    <h3 className="text-[18px] font-semibold text-[#0F172A]">{item.question}</h3>
-                    <p className="mt-3 text-[15px] leading-7 text-[#475569]">{item.answer}</p>
+                  <div
+                    key={item.question}
+                    className="rounded-[22px] border border-[#E7EBF3] bg-[#F8FAFC] p-6"
+                  >
+                    <h3 className="text-[18px] font-semibold text-[#0F172A]">
+                      {item.question}
+                    </h3>
+                    <p className="mt-3 text-[15px] leading-7 text-[#475569]">
+                      {item.answer}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -551,15 +586,23 @@ export default async function HomePage() {
       <section className="bg-white py-24">
         <div className="container mx-auto max-w-[1100px] px-6 lg:px-8">
           <div className="rounded-[32px] border border-[#E7EBF3] bg-[#0F172A] px-8 py-14 text-center text-white shadow-[0_24px_80px_rgba(15,23,42,0.16)] sm:px-12 sm:py-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">Get started</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
+              Get started
+            </p>
             <h2 className="mt-4 text-[34px] font-bold tracking-[-0.03em] text-white sm:text-[46px]">
               Explore what’s worth unlocking.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-[17px] leading-8 text-white/72">
-              Browse the marketplace, discover ideas with real commercial framing, or start selling your own expertise in a product environment built around paid access.
+              Browse the marketplace, discover ideas with real commercial
+              framing, or start selling your own expertise in a product
+              environment built around paid access.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" className="h-12 rounded-[12px] bg-white px-7 text-[#111827] hover:bg-white/90">
+              <Button
+                asChild
+                size="lg"
+                className="h-12 rounded-[12px] bg-white px-7 text-[#111827] hover:bg-white/90"
+              >
                 <Link href="/ideas">Explore ideas</Link>
               </Button>
               <Button
