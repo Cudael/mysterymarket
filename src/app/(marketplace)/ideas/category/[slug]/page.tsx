@@ -129,39 +129,39 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   );
 
   return (
-    <div className="bg-[#F8F9FC] min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="bg-[hsl(var(--surface))] min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#F5F6FA] to-[#FFFFFF] border-b border-[#D9DCE3]">
+      <section className="bg-gradient-to-br from-[hsl(var(--muted))] to-[hsl(var(--background))] border-b border-border">
         <div className="container mx-auto px-6 lg:px-8 max-w-[1400px] py-12 md:py-16">
           {/* Breadcrumb */}
           <nav className="mb-6 flex items-center gap-1.5 text-sm">
-            <Link href="/" className="text-[#1A1A1A]/60 hover:text-[#3A5FCD] transition-colors">
+            <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">
               Home
             </Link>
-            <ChevronRight className="h-3.5 w-3.5 text-[#1A1A1A]/40" />
-            <Link href="/ideas" className="text-[#1A1A1A]/60 hover:text-[#3A5FCD] transition-colors">
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
+            <Link href="/ideas" className="text-muted-foreground hover:text-primary transition-colors">
               Marketplace
             </Link>
-            <ChevronRight className="h-3.5 w-3.5 text-[#1A1A1A]/40" />
-            <span className="text-[#1A1A1A] font-medium">{category.name}</span>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
+            <span className="text-foreground font-medium">{category.name}</span>
           </nav>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[12px] bg-[#FFFFFF] border border-[#D9DCE3] shadow-[0_4px_14px_rgba(58,95,205,0.08)]">
-              <CategoryIcon className="h-7 w-7 text-[#3A5FCD]" />
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[12px] bg-primary/10 border border-primary/20 shadow-[0_4px_14px_rgba(0,0,0,0.06)]">
+              <CategoryIcon className="h-7 w-7 text-primary" />
             </div>
             <div>
-              <h1 className="text-[32px] font-bold tracking-tight text-[#1A1A1A]">
+              <h1 className="text-[32px] font-bold tracking-tight text-foreground">
                 {category.name} Ideas
               </h1>
-              <p className="mt-1.5 text-[16px] leading-[1.6] text-[#1A1A1A]/70 max-w-2xl">
+              <p className="mt-1.5 text-[16px] leading-[1.6] text-muted-foreground max-w-2xl">
                 {category.description}
               </p>
             </div>
           </div>
 
           {total > 0 && (
-            <p className="mt-5 text-[15px] font-medium text-[#3A5FCD]">
+            <p className="mt-5 text-[15px] font-medium text-primary">
               {total} {total === 1 ? "idea" : "ideas"} available
             </p>
           )}
@@ -170,19 +170,19 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
       <div className="container mx-auto px-6 lg:px-8 max-w-[1400px] py-12">
         {sortedIdeas.length === 0 ? (
-          <div className="py-20 flex flex-col items-center justify-center rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#F8F9FC] border border-[#D9DCE3]">
-              <Lightbulb className="h-7 w-7 text-[#1A1A1A]/30" />
+          <div className="py-20 flex flex-col items-center justify-center rounded-[12px] border border-dashed border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-muted border border-border">
+              <Lightbulb className="h-7 w-7 text-primary/40" />
             </div>
-            <p className="text-[18px] font-bold text-[#1A1A1A]">
-              No ideas in {category.name} yet
+            <p className="text-[18px] font-bold text-foreground">
+              No mysteries in this category yet
             </p>
-            <p className="mt-2 text-[15px] text-[#1A1A1A]/60">
-              Check back soon, or explore other categories.
+            <p className="mt-2 text-[15px] text-muted-foreground">
+              Be the first to share something worth discovering
             </p>
             <Link
               href="/ideas"
-              className="mt-6 inline-flex items-center gap-2 rounded-[8px] bg-[#3A5FCD] px-5 py-2.5 text-[15px] font-semibold text-white hover:bg-[#2D4FB0] transition-colors"
+              className="mt-6 inline-flex items-center gap-2 rounded-[8px] bg-primary px-5 py-2.5 text-[15px] font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Explore all ideas
             </Link>
@@ -211,7 +211,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             </div>
 
             {totalPages > 1 && (
-              <div className="flex justify-center pt-8 border-t border-[#D9DCE3]">
+              <div className="flex justify-center pt-8 border-t border-border">
                 <Suspense fallback={null}>
                   <Pagination
                     currentPage={page}
@@ -225,8 +225,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         )}
 
         {/* Related Categories */}
-        <div className="mt-16 pt-10 border-t border-[#D9DCE3]">
-          <h2 className="text-[20px] font-bold text-[#1A1A1A] mb-6">Explore Other Categories</h2>
+        <div className="mt-16 pt-10 border-t border-border">
+          <h2 className="text-[20px] font-bold text-foreground mb-6">Explore Other Categories</h2>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
             {relatedCategories.map((cat) => {
               const RelatedIcon = ICON_MAP[cat.icon] ?? Sparkles;
@@ -234,9 +234,9 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                 <Link
                   key={cat.slug}
                   href={`/ideas/category/${cat.slug}`}
-                  className="flex shrink-0 items-center gap-2.5 rounded-[10px] border border-[#D9DCE3] bg-[#FFFFFF] px-4 py-3 text-[14px] font-medium text-[#1A1A1A] transition-all hover:border-[#3A5FCD]/50 hover:bg-[#F5F6FA] hover:text-[#3A5FCD] shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
+                  className="flex shrink-0 items-center gap-2.5 rounded-[10px] border border-border bg-card px-4 py-3 text-[14px] font-medium text-foreground transition-all hover:border-primary/50 hover:bg-muted hover:text-primary shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
                 >
-                  <RelatedIcon className="h-4 w-4 text-[#3A5FCD] shrink-0" />
+                  <RelatedIcon className="h-4 w-4 text-primary shrink-0" />
                   {cat.name}
                 </Link>
               );

@@ -128,38 +128,38 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-[#F8F9FC] min-h-screen py-12 md:py-16">
+    <div className="bg-[hsl(var(--surface))] min-h-screen py-12 md:py-16">
       <div className="container mx-auto px-6 lg:px-8 max-w-[1400px] animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-        <div className="mb-8 pb-6 border-b border-[#D9DCE3]">
-          <h1 className="text-[32px] font-bold tracking-tight text-[#1A1A1A]">Explore Marketplace</h1>
-          <p className="mt-2 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+        <div className="mb-8 pb-6 border-b border-border">
+          <h1 className="text-[32px] font-bold tracking-tight text-foreground">Explore Marketplace</h1>
+          <p className="mt-2 text-[16px] leading-[1.6] text-muted-foreground">
             Discover and unlock high-value hidden ideas from verified creators.
             {total > 0 && (
-              <span className="ml-2 font-medium text-[#3A5FCD]">({total} available)</span>
+              <span className="ml-2 font-medium text-primary">({total} available)</span>
             )}
           </p>
         </div>
 
         <div className="mb-10">
-          <Suspense fallback={<div className="h-[52px] animate-pulse rounded-[12px] bg-[#D9DCE3]/50 w-full" />}>
+          <Suspense fallback={<div className="h-[52px] animate-pulse rounded-[12px] bg-border/50 w-full" />}>
             <IdeaFilters />
           </Suspense>
         </div>
 
         {sortedIdeas.length === 0 ? (
-          <div className="py-20 flex flex-col items-center justify-center rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-             <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#F8F9FC] border border-[#D9DCE3]">
-              <Lightbulb className="h-7 w-7 text-[#1A1A1A]/30" />
+          <div className="py-20 flex flex-col items-center justify-center rounded-[12px] border border-dashed border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-muted border border-border">
+              <Lightbulb className="h-7 w-7 text-primary/40" />
             </div>
-            <p className="text-[18px] font-bold text-[#1A1A1A]">No ideas found</p>
-            <p className="mt-2 text-[15px] text-[#1A1A1A]/60">
-              Try adjusting your filters or search terms to find what you&apos;re looking for.
+            <p className="text-[18px] font-bold text-foreground">No mysteries to uncover here… yet</p>
+            <p className="mt-2 text-[15px] text-muted-foreground">
+              Try adjusting your filters or explore a different category
             </p>
             {(search || category || unlockType) && (
               <Link
                 href="/ideas"
-                className="mt-4 text-[14px] font-medium text-[#3A5FCD] underline underline-offset-2 hover:text-[#6D7BE0]"
+                className="mt-4 text-[14px] font-medium text-primary underline underline-offset-2 hover:text-primary/80"
               >
                 Clear all filters
               </Link>
@@ -189,7 +189,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex justify-center pt-8 border-t border-[#D9DCE3]">
+              <div className="flex justify-center pt-8 border-t border-border">
                 <Suspense fallback={null}>
                   <Pagination currentPage={page} totalPages={totalPages} basePath="/ideas" />
                 </Suspense>

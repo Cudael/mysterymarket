@@ -39,6 +39,11 @@
   }
 }
 
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 @layer components {
   .blog-content h2 {
     @apply text-2xl font-bold mt-10 mb-4 text-foreground;

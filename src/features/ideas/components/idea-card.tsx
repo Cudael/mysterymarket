@@ -73,29 +73,43 @@ export function IdeaCard({
   const categorySlug = category ? CATEGORY_META[category]?.slug : null;
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-[16px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
+    <div className="flex h-full flex-col overflow-hidden rounded-[16px] border border-border bg-card shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:border-primary/20">
       {/* Header / media */}
-      <div className="relative h-44 w-full shrink-0 overflow-hidden bg-[#F5F6FA]">
+      <div className="relative h-44 w-full shrink-0 overflow-hidden bg-muted">
         {hasImage ? (
           <>
             <Image
               src={normalizedImageUrl}
               alt={title}
               fill
-              className="object-cover"
+              className={`object-cover${!isPurchased && !isOwner ? " blur-[2px]" : ""}`}
               onError={() => setImageError(true)}
               sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent" />
+            {!isPurchased && !isOwner ? (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent backdrop-blur-[1px]" />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent" />
+            )}
+            {!isPurchased && !isOwner && (
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_3s_ease-in-out_infinite]" />
+              </div>
+            )}
           </>
         ) : (
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,_#F8F9FC_0%,_#F1F4FB_100%)]">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(58,95,205,0.08),_transparent_30%)]" />
-            <div className="flex h-full w-full flex-col items-center justify-center px-4 text-center">
-              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full border border-[#D9DCE3] bg-[#FFFFFF] shadow-sm">
-                <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,_hsl(var(--muted))_0%,_hsl(var(--surface))_100%)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_hsl(var(--primary)/0.08),_transparent_30%)]" />
+            {!isPurchased && !isOwner && (
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_3s_ease-in-out_infinite]" />
               </div>
-              <p className="text-xs font-semibold text-[#1A1A1A]">
+            )}
+            <div className="flex h-full w-full flex-col items-center justify-center px-4 text-center">
+              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card shadow-sm">
+                <Lightbulb className="h-4 w-4 text-primary" />
+              </div>
+              <p className="text-xs font-semibold text-foreground">
                 Premium insight
               </p>
             </div>
@@ -113,8 +127,8 @@ export function IdeaCard({
           <span
             className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wide shadow-sm ${
               unlockType === "EXCLUSIVE"
-                ? "bg-amber-100 text-amber-800"
-                : "bg-white/95 text-[#1A1A1A]"
+                ? "border border-[hsl(var(--gold)/0.3)] bg-[hsl(var(--gold)/0.15)] text-[hsl(var(--gold-foreground))]"
+                : "bg-card/95 text-foreground"
             }`}
           >
             {unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
@@ -125,12 +139,12 @@ export function IdeaCard({
               <Link
                 href={`/ideas/category/${categorySlug}`}
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center rounded-md bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[#1A1A1A] shadow-sm transition-colors hover:bg-white"
+                className="inline-flex items-center rounded-md bg-card/95 px-2 py-0.5 text-[10px] font-medium text-foreground shadow-sm transition-colors hover:bg-card"
               >
                 {category}
               </Link>
             ) : (
-              <span className="inline-flex items-center rounded-md bg-white/95 px-2 py-0.5 text-[10px] font-medium text-[#1A1A1A] shadow-sm">
+              <span className="inline-flex items-center rounded-md bg-card/95 px-2 py-0.5 text-[10px] font-medium text-foreground shadow-sm">
                 {category}
               </span>
             ))}
@@ -141,10 +155,10 @@ export function IdeaCard({
       <div className="flex flex-1 flex-col p-4">
         {/* Title and Bookmark Row */}
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-bold leading-tight tracking-tight text-[#1A1A1A]">
+          <h3 className="text-lg font-bold leading-tight tracking-tight text-foreground">
             <Link
               href={`/ideas/${id}`}
-              className="transition-colors hover:text-[#3A5FCD] focus:outline-none"
+              className="transition-colors hover:text-primary focus:outline-none"
             >
               <span className="line-clamp-2">{title}</span>
             </Link>
@@ -166,15 +180,15 @@ export function IdeaCard({
           {creatorName && (
             <Link
               href={creatorId ? `/creators/${creatorId}` : "#"}
-              className={`flex items-center gap-2 text-xs text-[#1A1A1A]/70 ${
-                creatorId ? "transition-colors hover:text-[#3A5FCD]" : "pointer-events-none"
+              className={`flex items-center gap-2 text-xs text-muted-foreground ${
+                creatorId ? "transition-colors hover:text-primary" : "pointer-events-none"
               }`}
             >
-              <Avatar className="h-5 w-5 border border-[#D9DCE3]">
+              <Avatar className="h-5 w-5 border border-border">
                 {normalizedCreatorAvatarUrl ? (
                   <AvatarImage src={normalizedCreatorAvatarUrl} alt={creatorName} />
                 ) : null}
-                <AvatarFallback className="bg-[#EEF3FF] text-[9px] font-semibold text-[#3A5FCD]">
+                <AvatarFallback className="bg-muted text-[9px] font-semibold text-primary">
                   {creatorInitials}
                 </AvatarFallback>
               </Avatar>
@@ -183,8 +197,8 @@ export function IdeaCard({
           )}
 
           {purchaseCount !== undefined && purchaseCount > 0 && (
-            <span className="flex items-center gap-1 text-xs font-medium text-[#1A1A1A]/60">
-              <Users className="h-3.5 w-3.5 text-[#3A5FCD]" />
+            <span className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
+              <Users className="h-3.5 w-3.5 text-primary" />
               {purchaseCount}
             </span>
           )}
@@ -192,7 +206,7 @@ export function IdeaCard({
 
         {/* Teaser Text */}
         {teaserText && (
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-[#1A1A1A]/70">
+          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
             {teaserText}
           </p>
         )}
@@ -200,21 +214,21 @@ export function IdeaCard({
         <div className="flex-1" />
 
         {/* Footer (Strictly Price & Actions) */}
-        <div className="mt-4 flex items-center justify-between border-t border-[#D9DCE3] pt-4">
-          <div className="text-[22px] font-bold tracking-tight text-[#1A1A1A]">
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
+          <div className="text-[22px] font-bold tracking-tight text-foreground">
             {formatPrice(priceInCents)}
           </div>
 
           <div className="shrink-0">
             {isOwner ? (
-              <Button asChild variant="outline" size="sm" className="h-9 px-4 text-xs">
+              <Button asChild variant="outline" size="sm" className="h-9 px-4 text-xs bg-muted text-foreground hover:bg-muted/80 border-border">
                 <Link href={`/creator/ideas/${id}/edit`}>Edit</Link>
               </Button>
             ) : isPurchased ? (
               <Button
                 asChild
                 size="sm"
-                className="h-9 gap-1.5 bg-green-600 px-4 text-xs text-white hover:bg-green-700"
+                className="h-9 gap-1.5 bg-muted px-4 text-xs text-foreground hover:bg-muted/80"
               >
                 <Link href={`/ideas/${id}`}>
                   <Unlock className="h-3.5 w-3.5" />
@@ -222,8 +236,11 @@ export function IdeaCard({
                 </Link>
               </Button>
             ) : (
-              <Button asChild size="sm" className="h-9 px-4 text-xs">
-                <Link href={`/ideas/${id}`}>Unlock</Link>
+              <Button asChild size="sm" className="h-9 gap-1.5 px-4 text-xs bg-primary hover:bg-primary/90 text-primary-foreground shadow-[var(--shadow-primary-glow)]">
+                <Link href={`/ideas/${id}`}>
+                  <Unlock className="h-3.5 w-3.5" />
+                  Unlock
+                </Link>
               </Button>
             )}
           </div>

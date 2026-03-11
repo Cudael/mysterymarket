@@ -63,7 +63,7 @@ export function Pagination({
         item === "ellipsis" ? (
           <span
             key={`ellipsis-${index}`}
-            className="px-2 text-sm text-[#1A1A1A]/40"
+            className="px-2 text-sm text-muted-foreground"
           >
             …
           </span>
@@ -72,7 +72,7 @@ export function Pagination({
             key={item}
             variant={item === currentPage ? "default" : "outline"}
             size="sm"
-            className={item !== currentPage ? "bg-[#FFFFFF] border-[#D9DCE3] text-[#1A1A1A]/70 hover:text-[#1A1A1A]" : ""}
+            className={item !== currentPage ? "bg-card border-border text-muted-foreground hover:text-foreground" : ""}
             onClick={() => router.push(createPageUrl(item as number))}
             aria-label={`Page ${item}`}
             aria-current={item === currentPage ? "page" : undefined}
@@ -88,7 +88,7 @@ export function Pagination({
         disabled={currentPage >= totalPages}
         onClick={() => router.push(createPageUrl(currentPage + 1))}
         aria-label="Next page"
-        className="w-10 px-0 bg-[#FFFFFF] border-[#D9DCE3]"
+        className="w-10 px-0 bg-card border-border"
       >
         <ChevronRight className="h-4 w-4" />
       </Button>

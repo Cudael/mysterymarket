@@ -105,23 +105,23 @@ export function IdeaFilters() {
       <div className="flex flex-col sm:flex-row justify-between gap-4">
 
         <div className="relative w-full sm:max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
             placeholder="Search for hidden insights..."
             value={localSearch}
-            className="h-10 w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-10 pr-4 text-[14px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/50 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
+            className="h-10 w-full rounded-[8px] border border-border bg-muted pl-10 pr-4 text-[14px] text-foreground placeholder:text-muted-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
             onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
 
         <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-none">
-            <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#1A1A1A]/40" />
+            <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <select
               value={currentUnlockType}
               onChange={(e) => updateParam("unlockType", e.target.value)}
-              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] pl-9 pr-8 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-border bg-muted pl-9 pr-8 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
             >
               {UNLOCK_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>
@@ -129,14 +129,14 @@ export function IdeaFilters() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
 
           <div className="relative flex-1 sm:flex-none">
             <select
               value={currentCategory}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
             >
               <option value="">All Categories</option>
               {CATEGORIES.map((cat) => (
@@ -145,7 +145,7 @@ export function IdeaFilters() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
 
           {availableSubcategories.length > 0 && (
@@ -153,7 +153,7 @@ export function IdeaFilters() {
               <select
                 value={currentSubcategory}
                 onChange={(e) => updateParam("subcategory", e.target.value)}
-                className="h-10 w-full sm:w-[220px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+                className="h-10 w-full sm:w-[220px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
               >
                 <option value="">All Subcategories</option>
                 {availableSubcategories.map((sub) => (
@@ -162,7 +162,7 @@ export function IdeaFilters() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
           )}
 
@@ -170,7 +170,7 @@ export function IdeaFilters() {
             <select
               value={currentMaturity}
               onChange={(e) => updateParam("maturity", e.target.value)}
-              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
             >
               <option value="">All Maturities</option>
               {IDEA_MATURITY_LEVELS.map((level) => (
@@ -179,14 +179,14 @@ export function IdeaFilters() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
 
           <div className="relative flex-1 sm:flex-none">
             <select
               value={currentSortBy}
               onChange={(e) => updateParam("sortBy", e.target.value)}
-              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 pr-10 text-[14px] text-[#1A1A1A] outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
             >
               {SORT_OPTIONS.map((sort) => (
                 <option key={sort.value} value={sort.value}>
@@ -194,7 +194,7 @@ export function IdeaFilters() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40" />
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@ export function IdeaFilters() {
       {/* Active filter chips */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[12px] font-medium text-[#1A1A1A]/50">Active:</span>
+          <span className="text-[12px] font-medium text-muted-foreground">Active:</span>
           {activeFilters.map((f) => (
             <button
               key={f.key}
@@ -213,7 +213,7 @@ export function IdeaFilters() {
                 }
                 updateParam(f.key, "");
               }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#3A5FCD]/30 bg-[#3A5FCD]/8 px-2.5 py-1 text-[12px] font-medium text-[#3A5FCD] transition-colors hover:bg-[#3A5FCD]/15"
+              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary transition-colors hover:bg-primary/20"
             >
               {f.label}
               <X className="h-3 w-3" />
@@ -222,7 +222,7 @@ export function IdeaFilters() {
           <button
             type="button"
             onClick={clearAll}
-            className="text-[12px] font-medium text-[#1A1A1A]/50 underline underline-offset-2 hover:text-[#1A1A1A] transition-colors"
+            className="text-[12px] font-medium text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
           >
             Clear all
           </button>
