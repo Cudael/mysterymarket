@@ -6,10 +6,15 @@ export interface IdeaCardProps {
   priceInCents: number;
   unlockType: "EXCLUSIVE" | "MULTI";
   category?: string | null;
+  subcategoryName?: string | null;
+  maturityLevel?: "SEED" | "CONCEPT" | "BLUEPRINT" | "PROTOTYPE_READY";
   creatorId?: string | null;
   creatorName?: string | null;
   creatorAvatarUrl?: string | null;
   purchaseCount?: number;
+  reviewCount?: number;
+  averageRating?: number | null;
+  tags?: string[];
   isOwner?: boolean;
   isPurchased?: boolean;
   initialBookmarked?: boolean;

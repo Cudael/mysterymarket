@@ -1,39 +1,69 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Search, ChevronDown, X, SlidersHorizontal } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ChevronDown, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import { CATEGORIES, IDEA_MATURITY_LEVELS, getSubcategoriesByCategory } from "@/lib/constants";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import {
+  MARKETPLACE_SORT_OPTIONS,
+  MARKETPLACE_UNLOCK_TYPES,
+  getCategoryNameFromSlug,
+  getCategorySlugFromName,
+  getMaturityLabel,
+  getSortLabel,
+  getUnlockTypeLabel,
+} from "@/features/ideas/lib/marketplace-filters";
 
-const UNLOCK_TYPES = [
-  { label: "All Types", value: "" },
-  { label: "Exclusive Only", value: "EXCLUSIVE" },
-  { label: "Multi-unlock", value: "MULTI" },
-];
+interface IdeaFiltersProps {
+  total: number;
+  activeCategorySlug?: string | null;
+  activeCategoryName?: string | null;
+  featuredSubcategories?: Array<{
+    name: string;
+    slug: string;
+    count?: number;
+  }>;
+}
 
-const SORT_OPTIONS = [
-  { label: "Newest Arrivals", value: "newest" },
-  { label: "Best Rated", value: "best-rated" },
-  { label: "Most Popular", value: "most-purchased" },
-  { label: "Price: Low to High", value: "price-low" },
-  { label: "Price: High to Low", value: "price-high" },
-];
+const SELECT_CLASS_NAME =
+  "h-11 w-full appearance-none rounded-full border border-border bg-background/90 px-4 pr-10 text-sm text-foreground shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15";
 
-export function IdeaFilters() {
+export function IdeaFilters({
+  total,
+  activeCategorySlug,
+  activeCategoryName,
+  featuredSubcategories = [],
+}: IdeaFiltersProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentSearchUrl = searchParams.get("search") ?? "";
   const [localSearch, setLocalSearch] = useState(currentSearchUrl);
 
-  const currentCategory = searchParams.get("category") ?? "";
+  const routeCategorySlug = activeCategorySlug ?? "";
+  const routeCategoryName =
+    activeCategoryName ?? getCategoryNameFromSlug(routeCategorySlug) ?? "";
   const currentSubcategory = searchParams.get("subcategory") ?? "";
   const currentUnlockType = searchParams.get("unlockType") ?? "";
   const currentSortBy = searchParams.get("sortBy") ?? "newest";
   const currentMaturity = searchParams.get("maturity") ?? "";
 
-  const availableSubcategories = getSubcategoriesByCategory(currentCategory);
+  const availableSubcategories =
+    featuredSubcategories.length > 0
+      ? featuredSubcategories
+      : routeCategoryName
+        ? getSubcategoriesByCategory(routeCategoryName)
+        : [];
+
+  function pushWithParams(params: URLSearchParams, nextPathname = pathname) {
+    const query = params.toString();
+    router.push(query ? `${nextPathname}?${query}` : nextPathname);
+  }
 
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -43,19 +73,22 @@ export function IdeaFilters() {
       params.delete(key);
     }
     params.delete("page");
-    router.push(`/ideas?${params.toString()}`);
+    pushWithParams(params);
   }
 
-  function handleCategoryChange(value: string) {
+  function handleCategoryChange(categorySlug: string) {
     const params = new URLSearchParams(searchParams.toString());
-    if (value) {
-      params.set("category", value);
-    } else {
-      params.delete("category");
-    }
+
+    params.delete("category");
     params.delete("subcategory");
     params.delete("page");
-    router.push(`/ideas?${params.toString()}`);
+
+    if (!categorySlug) {
+      pushWithParams(params, "/ideas");
+      return;
+    }
+
+    pushWithParams(params, `/ideas/category/${categorySlug}`);
   }
 
   function handleSearchChange(value: string) {
@@ -66,7 +99,11 @@ export function IdeaFilters() {
 
   function clearAll() {
     setLocalSearch("");
-    router.push("/ideas");
+    const resetPath =
+      pathname.startsWith("/ideas/category/") && routeCategorySlug
+        ? `/ideas/category/${routeCategorySlug}`
+        : "/ideas";
+    router.push(resetPath);
   }
 
   useEffect(() => {
@@ -81,153 +118,234 @@ export function IdeaFilters() {
 
   const activeFilters: { label: string; key: string }[] = [];
   if (currentSearchUrl) activeFilters.push({ label: `"${currentSearchUrl}"`, key: "search" });
-  if (currentCategory) activeFilters.push({ label: currentCategory, key: "category" });
-  if (currentSubcategory) activeFilters.push({ label: currentSubcategory, key: "subcategory" });
+  if (currentSubcategory) {
+    const subcategoryLabel =
+      availableSubcategories.find((subcategory) => subcategory.slug === currentSubcategory)
+        ?.name ?? currentSubcategory;
+    activeFilters.push({ label: subcategoryLabel, key: "subcategory" });
+  }
   if (currentMaturity) {
-    const maturityLabel = IDEA_MATURITY_LEVELS.find((m) => m.value === currentMaturity)?.label ?? currentMaturity;
-    activeFilters.push({ label: maturityLabel, key: "maturity" });
+    activeFilters.push({ label: getMaturityLabel(currentMaturity), key: "maturity" });
   }
   if (currentUnlockType) {
-    activeFilters.push({
-      label: currentUnlockType === "EXCLUSIVE" ? "Exclusive Only" : "Multi-unlock",
-      key: "unlockType",
-    });
+    activeFilters.push({ label: getUnlockTypeLabel(currentUnlockType), key: "unlockType" });
   }
   if (currentSortBy && currentSortBy !== "newest") {
-    const sortLabel = SORT_OPTIONS.find((s) => s.value === currentSortBy)?.label ?? currentSortBy;
-    activeFilters.push({ label: sortLabel, key: "sortBy" });
+    activeFilters.push({ label: getSortLabel(currentSortBy), key: "sortBy" });
   }
 
   const hasActiveFilters = activeFilters.length > 0;
 
   return (
-    <div className="flex flex-col gap-4 mb-8">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
+    <div className="relative overflow-hidden rounded-[30px] border border-border/70 bg-card/95 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.06)] sm:p-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_hsl(var(--primary)/0.12),_transparent_38%)]" />
 
-        <div className="relative w-full sm:max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="search"
-            placeholder="Search for hidden insights..."
-            value={localSearch}
-            className="h-10 w-full rounded-[8px] border border-border bg-muted pl-10 pr-4 text-[14px] text-foreground placeholder:text-muted-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
-            onChange={(e) => handleSearchChange(e.target.value)}
-          />
+      <div className="relative">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+              <Sparkles className="h-3.5 w-3.5" />
+              Discovery controls
+            </div>
+            <h2 className="mt-4 text-[24px] font-semibold tracking-[-0.03em] text-foreground sm:text-[28px]">
+              Refine the mystery without giving it away
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-muted-foreground sm:text-[15px]">
+              {total} {total === 1 ? "idea" : "ideas"} match your current view
+              {routeCategoryName ? ` in ${routeCategoryName}` : ""}.
+            </p>
+          </div>
+
+          {hasActiveFilters && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={clearAll}
+              className="rounded-full border-border bg-background/80"
+            >
+              Clear filters
+            </Button>
+          )}
         </div>
 
-        <div className="flex flex-wrap sm:flex-nowrap gap-3 w-full sm:w-auto">
-          <div className="relative flex-1 sm:flex-none">
-            <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <select
-              value={currentUnlockType}
-              onChange={(e) => updateParam("unlockType", e.target.value)}
-              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-border bg-muted pl-9 pr-8 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
-            >
-              {UNLOCK_TYPES.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="search"
+              value={localSearch}
+              placeholder="Search by title, teaser, or creator..."
+              className="h-12 rounded-full border-border bg-background/90 pl-11 pr-4 shadow-sm"
+              onChange={(e) => handleSearchChange(e.target.value)}
+            />
           </div>
 
-          <div className="relative flex-1 sm:flex-none">
-            <select
-              value={currentCategory}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
-            >
-              <option value="">All Categories</option>
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          </div>
-
-          {availableSubcategories.length > 0 && (
-            <div className="relative flex-1 sm:flex-none">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="relative">
               <select
-                value={currentSubcategory}
-                onChange={(e) => updateParam("subcategory", e.target.value)}
-                className="h-10 w-full sm:w-[220px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+                value={routeCategorySlug}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className={SELECT_CLASS_NAME}
               >
-                <option value="">All Subcategories</option>
-                {availableSubcategories.map((sub) => (
-                  <option key={sub.slug} value={sub.slug}>
-                    {sub.name}
+                <option value="">All collections</option>
+                {CATEGORIES.map((categoryName) => {
+                  return (
+                    <option
+                      key={categoryName}
+                      value={getCategorySlugFromName(categoryName) ?? ""}
+                    >
+                      {categoryName}
+                    </option>
+                  );
+                })}
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            </div>
+
+            <div className="relative">
+              <select
+                value={currentUnlockType}
+                onChange={(e) => updateParam("unlockType", e.target.value)}
+                className={cn(SELECT_CLASS_NAME, "pl-10")}
+              >
+                {MARKETPLACE_UNLOCK_TYPES.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <SlidersHorizontal className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             </div>
-          )}
+          </div>
+        </div>
 
-          <div className="relative flex-1 sm:flex-none">
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
+          {MARKETPLACE_SORT_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => updateParam("sortBy", option.value)}
+              className={cn(
+                "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition",
+                currentSortBy === option.value
+                  ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-primary-glow)]"
+                  : "border-border bg-background/80 text-muted-foreground hover:border-primary/20 hover:text-foreground"
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="relative">
             <select
               value={currentMaturity}
               onChange={(e) => updateParam("maturity", e.target.value)}
-              className="h-10 w-full sm:w-[180px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              className={SELECT_CLASS_NAME}
             >
-              <option value="">All Maturities</option>
+              <option value="">All maturity levels</option>
               {IDEA_MATURITY_LEVELS.map((level) => (
                 <option key={level.value} value={level.value}>
                   {level.label}
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
 
-          <div className="relative flex-1 sm:flex-none">
+          <div className="relative md:col-span-2">
             <select
-              value={currentSortBy}
-              onChange={(e) => updateParam("sortBy", e.target.value)}
-              className="h-10 w-full sm:w-[200px] appearance-none rounded-[8px] border border-border bg-muted px-4 pr-10 text-[14px] text-foreground outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)] cursor-pointer"
+              value={currentSubcategory}
+              onChange={(e) => updateParam("subcategory", e.target.value)}
+              className={cn(
+                SELECT_CLASS_NAME,
+                availableSubcategories.length === 0 &&
+                  "cursor-not-allowed opacity-60"
+              )}
+              disabled={availableSubcategories.length === 0}
             >
-              {SORT_OPTIONS.map((sort) => (
-                <option key={sort.value} value={sort.value}>
-                  {sort.label}
+              <option value="">
+                {availableSubcategories.length === 0
+                  ? "Choose a collection to browse subcategories"
+                  : "All subcategories"}
+              </option>
+              {availableSubcategories.map((subcategory) => (
+                <option key={subcategory.slug} value={subcategory.slug}>
+                  {subcategory.name}
+                  {"count" in subcategory && subcategory.count
+                    ? ` (${subcategory.count})`
+                    : ""}
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
-      </div>
 
-      {/* Active filter chips */}
-      {hasActiveFilters && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[12px] font-medium text-muted-foreground">Active:</span>
-          {activeFilters.map((f) => (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => {
-                if (f.key === "search") {
-                  setLocalSearch("");
-                }
-                updateParam(f.key, "");
-              }}
-              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary transition-colors hover:bg-primary/20"
-            >
-              {f.label}
-              <X className="h-3 w-3" />
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={clearAll}
-            className="text-[12px] font-medium text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
-          >
-            Clear all
-          </button>
-        </div>
-      )}
+        {availableSubcategories.length > 0 && (
+          <div className="mt-4">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Quick lanes
+            </p>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              <button
+                type="button"
+                onClick={() => updateParam("subcategory", "")}
+                className={cn(
+                  "shrink-0 rounded-full border px-3 py-2 text-sm transition",
+                  currentSubcategory === ""
+                    ? "border-primary/20 bg-primary/10 text-primary"
+                    : "border-border bg-background/80 text-muted-foreground hover:text-foreground"
+                )}
+              >
+                All
+              </button>
+              {availableSubcategories.slice(0, 10).map((subcategory) => (
+                <button
+                  key={subcategory.slug}
+                  type="button"
+                  onClick={() => updateParam("subcategory", subcategory.slug)}
+                  className={cn(
+                    "shrink-0 rounded-full border px-3 py-2 text-sm transition",
+                    currentSubcategory === subcategory.slug
+                      ? "border-primary/20 bg-primary/10 text-primary"
+                      : "border-border bg-background/80 text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {subcategory.name}
+                  {"count" in subcategory && subcategory.count ? ` · ${subcategory.count}` : ""}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {hasActiveFilters && (
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span className="text-[12px] font-medium text-muted-foreground">
+              Active filters
+            </span>
+            {activeFilters.map((filter) => (
+              <button
+                key={filter.key}
+                type="button"
+                onClick={() => {
+                  if (filter.key === "search") {
+                    setLocalSearch("");
+                  }
+                  updateParam(filter.key, "");
+                }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-[12px] font-medium text-primary transition hover:bg-primary/15"
+              >
+                {filter.label}
+                <X className="h-3 w-3" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
