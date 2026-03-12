@@ -1,94 +1,240 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Flame, Lock, Zap, Unlock } from "lucide-react";
-import { formatPrice } from "@/lib/utils";
+import { Flame, Lightbulb, Star, Unlock, Users, Zap } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
+import { CATEGORY_META } from "@/lib/constants";
+import { cn, formatPrice } from "@/lib/utils";
 import type { IdeaCardProps } from "@/features/ideas/types";
+
+function normalizeUrl(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
+  return null;
+}
 
 export function IdeaCard({
   id,
   title,
+  teaserText,
   teaserImageUrl,
   priceInCents,
   unlockType,
   category,
+  creatorId,
   creatorName,
+  creatorAvatarUrl,
   purchaseCount,
+  reviewCount,
+  averageRating,
   isOwner = false,
   isPurchased = false,
+  initialBookmarked = false,
+  isAuthenticated = false,
   isTrending = false,
-  index = 0, // Pass the array index from the parent map function for bento sizing
+  index,
 }: IdeaCardProps & { index?: number }) {
   const [imageError, setImageError] = useState(false);
 
-  const lockedState = !isPurchased && !isOwner;
-  const sizeClass = index % 5 === 0 ? "md:col-span-2 md:row-span-2" : "col-span-1 row-span-1";
+  const normalizedImageUrl = normalizeUrl(teaserImageUrl);
+  const normalizedCreatorAvatarUrl = normalizeUrl(creatorAvatarUrl);
+
+  const creatorInitials = (() => {
+    const value = creatorName?.trim();
+    if (!value) return "?";
+    const parts = value.split(/\s+/).filter(Boolean);
+    return parts
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase();
+  })();
+
+  const hasImage = !!normalizedImageUrl && !imageError;
+  const categorySlug = category ? CATEGORY_META[category]?.slug : null;
+
+  const unlockBadgeClasses = cn(
+    "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm",
+    unlockType === "EXCLUSIVE"
+      ? "bg-violet-600/80 text-white"
+      : "bg-zinc-700/80 text-zinc-200"
+  );
 
   return (
-    <Link href={`/ideas/${id}`} className={`group relative overflow-hidden rounded-3xl bg-zinc-900/40 border border-white/5 backdrop-blur-md cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:border-violet-500/50 hover:shadow-[0_0_40px_-10px_rgba(139,92,246,0.2)] flex flex-col ${sizeClass}`}>
-      
-      {/* Cinematic Background Image */}
-      <div className="absolute inset-0 z-0 bg-zinc-950">
-        {!imageError && teaserImageUrl ? (
-          <Image 
-            src={teaserImageUrl} 
-            alt={title} 
-            fill 
-            className={`object-cover opacity-30 mix-blend-overlay transition-all duration-700 group-hover:scale-105 group-hover:opacity-50 ${lockedState ? "blur-sm group-hover:blur-[2px]" : ""}`}
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-900/20 via-zinc-950 to-zinc-950" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent" />
-      </div>
-
-      {/* Floating Badges */}
-      <div className="absolute top-5 left-5 z-10 flex flex-wrap gap-2">
-        {unlockType === "EXCLUSIVE" && (
-          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-violet-500/20 border border-violet-500/30 text-violet-300 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
-            <Zap size={12} fill="currentColor" /> Exclusive
-          </span>
-        )}
-        {isTrending && (
-          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/20 border border-orange-500/30 text-orange-300 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
-            <Flame size={12} fill="currentColor" /> Hot
-          </span>
-        )}
-      </div>
-
-      {/* Center Padlock Interaction */}
-      {lockedState && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-500 group-hover:opacity-0 group-hover:scale-95 group-hover:-translate-y-4">
-          <div className="p-4 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
-            <Lock className="text-zinc-400 w-6 h-6" />
-          </div>
-          <p className="mt-3 text-[10px] font-bold tracking-[0.3em] text-zinc-500 uppercase">Classified</p>
-        </div>
+    <div
+      className={cn(
+        "group flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800",
+        "bg-white dark:bg-zinc-900",
+        "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]",
+        "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
       )}
-
-      {/* Content Area - Slides up on hover */}
-      <div className="relative z-20 flex flex-col justify-end h-full p-6 mt-auto">
-        <div className={`transform transition-all duration-500 ease-out ${lockedState ? "translate-y-6 group-hover:translate-y-0" : ""}`}>
-          <p className="text-[11px] font-semibold text-violet-400 uppercase tracking-widest mb-2">{category}</p>
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-2 line-clamp-2 leading-tight">{title}</h3>
-          
-          <div className={`flex items-center justify-between mt-6 transition-all duration-500 delay-100 ${lockedState ? "opacity-0 group-hover:opacity-100" : ""}`}>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-zinc-400">By @{creatorName?.split(" ")[0] || "Creator"}</span>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <span className="text-lg font-bold text-white">{formatPrice(priceInCents)}</span>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                {lockedState ? <Unlock className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
-              </div>
+    >
+      {/* Image area */}
+      <div className="relative h-48 overflow-hidden rounded-t-2xl">
+        {hasImage ? (
+          <>
+            <Image
+              src={normalizedImageUrl!}
+              alt={title}
+              fill
+              className="object-cover"
+              onError={() => setImageError(true)}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          </>
+        ) : (
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/30 dark:to-indigo-950/30">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/70 dark:bg-zinc-800/70">
+              <Lightbulb className="h-7 w-7 text-violet-400 dark:text-violet-300" />
             </div>
           </div>
+        )}
+
+        {/* Badge strip */}
+        <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5">
+          {isTrending && (
+            <span className="flex items-center gap-1 rounded-full bg-orange-500/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+              <Flame className="h-3 w-3" /> Trending
+            </span>
+          )}
+          <span className={unlockBadgeClasses}>
+            {unlockType === "EXCLUSIVE" ? (
+              <><Zap className="h-3 w-3" /> Exclusive</>
+            ) : (
+              <>Multi</>
+            )}
+          </span>
+          {category && (
+            categorySlug ? (
+              <Link
+                href={`/ideas/category/${categorySlug}`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-700 backdrop-blur-sm dark:bg-zinc-800/80 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-700"
+              >
+                {category}
+              </Link>
+            ) : (
+              <span className="flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-700 backdrop-blur-sm dark:bg-zinc-800/80 dark:text-zinc-200">
+                {category}
+              </span>
+            )
+          )}
         </div>
       </div>
-    </Link>
+
+      {/* Card body */}
+      <div className="flex flex-1 flex-col p-4">
+        {/* Title row */}
+        <div className="flex items-start justify-between gap-2">
+          <Link
+            href={`/ideas/${id}`}
+            className="flex-1 font-bold text-base leading-snug line-clamp-2 text-zinc-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400"
+          >
+            <span>{title}</span>
+          </Link>
+          {!isOwner && (
+            <BookmarkButton
+              ideaId={id}
+              initialBookmarked={initialBookmarked}
+              isAuthenticated={isAuthenticated}
+            />
+          )}
+        </div>
+
+        {/* Creator row */}
+        {(creatorId || creatorName) && (
+          <div className="mt-2 flex items-center justify-between">
+            <Link
+              href={creatorId ? `/creators/${creatorId}` : "#"}
+              className="flex items-center gap-1.5 min-w-0"
+              onClick={(e) => !creatorId && e.preventDefault()}
+            >
+              <Avatar className="h-5 w-5 shrink-0">
+                <AvatarImage src={normalizedCreatorAvatarUrl ?? undefined} />
+                <AvatarFallback className="text-[9px]">{creatorInitials}</AvatarFallback>
+              </Avatar>
+              <span className="truncate text-xs text-zinc-500 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-violet-400">
+                {creatorName ?? "Creator"}
+              </span>
+            </Link>
+            {typeof purchaseCount === "number" && (
+              <span className="flex items-center gap-1 text-xs text-zinc-400 dark:text-zinc-500 shrink-0">
+                <Users className="h-3.5 w-3.5" />
+                {purchaseCount}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Teaser text */}
+        {teaserText && (
+          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+            {teaserText}
+          </p>
+        )}
+
+        {/* Rating row */}
+        {typeof averageRating === "number" && typeof reviewCount === "number" && reviewCount > 0 && (
+          <div className="mt-2 flex items-center gap-1">
+            <span aria-label={`Rating: ${averageRating.toFixed(1)} out of 5 stars`}>
+              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+            </span>
+            <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+              {averageRating.toFixed(1)}
+            </span>
+            <span className="text-xs text-zinc-400 dark:text-zinc-500">
+              ({reviewCount})
+            </span>
+          </div>
+        )}
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Footer */}
+        <div className="mt-4 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800 pt-4">
+          <span className="text-xl font-bold text-zinc-900 dark:text-white">
+            {formatPrice(priceInCents)}
+          </span>
+          {isOwner ? (
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-9 px-4 text-xs rounded-xl"
+            >
+              <Link href={`/studio/ideas/${id}/edit`}>Edit</Link>
+            </Button>
+          ) : isPurchased ? (
+            <Button
+              asChild
+              size="sm"
+              className="h-9 px-4 text-xs rounded-xl bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Link href={`/ideas/${id}`}>
+                <Unlock className="mr-1.5 h-3.5 w-3.5" />
+                Read
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              asChild
+              size="sm"
+              className="h-9 px-4 text-xs rounded-xl"
+            >
+              <Link href={`/ideas/${id}`}>
+                <Unlock className="mr-1.5 h-3.5 w-3.5" />
+                Unlock
+              </Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

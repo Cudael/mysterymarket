@@ -1,4 +1,5 @@
 export interface IdeaCardProps {
+  // — Idea data —
   id: string;
   title: string;
   teaserText?: string | null;
@@ -8,18 +9,22 @@ export interface IdeaCardProps {
   category?: string | null;
   subcategoryName?: string | null;
   maturityLevel?: "SEED" | "CONCEPT" | "BLUEPRINT" | "PROTOTYPE_READY";
-  creatorId?: string | null;
-  creatorName?: string | null;
-  creatorAvatarUrl?: string | null;
   purchaseCount?: number;
   reviewCount?: number;
   averageRating?: number | null;
   tags?: string[];
+  isTrending?: boolean;
+
+  // — Creator info —
+  creatorId?: string | null;
+  creatorName?: string | null;
+  creatorAvatarUrl?: string | null;
+
+  // — Viewer state —
   isOwner?: boolean;
   isPurchased?: boolean;
   initialBookmarked?: boolean;
   isAuthenticated?: boolean;
-  isTrending?: boolean;
 }
 
 export interface IdeaWithCreator {
