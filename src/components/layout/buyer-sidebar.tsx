@@ -39,7 +39,7 @@ export function BuyerSidebar() {
   }, []);
 
   return (
-    <aside className="hidden md:flex w-52 lg:w-56 shrink-0 flex-col border-r border-[#D9DCE3] bg-[#FFFFFF] sticky top-[72px] self-start h-[calc(100vh-72px)] overflow-y-auto">
+    <aside className="hidden md:flex w-52 lg:w-56 shrink-0 flex-col border-r border-border bg-card sticky top-[72px] self-start h-[calc(100vh-72px)] overflow-y-auto">
       <nav className="flex flex-col gap-0.5 p-3 pt-5">
         {BUYER_NAV.map(({ href, label, icon: Icon, exact }) => {
           const isActive = exact ? pathname === href : pathname.startsWith(href);
@@ -52,14 +52,14 @@ export function BuyerSidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-[9px] px-3 py-2.5 text-[14px] font-medium transition-all duration-200",
                 isActive
-                  ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
-                  : "text-[#1A1A1A]/60 hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+                  ? "bg-primary/10 text-primary"
+                  : "text-foreground/60 hover:bg-muted hover:text-foreground"
               )}
             >
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0",
-                  isActive ? "text-[#3A5FCD]" : "text-[#1A1A1A]/50"
+                  isActive ? "text-primary" : "text-foreground/50"
                 )}
               />
               <span className="flex-1">{label}</span>
@@ -73,10 +73,10 @@ export function BuyerSidebar() {
         })}
       </nav>
 
-      <div className="mt-auto border-t border-[#D9DCE3] p-3">
+      <div className="mt-auto border-t border-border p-3">
         <Link
           href="/studio"
-          className="flex items-center gap-3 rounded-[9px] px-3 py-2.5 text-[14px] font-medium text-[#1A1A1A]/50 transition-all duration-200 hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+          className="flex items-center gap-3 rounded-[9px] px-3 py-2.5 text-[14px] font-medium text-foreground/50 transition-all duration-200 hover:bg-muted hover:text-foreground"
         >
           <Lightbulb className="h-4 w-4 shrink-0" />
           Creator Studio

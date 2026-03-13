@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Flame, Lightbulb, Lock, Star, Unlock, Users, Zap } from "lucide-react";
+import { Flame, Lock, Star, Unlock, Users, Zap } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
@@ -61,17 +61,17 @@ export function IdeaCard({
   const unlockBadgeClasses = cn(
     "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm",
     unlockType === "EXCLUSIVE"
-      ? "bg-violet-100 text-violet-700 border border-violet-200"
-      : "bg-slate-100 text-slate-600 border border-slate-200"
+      ? "bg-primary/10 text-primary border border-primary/20"
+      : "bg-muted text-muted-foreground border border-border"
   );
 
   return (
     <div
       className={cn(
-        "group flex flex-col rounded-2xl border border-slate-200",
-        "bg-white",
+        "group flex flex-col rounded-2xl border border-border",
+        "bg-card",
         "shadow-sm",
-        "transition-all duration-300 hover:shadow-lg hover:shadow-violet-100/50 hover:border-violet-300 hover:-translate-y-1"
+        "transition-all duration-300 hover:shadow-[var(--shadow-primary-glow)] hover:border-primary/30 hover:-translate-y-1"
       )}
     >
       {/* Image area */}
@@ -88,24 +88,22 @@ export function IdeaCard({
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </>
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-50 to-indigo-50">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm">
-              <Lightbulb className="h-7 w-7 text-violet-500" />
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-card shadow-sm">
+              <Lock className="h-7 w-7 text-primary/60" />
             </div>
           </div>
         )}
 
         {/* Lock overlay for unpurchased ideas */}
-        {!isPurchased && !isOwner && (
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md grayscale-[30%] bg-white/40"
-          >
-            <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 shadow-sm border border-violet-100">
-              <Lock className="h-5 w-5 text-violet-500" />
+        {!isPurchased && !isOwner && hasImage && (
+          <div className="absolute inset-0 flex flex-col items-end justify-end p-4 bg-gradient-to-t from-foreground/60 via-foreground/20 to-transparent backdrop-blur-[2px]">
+            <div className="flex w-full items-center justify-center gap-2">
+              <Lock className="h-4 w-4 text-white" />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-white/80">
+                Unlock to reveal
+              </span>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-800 drop-shadow-sm">
-              Preview Only
-            </span>
           </div>
         )}
 
@@ -128,12 +126,12 @@ export function IdeaCard({
               <Link
                 href={`/ideas/category/${categorySlug}`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center rounded-full bg-white/90 border border-slate-200 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-700 backdrop-blur-sm hover:bg-white hover:border-violet-300 hover:text-violet-700 transition-colors"
+                className="flex items-center rounded-full bg-card/90 border border-border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-foreground/70 backdrop-blur-sm hover:bg-card hover:border-primary/30 hover:text-primary transition-colors"
               >
                 {category}
               </Link>
             ) : (
-              <span className="flex items-center rounded-full bg-white/90 border border-slate-200 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-700 backdrop-blur-sm">
+              <span className="flex items-center rounded-full bg-card/90 border border-border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-foreground/70 backdrop-blur-sm">
                 {category}
               </span>
             )
@@ -147,7 +145,7 @@ export function IdeaCard({
         <div className="flex items-start justify-between gap-2">
           <Link
             href={`/ideas/${id}`}
-            className="flex-1 font-bold text-base leading-snug line-clamp-2 text-zinc-900 hover:text-violet-600 transition-colors"
+            className="flex-1 font-bold text-base leading-snug line-clamp-2 text-foreground hover:text-primary transition-colors"
           >
             <span>{title}</span>
           </Link>
@@ -168,16 +166,16 @@ export function IdeaCard({
               className="flex items-center gap-1.5 min-w-0"
               onClick={(e) => !creatorId && e.preventDefault()}
             >
-              <Avatar className="h-5 w-5 shrink-0 ring-1 ring-slate-200">
+              <Avatar className="h-5 w-5 shrink-0 ring-1 ring-border">
                 <AvatarImage src={normalizedCreatorAvatarUrl ?? undefined} />
-                <AvatarFallback className="text-[9px] bg-violet-50 text-violet-600">{creatorInitials}</AvatarFallback>
+                <AvatarFallback className="text-[9px] bg-primary/10 text-primary">{creatorInitials}</AvatarFallback>
               </Avatar>
-              <span className="truncate text-xs text-slate-500 hover:text-violet-600 transition-colors">
+              <span className="truncate text-xs text-muted-foreground hover:text-primary transition-colors">
                 {creatorName ?? "Creator"}
               </span>
             </Link>
             {typeof purchaseCount === "number" && (
-              <span className="flex items-center gap-1 text-xs text-slate-400 shrink-0">
+              <span className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
                 <Users className="h-3.5 w-3.5" />
                 {purchaseCount}
               </span>
@@ -187,7 +185,7 @@ export function IdeaCard({
 
         {/* Teaser text */}
         {teaserText && (
-          <p className="mt-2 text-sm text-slate-500 line-clamp-2">
+          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
             {teaserText}
           </p>
         )}
@@ -198,10 +196,10 @@ export function IdeaCard({
             <span aria-label={`Rating: ${averageRating.toFixed(1)} out of 5 stars`}>
               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
             </span>
-            <span className="text-xs font-medium text-zinc-700">
+            <span className="text-xs font-medium text-foreground">
               {averageRating.toFixed(1)}
             </span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-muted-foreground">
               ({reviewCount})
             </span>
           </div>
@@ -211,12 +209,12 @@ export function IdeaCard({
         <div className="flex-1" />
 
         {/* Footer */}
-        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
           <div>
-            <span className="block text-[10px] uppercase tracking-widest text-slate-400">
+            <span className="block text-[10px] uppercase tracking-widest text-muted-foreground">
               Price
             </span>
-            <span className="text-xl font-bold text-zinc-900">
+            <span className="text-xl font-bold text-foreground">
               {formatPrice(priceInCents)}
             </span>
           </div>
@@ -225,7 +223,7 @@ export function IdeaCard({
               asChild
               variant="outline"
               size="sm"
-              className="h-9 px-4 text-xs rounded-xl border-slate-200 text-slate-700 hover:border-violet-300 hover:text-violet-700 hover:bg-violet-50"
+              className="h-9 px-4 text-xs rounded-xl border-border text-foreground/70 hover:border-primary/30 hover:text-primary hover:bg-primary/5"
             >
               <Link href={`/studio/ideas/${id}/edit`}>Edit</Link>
             </Button>
@@ -243,7 +241,7 @@ export function IdeaCard({
             <Button
               asChild
               size="sm"
-              className="h-9 px-4 text-xs rounded-xl bg-violet-600 hover:bg-violet-700 text-white"
+              className="h-9 px-4 text-xs rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Link href={`/ideas/${id}`}>                <Unlock className="mr-1.5 h-3.5 w-3.5" />
                 Unlock

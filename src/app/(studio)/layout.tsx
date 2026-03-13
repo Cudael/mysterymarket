@@ -9,7 +9,7 @@ export default function StudioLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[#F5F6FA] text-[#1A1A1A] antialiased selection:bg-[#3A5FCD] selection:text-white">
+    <div className="flex min-h-[100dvh] flex-col bg-surface text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
       <Navbar />
 
       <div className="flex flex-1 flex-col md:flex-row">

@@ -68,6 +68,15 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   return (
     <div className="min-h-screen bg-[hsl(var(--surface))]">
       <div className="container mx-auto max-w-[1400px] px-6 py-10 lg:px-8">
+        <div className="mb-8 rounded-[24px] bg-[hsl(252,40%,6%)] px-8 py-10 text-white">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">Marketplace</p>
+          <h1 className="mt-2 text-[28px] font-bold tracking-tight sm:text-[36px]">
+            Discover hidden ideas
+          </h1>
+          <p className="mt-2 text-[15px] text-white/65 max-w-xl">
+            Browse premium concepts from top creators. Every idea stays locked until you unlock it.
+          </p>
+        </div>
         <Suspense
           fallback={<div className="h-[72px] animate-pulse rounded-[30px] bg-border/40" />}
         >

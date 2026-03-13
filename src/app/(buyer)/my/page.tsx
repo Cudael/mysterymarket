@@ -116,9 +116,9 @@ export default async function MyPage() {
 
       {purchases.length === 0 ? (
         <ContentCard bodyClassName="p-0">
-          <div className="rounded-[16px] bg-[#F8F9FC] p-2">
+          <div className="rounded-[16px] bg-muted p-2">
             <EmptyState
-              icon={<ShoppingBag className="h-9 w-9 text-[#1A1A1A]/40" />}
+              icon={<ShoppingBag className="h-9 w-9 text-foreground/40" />}
               title="Start your collection"
               description="Discover premium ideas from top creators. Every idea you unlock becomes part of your personal library."
               action={{ label: "Explore Marketplace", href: "/ideas" }}
@@ -126,8 +126,8 @@ export default async function MyPage() {
           </div>
 
           {recommendedIdeas.length > 0 && (
-            <div className="border-t border-[#D9DCE3] px-6 py-6">
-              <h2 className="text-[14px] font-bold uppercase tracking-[0.08em] text-[#1A1A1A]/45">
+            <div className="border-t border-border px-6 py-6">
+              <h2 className="text-[14px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
                 Recommended for you
               </h2>
 
@@ -136,14 +136,14 @@ export default async function MyPage() {
                   <Link
                     key={idea.id}
                     href={`/ideas/${idea.id}`}
-                    className="group rounded-[12px] border border-[#D9DCE3] bg-white p-4 transition-all hover:border-[#3A5FCD]/30 hover:shadow-[0_4px_12px_rgba(58,95,205,0.08)]"
+                    className="group rounded-[12px] border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-[var(--shadow-primary-glow)]"
                   >
-                    <p className="line-clamp-2 text-sm font-semibold text-[#1A1A1A] transition-colors group-hover:text-[#3A5FCD]">
+                    <p className="line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
                       {idea.title}
                     </p>
-                    <div className="mt-2 flex items-center justify-between text-xs text-[#1A1A1A]/60">
+                    <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
                       <span>{idea.category ?? "General"}</span>
-                      <span className="font-bold text-[#3A5FCD]">
+                      <span className="font-bold text-primary">
                         {formatPrice(idea.priceInCents)}
                       </span>
                     </div>
@@ -158,7 +158,7 @@ export default async function MyPage() {
           title="Recent Purchases"
           bodyClassName="p-0"
         >
-          <div className="divide-y divide-[#D9DCE3]">
+          <div className="divide-y divide-border">
             {recentPurchases.map((purchase) => {
               const refundStatus = refundByPurchaseId.get(purchase.id);
               const hasReviewed = purchase.idea.reviews.length > 0;
@@ -169,7 +169,7 @@ export default async function MyPage() {
                     <div className="min-w-0">
                       <Link
                         href={`/ideas/${purchase.idea.id}`}
-                        className="text-[18px] font-semibold text-[#1A1A1A] hover:text-[#3A5FCD]"
+                        className="text-[18px] font-semibold text-foreground hover:text-primary"
                       >
                         {purchase.idea.title}
                       </Link>
@@ -177,14 +177,14 @@ export default async function MyPage() {
                       <div className="mt-2 flex flex-wrap items-center gap-2">
                         <Badge
                           variant="outline"
-                          className="border-[#D9DCE3] text-[#1A1A1A]/80"
+                          className="border-border text-foreground/80"
                         >
                           {formatPrice(purchase.amountInCents)} paid
                         </Badge>
 
                         <Badge
                           variant="outline"
-                          className="border-[#D9DCE3] text-[#1A1A1A]/80"
+                          className="border-border text-foreground/80"
                         >
                           <Calendar className="mr-1 h-3 w-3" />
                           {new Date(purchase.createdAt).toLocaleDateString("en-US", {
@@ -202,7 +202,7 @@ export default async function MyPage() {
                       </div>
 
                       {purchase.idea.teaserText && (
-                        <p className="mt-3 line-clamp-2 text-sm text-[#1A1A1A]/60">
+                        <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
                           {purchase.idea.teaserText}
                         </p>
                       )}
@@ -236,12 +236,12 @@ export default async function MyPage() {
           </div>
 
           {hasMorePurchases && (
-            <div className="border-t border-[#D9DCE3] px-6 py-4">
-              <p className="text-[13px] text-[#1A1A1A]/50">
+            <div className="border-t border-border px-6 py-4">
+              <p className="text-[13px] text-muted-foreground">
                 Showing {RECENT_PURCHASES_LIMIT} of {purchases.length} purchases.{" "}
                 <Link
                   href="/my/activity"
-                  className="font-medium text-[#3A5FCD] hover:text-[#6D7BE0]"
+                  className="font-medium text-primary hover:text-primary/80"
                 >
                   View more in Activity →
                 </Link>

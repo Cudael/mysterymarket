@@ -62,20 +62,20 @@ export function StudioSidebar() {
         className={cn(
           "group flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[14px] font-medium transition-all duration-200",
           isActive
-            ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
+            ? "bg-primary/10 text-primary"
             : muted
-              ? "text-[#1A1A1A]/40 hover:bg-[#FFFFFF] hover:text-[#1A1A1A]/70 hover:shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
-              : "text-[#1A1A1A]/70 hover:bg-[#FFFFFF] hover:text-[#1A1A1A] hover:shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+              ? "text-foreground/40 hover:bg-card hover:text-foreground/70 hover:shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+              : "text-foreground/70 hover:bg-card hover:text-foreground hover:shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
         )}
       >
         <Icon
           className={cn(
             "h-4 w-4 shrink-0 transition-colors",
             isActive
-              ? "text-[#3A5FCD]"
+              ? "text-primary"
               : muted
-                ? "text-[#1A1A1A]/30"
-                : "text-[#1A1A1A]/50 group-hover:text-[#1A1A1A]/70"
+                ? "text-foreground/30"
+                : "text-foreground/50 group-hover:text-foreground/70"
           )}
         />
         <span className="truncate">{label}</span>
@@ -85,18 +85,18 @@ export function StudioSidebar() {
 
   return (
     <>
-      <aside className="hidden w-[280px] shrink-0 border-r border-[#D9DCE3] bg-[#F5F6FA] md:sticky md:top-[72px] md:flex md:h-[calc(100dvh-72px)] md:flex-col">
-        <div className="border-b border-[#D9DCE3] px-4 py-4">
-          <div className="rounded-[14px] border border-[#D9DCE3] bg-[#FFFFFF] p-2 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-            <div className="flex items-start gap-3 rounded-[10px] bg-[#F8F9FC] px-3 py-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
-                <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
+      <aside className="hidden w-[280px] shrink-0 border-r border-border bg-muted md:sticky md:top-[72px] md:flex md:h-[calc(100dvh-72px)] md:flex-col">
+        <div className="border-b border-border px-4 py-4">
+          <div className="rounded-[14px] border border-border bg-card p-2 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+            <div className="flex items-start gap-3 rounded-[10px] bg-muted px-3 py-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+                <Lightbulb className="h-4 w-4 text-primary" />
               </div>
               <div className="min-w-0">
-                <p className="text-[13px] font-semibold text-[#1A1A1A]">
+                <p className="text-[13px] font-semibold text-foreground">
                   Creator Studio
                 </p>
-                <p className="mt-0.5 text-[12px] leading-5 text-[#1A1A1A]/55">
+                <p className="mt-0.5 text-[12px] leading-5 text-muted-foreground">
                   Manage your ideas, payouts, and performance.
                 </p>
               </div>
@@ -105,7 +105,7 @@ export function StudioSidebar() {
         </div>
 
         <nav className="flex flex-1 flex-col overflow-y-auto px-4 py-3">
-          <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#1A1A1A]/35">
+          <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-foreground/35">
             Studio
           </p>
 
@@ -115,20 +115,20 @@ export function StudioSidebar() {
             ))}
           </div>
 
-          <div className="my-4 h-px bg-[#D9DCE3]" />
+          <div className="my-4 h-px bg-border" />
 
           <Link
             href="/my"
-            className="flex items-center gap-2 rounded-[10px] border border-dashed border-[#D9DCE3] bg-[#FFFFFF]/80 px-3.5 py-2.5 text-[13px] font-medium text-[#1A1A1A]/55 transition-all hover:border-[#3A5FCD]/30 hover:bg-[#FFFFFF] hover:text-[#3A5FCD]"
+            className="flex items-center gap-2 rounded-[10px] border border-dashed border-border bg-card/80 px-3.5 py-2.5 text-[13px] font-medium text-foreground/55 transition-all hover:border-primary/30 hover:bg-card hover:text-primary"
           >
             <ShoppingBag className="h-4 w-4 shrink-0" />
             My Library
             <ArrowLeftRight className="ml-auto h-3.5 w-3.5 shrink-0" />
           </Link>
 
-          <div className="my-4 h-px bg-[#D9DCE3]" />
+          <div className="my-4 h-px bg-border" />
 
-          <p className="px-3.5 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#1A1A1A]/35">
+          <p className="px-3.5 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-foreground/35">
             Account
           </p>
 
@@ -140,14 +140,14 @@ export function StudioSidebar() {
 
           {isAdmin && (
             <>
-              <div className="my-4 h-px bg-[#D9DCE3]" />
+              <div className="my-4 h-px bg-border" />
               <Link
                 href="/admin"
                 className={cn(
                   "mt-1 flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[14px] font-medium transition-all duration-200",
                   pathname.startsWith("/admin")
                     ? "bg-red-500/10 text-red-600"
-                    : "text-[#1A1A1A]/70 hover:bg-[#FFFFFF] hover:text-[#1A1A1A] hover:shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+                    : "text-foreground/70 hover:bg-card hover:text-foreground hover:shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
                 )}
               >
                 <Shield
@@ -155,7 +155,7 @@ export function StudioSidebar() {
                     "h-4 w-4 shrink-0",
                     pathname.startsWith("/admin")
                       ? "text-red-500"
-                      : "text-[#1A1A1A]/50"
+                      : "text-foreground/50"
                   )}
                 />
                 Admin Panel
@@ -168,7 +168,7 @@ export function StudioSidebar() {
         </nav>
       </aside>
 
-      <div className="flex flex-col border-b border-[#D9DCE3] bg-[#FFFFFF] md:hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+      <div className="flex flex-col border-b border-border bg-card md:hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
         <div className="overflow-x-auto no-scrollbar">
           <div className="flex gap-2 px-4 py-3">
             {STUDIO_LINKS.map(({ href, label, icon: Icon, exact }) => {
@@ -181,8 +181,8 @@ export function StudioSidebar() {
                   className={cn(
                     "flex shrink-0 items-center gap-2 rounded-[9px] px-4 py-2.5 text-[14px] font-medium transition-colors",
                     isActive
-                      ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
-                      : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-foreground/70 hover:bg-muted/80 hover:text-foreground"
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -191,7 +191,7 @@ export function StudioSidebar() {
               );
             })}
 
-            <div className="mx-1 my-auto h-5 w-px shrink-0 bg-[#D9DCE3]" />
+            <div className="mx-1 my-auto h-5 w-px shrink-0 bg-border" />
 
             {ACCOUNT_LINKS.map(({ href, label, icon: Icon, exact }) => {
               const isActive = exact ? pathname === href : pathname.startsWith(href);
@@ -203,8 +203,8 @@ export function StudioSidebar() {
                   className={cn(
                     "flex shrink-0 items-center gap-2 rounded-[9px] px-4 py-2.5 text-[14px] font-medium transition-colors",
                     isActive
-                      ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
-                      : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-foreground/70 hover:bg-muted/80 hover:text-foreground"
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -220,7 +220,7 @@ export function StudioSidebar() {
                   "flex shrink-0 items-center gap-2 rounded-[9px] px-4 py-2.5 text-[14px] font-medium transition-colors",
                   pathname.startsWith("/admin")
                     ? "bg-red-500/10 text-red-600"
-                    : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                    : "bg-muted text-foreground/70 hover:bg-muted/80 hover:text-foreground"
                 )}
               >
                 <Shield className="h-4 w-4" />

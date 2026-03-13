@@ -94,15 +94,15 @@ export default async function StudioPage() {
       <ContentCard bodyClassName="p-6">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-[#3A5FCD]/10">
-              <Sparkles className="h-6 w-6 text-[#3A5FCD]" />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-primary/10">
+              <Sparkles className="h-6 w-6 text-primary" />
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-[20px] font-semibold text-[#1A1A1A]">
+              <h2 className="text-[20px] font-semibold text-foreground">
                 Your creator workspace
               </h2>
-              <p className="max-w-2xl text-[14px] leading-6 text-[#1A1A1A]/60">
+              <p className="max-w-2xl text-[14px] leading-6 text-muted-foreground">
                 Use this space to publish ideas, review sales activity, and keep
                 your payout setup in good standing. Your wallet balance updates as
                 purchases are completed.
@@ -111,26 +111,26 @@ export default async function StudioPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3">
-              <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/45">
+            <div className="rounded-[12px] border border-border bg-muted px-4 py-3">
+              <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
                 Available Balance
               </p>
-              <p className="mt-1 text-[22px] font-bold text-[#3A5FCD]">
+              <p className="mt-1 text-[22px] font-bold text-primary">
                 {formatPrice(wallet.balanceInCents)}
               </p>
             </div>
-            <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3">
-              <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/45">
+            <div className="rounded-[12px] border border-border bg-muted px-4 py-3">
+              <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
                 Lifetime Earned
               </p>
-              <p className="mt-1 text-[22px] font-bold text-[#1A1A1A]">
+              <p className="mt-1 text-[22px] font-bold text-foreground">
                 {formatPrice(wallet.totalEarnedInCents)}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col gap-3 border-t border-[#D9DCE3] pt-6 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row">
           <Button asChild className="sm:w-auto">
             <Link href="/studio/ideas/new" className="gap-2">
               <PlusCircle className="h-4 w-4" />
@@ -163,22 +163,22 @@ export default async function StudioPage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group flex items-start gap-4 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-5 transition-all hover:border-[#3A5FCD]/35 hover:bg-[#F8F9FC] hover:shadow-[0_6px_20px_rgba(58,95,205,0.08)]"
+                className="group flex items-start gap-4 rounded-[12px] border border-border bg-card p-5 transition-all hover:border-primary/35 hover:bg-muted hover:shadow-[var(--shadow-primary-glow)]"
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
-                  <Icon className="h-5 w-5 text-[#3A5FCD]" />
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+                  <Icon className="h-5 w-5 text-primary" />
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-[15px] font-semibold text-[#1A1A1A] transition-colors group-hover:text-[#3A5FCD]">
+                  <p className="text-[15px] font-semibold text-foreground transition-colors group-hover:text-primary">
                     {item.title}
                   </p>
-                  <p className="mt-1 text-[13px] leading-5 text-[#1A1A1A]/55">
+                  <p className="mt-1 text-[13px] leading-5 text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
 
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-[#1A1A1A]/30 transition-colors group-hover:text-[#3A5FCD]" />
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-foreground/30 transition-colors group-hover:text-primary" />
               </Link>
             );
           })}
@@ -201,13 +201,13 @@ export default async function StudioPage() {
       >
         {ideas.length === 0 ? (
           <div className="flex flex-col items-center py-12 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F5F6FA]">
-              <Lightbulb className="h-7 w-7 text-[#3A5FCD]" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted">
+              <Lightbulb className="h-7 w-7 text-primary" />
             </div>
-            <p className="mt-5 text-[18px] font-semibold text-[#1A1A1A]">
+            <p className="mt-5 text-[18px] font-semibold text-foreground">
               No ideas published yet
             </p>
-            <p className="mt-2 max-w-lg text-[14px] leading-6 text-[#1A1A1A]/60">
+            <p className="mt-2 max-w-lg text-[14px] leading-6 text-muted-foreground">
               Start with one strong idea. Add a clear teaser, set a fair price,
               and publish when you&apos;re ready. You can always edit drafts later.
             </p>
@@ -219,40 +219,40 @@ export default async function StudioPage() {
           <>
             <div className="hidden overflow-x-auto md:block">
               <table className="w-full text-sm">
-                <thead className="border-b border-[#D9DCE3] bg-[#F8F9FC]">
+                <thead className="border-b border-border bg-muted">
                   <tr>
-                    <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                    <th className="px-6 py-4 text-left font-semibold text-foreground/70">
                       Title
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                    <th className="px-6 py-4 text-left font-semibold text-foreground/70">
                       Price
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                    <th className="px-6 py-4 text-left font-semibold text-foreground/70">
                       Type
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                    <th className="px-6 py-4 text-left font-semibold text-foreground/70">
                       Status
                     </th>
-                    <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                    <th className="px-6 py-4 text-left font-semibold text-foreground/70">
                       Sales
                     </th>
-                    <th className="px-6 py-4 text-right font-semibold text-[#1A1A1A]/70">
+                    <th className="px-6 py-4 text-right font-semibold text-foreground/70">
                       Actions
                     </th>
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-[#D9DCE3]">
+                <tbody className="divide-y divide-border">
                   {ideas.map((idea) => (
-                    <tr key={idea.id} className="transition-colors hover:bg-[#F8F9FC]">
-                      <td className="px-6 py-4 font-medium text-[#1A1A1A]">
+                    <tr key={idea.id} className="transition-colors hover:bg-muted">
+                      <td className="px-6 py-4 font-medium text-foreground">
                         {idea.title}
                       </td>
-                      <td className="px-6 py-4 text-[#1A1A1A]/70">
+                      <td className="px-6 py-4 text-foreground/70">
                         {formatPrice(idea.priceInCents)}
                       </td>
                       <td className="px-6 py-4">
-                        <span className="inline-flex items-center rounded-[999px] border border-[#D9DCE3] bg-[#F5F6FA] px-2.5 py-1 text-xs font-medium text-[#1A1A1A]">
+                        <span className="inline-flex items-center rounded-[999px] border border-border bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
                           {idea.unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-use"}
                         </span>
                       </td>
@@ -260,14 +260,14 @@ export default async function StudioPage() {
                         <span
                           className={`inline-flex items-center rounded-[999px] px-2.5 py-1 text-xs font-medium border ${
                             idea.published
-                              ? "border-[#AEE5D8]/50 bg-[#AEE5D8]/20 text-emerald-800"
-                              : "border-[#D9DCE3] bg-[#F5F6FA] text-[#1A1A1A]/60"
+                              ? "border-emerald-200/50 bg-emerald-50 text-emerald-800"
+                              : "border-border bg-muted text-muted-foreground"
                           }`}
                         >
                           {idea.published ? "Published" : "Draft"}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-[#1A1A1A]/70">
+                      <td className="px-6 py-4 text-foreground/70">
                         {idea._count.purchases}
                       </td>
                       <td className="px-6 py-4">
@@ -297,14 +297,14 @@ export default async function StudioPage() {
               {ideas.map((idea) => (
                 <div
                   key={idea.id}
-                  className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-4"
+                  className="rounded-[12px] border border-border bg-card p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="truncate text-[15px] font-semibold text-[#1A1A1A]">
+                      <p className="truncate text-[15px] font-semibold text-foreground">
                         {idea.title}
                       </p>
-                      <p className="mt-1 text-[13px] text-[#1A1A1A]/55">
+                      <p className="mt-1 text-[13px] text-muted-foreground">
                         {formatPrice(idea.priceInCents)} • {idea._count.purchases} sales
                       </p>
                     </div>
@@ -312,8 +312,8 @@ export default async function StudioPage() {
                     <span
                       className={`inline-flex items-center rounded-[999px] px-2.5 py-1 text-xs font-medium border ${
                         idea.published
-                          ? "border-[#AEE5D8]/50 bg-[#AEE5D8]/20 text-emerald-800"
-                          : "border-[#D9DCE3] bg-[#F5F6FA] text-[#1A1A1A]/60"
+                          ? "border-emerald-200/50 bg-emerald-50 text-emerald-800"
+                          : "border-border bg-muted text-muted-foreground"
                       }`}
                     >
                       {idea.published ? "Published" : "Draft"}
@@ -321,7 +321,7 @@ export default async function StudioPage() {
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center rounded-[999px] border border-[#D9DCE3] bg-[#F5F6FA] px-2.5 py-1 text-xs font-medium text-[#1A1A1A]">
+                    <span className="inline-flex items-center rounded-[999px] border border-border bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
                       {idea.unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-use"}
                     </span>
                   </div>
@@ -350,8 +350,8 @@ export default async function StudioPage() {
 
       {draftIdeas > 0 && (
         <ContentCard title="Publishing Tip" bodyClassName="p-6">
-          <p className="text-[14px] leading-6 text-[#1A1A1A]/65">
-            You currently have <span className="font-semibold text-[#1A1A1A]">{draftIdeas}</span>{" "}
+          <p className="text-[14px] leading-6 text-muted-foreground">
+            You currently have <span className="font-semibold text-foreground">{draftIdeas}</span>{" "}
             draft {draftIdeas === 1 ? "idea" : "ideas"}. If an idea is ready,
             publishing it can improve visibility and sales momentum.
           </p>

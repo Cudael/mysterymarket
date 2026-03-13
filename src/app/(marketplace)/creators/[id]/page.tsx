@@ -127,14 +127,14 @@ export default async function CreatorProfilePage({
   return (
     <div className="container mx-auto px-4 py-12 max-w-6xl animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Creator Profile Header Card */}
-      <div className="mb-12 rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-8 sm:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+      <div className="mb-12 rounded-[12px] border border-border bg-card p-8 sm:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
         <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
-          <Avatar className="h-24 w-24 shrink-0 border-2 border-[#F8F9FC] shadow-sm">
+          <Avatar className="h-24 w-24 shrink-0 border-2 border-border shadow-sm">
             <AvatarImage
               src={user.avatarUrl ?? undefined}
               alt={user.name ?? "Creator"}
             />
-            <AvatarFallback className="bg-[#F8F9FC] text-[#3A5FCD] text-2xl font-bold border border-[#D9DCE3]">
+            <AvatarFallback className="bg-muted text-primary text-2xl font-bold border border-border">
               {initials}
             </AvatarFallback>
           </Avatar>
@@ -142,11 +142,11 @@ export default async function CreatorProfilePage({
           <div className="flex-1">
             {/* Name + Verified Badge */}
             <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
-              <h1 className="text-[32px] font-bold tracking-tight text-[#1A1A1A]">
+              <h1 className="text-[32px] font-bold tracking-tight text-foreground">
                 {user.name ?? "Anonymous"}
               </h1>
               {user.stripeOnboarded && (
-                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-[#3A5FCD]/20 bg-[#3A5FCD]/10 px-2.5 py-1 text-[12px] font-semibold text-[#3A5FCD]">
+                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-primary/20 bg-primary/10 px-2.5 py-1 text-[12px] font-semibold text-primary">
                   <BadgeCheck className="h-3.5 w-3.5" />
                   Verified Creator
                 </span>
@@ -166,7 +166,7 @@ export default async function CreatorProfilePage({
             </div>
 
             {user.bio && (
-              <p className="mt-3 max-w-2xl text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+              <p className="mt-3 max-w-2xl text-[16px] leading-[1.6] text-foreground/70">
                 {user.bio}
               </p>
             )}
@@ -179,7 +179,7 @@ export default async function CreatorProfilePage({
                     href={user.twitterUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-[13px] text-[#1A1A1A]/50 hover:text-[#3A5FCD] transition-colors"
+                    className="flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-primary transition-colors"
                   >
                     <ExternalLink className="h-4 w-4" />
                     Twitter
@@ -190,7 +190,7 @@ export default async function CreatorProfilePage({
                     href={user.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-[13px] text-[#1A1A1A]/50 hover:text-[#3A5FCD] transition-colors"
+                    className="flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-primary transition-colors"
                   >
                     <Linkedin className="h-4 w-4" />
                     LinkedIn
@@ -201,7 +201,7 @@ export default async function CreatorProfilePage({
                     href={user.websiteUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-[13px] text-[#1A1A1A]/50 hover:text-[#3A5FCD] transition-colors"
+                    className="flex items-center gap-1.5 text-[13px] text-muted-foreground hover:text-primary transition-colors"
                   >
                     <Globe className="h-4 w-4" />
                     Website
@@ -213,9 +213,9 @@ export default async function CreatorProfilePage({
             {/* Category Specialization */}
             {topCategories.length > 0 && (
               <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                <span className="text-[12px] font-semibold uppercase tracking-wider text-[#1A1A1A]/40">Specializes in</span>
+                <span className="text-[12px] font-semibold uppercase tracking-wider text-foreground/40">Specializes in</span>
                 {topCategories.map((cat) => (
-                  <span key={cat} className="inline-flex items-center rounded-[6px] border border-[#3A5FCD]/20 bg-[#F0F4FF] px-2.5 py-1 text-[12px] font-medium text-[#3A5FCD]">
+                  <span key={cat} className="inline-flex items-center rounded-[6px] border border-primary/20 bg-primary/5 px-2.5 py-1 text-[12px] font-medium text-primary">
                     {cat}
                   </span>
                 ))}
@@ -224,37 +224,37 @@ export default async function CreatorProfilePage({
 
             {/* Stats Row */}
             <div className="mt-6 flex flex-wrap justify-center gap-4 sm:justify-start">
-              <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
-                <Calendar className="h-4 w-4 text-[#1A1A1A]/50" />
+              <span className="flex items-center gap-2 rounded-[6px] bg-muted border border-border px-3 py-1.5 text-[13px] font-medium text-foreground">
+                <Calendar className="h-4 w-4 text-foreground/50" />
                 Joined{" "}
                 {new Date(user.createdAt).toLocaleDateString("en-US", {
                   month: "short",
                   year: "numeric",
                 })}
               </span>
-              <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
-                <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
+              <span className="flex items-center gap-2 rounded-[6px] bg-muted border border-border px-3 py-1.5 text-[13px] font-medium text-foreground">
+                <Lightbulb className="h-4 w-4 text-primary" />
                 {user.ideas.length} idea{user.ideas.length !== 1 ? "s" : ""}
               </span>
-              <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
-                <ShoppingBag className="h-4 w-4 text-[#054F31]" />
+              <span className="flex items-center gap-2 rounded-[6px] bg-muted border border-border px-3 py-1.5 text-[13px] font-medium text-foreground">
+                <ShoppingBag className="h-4 w-4 text-emerald-600" />
                 {totalSales} sale{totalSales !== 1 ? "s" : ""}
               </span>
               {totalRevenueInCents > 0 && (
-                <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
-                  <ShoppingBag className="h-4 w-4 text-[#1A1A1A]/50" />
+                <span className="flex items-center gap-2 rounded-[6px] bg-muted border border-border px-3 py-1.5 text-[13px] font-medium text-foreground">
+                  <ShoppingBag className="h-4 w-4 text-foreground/50" />
                   {formatPrice(totalRevenueInCents)} total sales value
                 </span>
               )}
-              <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
-                <Users className="h-4 w-4 text-[#1A1A1A]/50" />
+              <span className="flex items-center gap-2 rounded-[6px] bg-muted border border-border px-3 py-1.5 text-[13px] font-medium text-foreground">
+                <Users className="h-4 w-4 text-foreground/50" />
                 {followerCount} follower{followerCount !== 1 ? "s" : ""}
               </span>
               {avgRating != null && reviewCount > 0 && (
-                <span className="flex items-center gap-2 rounded-[6px] bg-[#F8F9FC] border border-[#D9DCE3] px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A]">
+                <span className="flex items-center gap-2 rounded-[6px] bg-muted border border-border px-3 py-1.5 text-[13px] font-medium text-foreground">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                   {Number(avgRating).toFixed(1)}
-                  <span className="text-[#1A1A1A]/50">
+                  <span className="text-muted-foreground">
                     ({reviewCount} review{reviewCount !== 1 ? "s" : ""})
                   </span>
                 </span>
@@ -278,7 +278,7 @@ export default async function CreatorProfilePage({
 
       {/* Ideas grid */}
       <div>
-        <h2 className="mb-6 text-[22px] font-bold tracking-tight text-[#1A1A1A]">
+        <h2 className="mb-6 text-[22px] font-bold tracking-tight text-foreground">
           Ideas by {user.name?.split(" ")[0] ?? "this creator"}
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

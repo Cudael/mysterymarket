@@ -47,9 +47,9 @@ export default async function BuyerWalletPage({
       />
 
       {deposit === "success" && (
-        <div className="flex items-center gap-3 rounded-[12px] border border-[#C8E6C9] bg-[#E8F5E9] p-4 shadow-sm">
-          <CheckCircle2 className="h-5 w-5 text-[#054F31]" />
-          <p className="text-[14px] font-medium text-[#054F31]">
+        <div className="flex items-center gap-3 rounded-[12px] border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+          <CheckCircle2 className="h-5 w-5 text-emerald-700" />
+          <p className="text-[14px] font-medium text-emerald-700">
             Funds added successfully. Your wallet balance has been updated.
           </p>
         </div>
@@ -58,35 +58,35 @@ export default async function BuyerWalletPage({
       <ContentCard title="Your Balance" titleIcon={Wallet2} bodyClassName="p-6 md:p-8">
         <div className="space-y-8">
           <div>
-            <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/45">
+            <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
               Available Balance
             </p>
-            <p className="mt-2 text-5xl font-bold tracking-tight text-[#1A1A1A]">
+            <p className="mt-2 text-5xl font-bold tracking-tight text-foreground">
               {formatPrice(wallet.balanceInCents)}
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
-              <div className="mb-2 flex items-center gap-2 text-[#054F31]">
+            <div className="rounded-[12px] border border-border bg-muted p-4">
+              <div className="mb-2 flex items-center gap-2 text-emerald-600">
                 <ArrowDownCircle className="h-4 w-4" />
                 <span className="text-[12px] font-bold uppercase tracking-[0.08em]">
                   Total Deposited
                 </span>
               </div>
-              <p className="text-xl font-bold text-[#1A1A1A]">
+              <p className="text-xl font-bold text-foreground">
                 {formatPrice(totalDeposited)}
               </p>
             </div>
 
-            <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
-              <div className="mb-2 flex items-center gap-2 text-[#D32F2F]">
+            <div className="rounded-[12px] border border-border bg-muted p-4">
+              <div className="mb-2 flex items-center gap-2 text-red-600">
                 <ShoppingCart className="h-4 w-4" />
                 <span className="text-[12px] font-bold uppercase tracking-[0.08em]">
                   Total Spent
                 </span>
               </div>
-              <p className="text-xl font-bold text-[#1A1A1A]">
+              <p className="text-xl font-bold text-foreground">
                 {formatPrice(totalSpentInCents)}
               </p>
             </div>

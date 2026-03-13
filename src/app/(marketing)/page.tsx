@@ -380,7 +380,7 @@ export default async function HomePage() {
                     <div className="text-foreground">
                       <IconBadge icon={Icon} />
                     </div>
-                    <span className="text-[28px] font-bold tracking-tight text-gold/25">
+                    <span className="text-[28px] font-bold tracking-tight text-gold/40">
                       {item.step}
                     </span>
                   </div>

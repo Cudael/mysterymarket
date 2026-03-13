@@ -32,7 +32,7 @@ export function BuyerSubNav() {
   }, []);
 
   return (
-    <div className="sticky top-[72px] z-40 w-full border-b border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+    <div className="sticky top-[72px] z-40 w-full border-b border-border bg-card shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
       <div className="mx-auto max-w-6xl px-4 md:px-8 lg:px-10">
         <div className="overflow-x-auto no-scrollbar">
           <div className="flex gap-1 py-2">
@@ -47,11 +47,11 @@ export function BuyerSubNav() {
                   className={cn(
                     "flex shrink-0 items-center gap-2 rounded-[9px] px-4 py-2 text-[14px] font-medium transition-all duration-200",
                     isActive
-                      ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
-                      : "text-[#1A1A1A]/60 hover:bg-[#F5F6FA] hover:text-[#1A1A1A]"
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground/60 hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-[#3A5FCD]" : "text-[#1A1A1A]/50")} />
+                  <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-primary" : "text-foreground/50")} />
                   {label}
                   {isNotifications && unreadCount > 0 && (
                     <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white">

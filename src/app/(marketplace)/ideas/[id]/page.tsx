@@ -14,7 +14,7 @@ import { ReviewList } from "@/features/reviews/components/review-list";
 import { ReviewForm } from "@/features/reviews/components/review-form";
 import { ReportDialog } from "@/features/reports/components/report-dialog";
 import prisma from "@/lib/prisma";
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { CATEGORY_META } from "@/lib/constants";
 import { getIdeaById } from "@/features/ideas/actions";
 import { trackEvent } from "@/lib/analytics";
@@ -159,7 +159,7 @@ export default async function IdeaDetailPage({
           <div className="lg:col-span-2">
             {/* Teaser image */}
             {idea.teaserImageUrl && (
-              <div className="relative mb-6 h-64 w-full overflow-hidden rounded-xl">
+              <div className="relative mb-6 h-64 w-full overflow-hidden rounded-2xl sm:h-80">
                 <Image
                   src={idea.teaserImageUrl}
                   alt={idea.title}
@@ -268,24 +268,26 @@ export default async function IdeaDetailPage({
                   </p>
                 </div>
               ) : (
-                <div className="relative overflow-hidden rounded-xl border border-border bg-card">
-                  {/* Blurred preview */}
-                  <div className="select-none blur-sm p-6 pointer-events-none">
-                    <p className="text-foreground leading-relaxed">
-                      {idea.hiddenContent.substring(0, 200)}
-                      {idea.hiddenContent.length > 200 ? "..." : ""}
-                    </p>
+                <div className="rounded-2xl border border-border bg-card p-8 text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
+                    <Lock className="h-8 w-8 text-primary" />
                   </div>
-                  {/* Lock overlay */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-primary/30 bg-primary/10 mb-3">
-                      <Lock className="h-7 w-7 text-primary" />
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {exclusiveClaimed
-                        ? "This idea has been claimed"
-                        : `Unlock to reveal the full idea`}
+                  <h3 className="text-xl font-bold text-foreground">This idea is locked</h3>
+                  <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
+                    {exclusiveClaimed
+                      ? "This exclusive idea has already been claimed."
+                      : "Purchase to reveal the full concept, execution plan, and creator insights."}
+                  </p>
+                  {exclusiveClaimed && (
+                    <p className="mt-2 text-sm font-medium text-destructive">
+                      This exclusive idea has already been claimed
                     </p>
+                  )}
+                  <div className="mt-6 space-y-2 select-none pointer-events-none" aria-hidden="true">
+                    <div className="h-3 w-full rounded-full bg-muted blur-sm" />
+                    <div className="h-3 w-5/6 rounded-full bg-muted blur-sm" />
+                    <div className="h-3 w-4/5 rounded-full bg-muted/70 blur-sm" />
+                    <div className="h-3 w-3/4 rounded-full bg-muted/50 blur-sm" />
                   </div>
                 </div>
               )}
@@ -336,9 +338,12 @@ export default async function IdeaDetailPage({
           {/* Sidebar */}
           <div className="flex flex-col gap-4">
             {/* Price & unlock card */}
-            <div className="rounded-xl border border-border bg-card p-6">
+            <div className={cn(
+              "rounded-xl border border-border bg-card p-6",
+              !isPurchased && !isOwner && "shadow-[var(--shadow-primary-glow)]"
+            )}>
               <div className="mb-1 text-center">
-                <span className="text-3xl font-bold text-foreground">
+                <span className="text-3xl font-bold text-[hsl(var(--gold))]">
                   {formatPrice(idea.priceInCents)}
                 </span>
                 {idea.unlockType === "EXCLUSIVE" ? (
@@ -402,30 +407,32 @@ export default async function IdeaDetailPage({
               <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 Creator
               </h3>
-              <Link
-                href={`/creators/${idea.creator.id}`}
-                className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-              >
-                {idea.creator.avatarUrl ? (
-                  <Image
-                    src={idea.creator.avatarUrl}
-                    alt={idea.creator.name ?? "Creator"}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                ) : (
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-primary">
-                    {(idea.creator.name ?? "?")[0].toUpperCase()}
+              <div className="rounded-xl bg-muted p-4">
+                <Link
+                  href={`/creators/${idea.creator.id}`}
+                  className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                >
+                  {idea.creator.avatarUrl ? (
+                    <Image
+                      src={idea.creator.avatarUrl}
+                      alt={idea.creator.name ?? "Creator"}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-primary">
+                      {(idea.creator.name ?? "?")[0].toUpperCase()}
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-medium text-foreground">
+                      {idea.creator.name ?? "Anonymous"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">View profile →</p>
                   </div>
-                )}
-                <div>
-                  <p className="font-medium text-foreground">
-                    {idea.creator.name ?? "Anonymous"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">View profile →</p>
-                </div>
-              </Link>
+                </Link>
+              </div>
 
               {/* Creator stats */}
               <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4">

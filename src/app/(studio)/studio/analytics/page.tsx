@@ -85,14 +85,14 @@ export default async function StudioAnalyticsPage() {
 
       <ContentCard bodyClassName="p-6">
         <div className="flex items-start gap-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
-            <TrendingUp className="h-5 w-5 text-[#3A5FCD]" />
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+            <TrendingUp className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-[18px] font-semibold text-[#1A1A1A]">
+            <h2 className="text-[18px] font-semibold text-foreground">
               Performance snapshot
             </h2>
-            <p className="mt-1 text-[14px] leading-6 text-[#1A1A1A]/60">
+            <p className="mt-1 text-[14px] leading-6 text-muted-foreground">
               Use these metrics to identify which ideas are converting, whether
               your revenue is growing, and if your payout setup needs attention.
             </p>
@@ -114,7 +114,7 @@ export default async function StudioAnalyticsPage() {
 
       <ContentCard title="Revenue Over Time" bodyClassName="p-6">
         <div className="mb-4">
-          <p className="text-[13px] text-[#1A1A1A]/55">
+          <p className="text-[13px] text-muted-foreground">
             Track monthly earnings to spot momentum and seasonality.
           </p>
         </div>
