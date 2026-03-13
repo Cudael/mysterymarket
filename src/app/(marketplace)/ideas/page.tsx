@@ -6,6 +6,7 @@ import { Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters";
+import { CategoryPickerGrid } from "@/components/marketplace/category-picker-grid";
 import { Pagination } from "@/components/shared/pagination";
 import {
   buildMarketplaceWhere,
@@ -15,7 +16,6 @@ import {
   normalizeMarketplaceSearchParams,
   resolveSubcategory,
 } from "@/features/ideas/lib/marketplace-data";
-import { getCategorySlugFromName } from "@/features/ideas/lib/marketplace-filters";
 
 export const metadata: Metadata = {
   title: "Explore Ideas - MysteryMarket",
@@ -63,7 +63,6 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
       .slice(0, 3)
       .map((idea) => idea.id)
   );
-  const activeCategorySlug = getCategorySlugFromName(filters.category);
 
   return (
     <div className="min-h-screen bg-[hsl(var(--surface))]">
@@ -77,13 +76,19 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
             Browse premium concepts from top creators. Every idea stays locked until you unlock it.
           </p>
         </div>
+
+        {/* Category picker — shown when no search is active */}
+        {!filters.search && (
+          <div className="mb-10">
+            <CategoryPickerGrid />
+          </div>
+        )}
+
         <Suspense
           fallback={<div className="h-[72px] animate-pulse rounded-[30px] bg-border/40" />}
         >
           <IdeaFilters
             total={listing.total}
-            activeCategorySlug={activeCategorySlug}
-            activeCategoryName={filters.category || undefined}
           />
         </Suspense>
 

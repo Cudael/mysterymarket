@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Menu, ChevronDown, ChevronRight, Lightbulb, ShoppingBag, PieChart, Bookmark, Wallet2, Bell, Settings } from "lucide-react";
+import { Sparkles, Menu, ChevronDown, Lightbulb, ShoppingBag, PieChart, Bookmark, Wallet2, Bell, Settings } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
@@ -18,8 +18,6 @@ import {
 } from "@/components/ui/sheet";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
-import { CategoryDropdown } from "@/components/layout/category-dropdown";
-import { NAV_CATEGORIES } from "@/lib/category-nav";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -41,7 +39,6 @@ export function Navbar() {
     open: false,
     tab: "sign-in",
   });
-  const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
   const [mobileLibraryOpen, setMobileLibraryOpen] = useState(false);
 
   return (
@@ -69,7 +66,6 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <CategoryDropdown />
         </nav>
 
         {/* Desktop auth buttons */}
@@ -148,38 +144,6 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
-
-                {/* Mobile Categories */}
-                <nav aria-label="Category navigation" className="border-t border-border pt-4 mt-1">
-                  <button
-                    type="button"
-                    onClick={() => setMobileCatsOpen((v) => !v)}
-                    className="flex w-full items-center justify-between py-2 text-[16px] font-medium text-foreground/80 hover:text-primary transition-colors"
-                  >
-                    <span>Categories</span>
-                    <ChevronDown
-                      className={`h-4 w-4 transition-transform duration-200 ${mobileCatsOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
-                  {mobileCatsOpen && (
-                    <div className="mt-2 flex flex-col gap-0.5">
-                      {NAV_CATEGORIES.map((cat) => {
-                        const Icon = cat.icon;
-                        return (
-                          <Link
-                            key={cat.slug}
-                            href={`/ideas/category/${cat.slug}`}
-                            className="flex items-center gap-2.5 rounded-[8px] px-3 py-2 text-[14px] font-medium text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
-                          >
-                            <Icon className="h-4 w-4 shrink-0 text-primary" />
-                            {cat.name}
-                            <ChevronRight className="ml-auto h-3.5 w-3.5 text-muted-foreground/40" />
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  )}
-                </nav>
                 
                 <SignedOut>
                   <div className="mt-4 flex flex-col gap-3 pt-6 border-t border-border">

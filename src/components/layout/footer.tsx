@@ -40,7 +40,7 @@ export function Footer() {
               Categories
             </h3>
             <ul className="space-y-3.5">
-              {Object.values(CATEGORY_META).slice(0, 5).map((cat) => (
+              {Object.values(CATEGORY_META).map((cat) => (
                 <li key={cat.slug}>
                   <Link href={`/ideas/category/${cat.slug}`} className="text-[15px] font-medium text-white/50 transition-colors hover:text-[hsl(var(--gold))]">
                     {cat.name}
