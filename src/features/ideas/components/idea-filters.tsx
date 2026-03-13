@@ -17,12 +17,8 @@ interface IdeaFiltersProps {
   }>;
 }
 
-export function IdeaFilters({
-  total: _total,
-  activeCategorySlug: _activeCategorySlug,
-  activeCategoryName: _activeCategoryName,
-  featuredSubcategories: _featuredSubcategories,
-}: IdeaFiltersProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function IdeaFilters(_props: IdeaFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -64,7 +60,7 @@ export function IdeaFilters({
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       {/* Search */}
       <div className="relative flex-1">
-        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           type="search"
           value={localSearch}
