@@ -4,7 +4,7 @@ import { CATEGORY_META } from "@/lib/constants";
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-foreground mt-auto">
+    <footer className="border-t border-white/8 bg-[hsl(252,32%,3%)] mt-auto">
       <div className="container mx-auto px-6 py-16 lg:px-8 max-w-7xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-5 lg:gap-8">
           
