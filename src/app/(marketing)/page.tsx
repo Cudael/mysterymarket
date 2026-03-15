@@ -11,6 +11,9 @@ import {
   Sparkles,
   Wallet,
   Search,
+  Eye,
+  Star,
+  Zap,
 } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
@@ -23,24 +26,32 @@ const CATEGORIES = [
     name: "Startup Ideas",
     desc: "Business models, operator playbooks, and launch-ready opportunities.",
     slug: "startup-business-ideas",
+    color: "text-amber-400",
+    glow: "hover:shadow-[0_4px_24px_rgba(251,191,36,0.15)]",
   },
   {
     icon: Bot,
     name: "AI & Automation",
     desc: "Workflow systems, prompt stacks, and automation concepts.",
     slug: "ai-automation",
+    color: "text-violet-400",
+    glow: "hover:shadow-[0_4px_24px_rgba(167,139,250,0.15)]",
   },
   {
     icon: Code,
     name: "Software & Tech",
     desc: "Developer tools, SaaS angles, and technical strategy.",
     slug: "software-technology",
+    color: "text-cyan-400",
+    glow: "hover:shadow-[0_4px_24px_rgba(34,211,238,0.15)]",
   },
   {
     icon: Palette,
     name: "Design & Creative",
     desc: "Creative direction, visual systems, and design-led ideas.",
     slug: "design-visual-arts",
+    color: "text-rose-400",
+    glow: "hover:shadow-[0_4px_24px_rgba(251,113,133,0.15)]",
   },
 ] as const;
 
@@ -108,13 +119,11 @@ function SectionHeader({
   title,
   description,
   align = "center",
-  dark = false,
 }: {
   eyebrow?: string;
   title: string;
   description?: string;
   align?: "left" | "center";
-  dark?: boolean;
 }) {
   return (
     <div
@@ -123,42 +132,18 @@ function SectionHeader({
       }
     >
       {eyebrow && (
-        <p
-          className={`mb-3 text-xs font-semibold uppercase tracking-[0.18em] ${
-            dark ? "text-white/50" : "text-primary"
-          }`}
-        >
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold/70">
           {eyebrow}
         </p>
       )}
-      <h2
-        className={`text-[30px] font-bold tracking-[-0.03em] sm:text-[40px] ${
-          dark ? "text-white" : "text-foreground"
-        }`}
-      >
+      <h2 className="text-[30px] font-bold tracking-[-0.03em] text-white sm:text-[40px]">
         {title}
       </h2>
       {description && (
-        <p
-          className={`mt-4 text-[17px] leading-8 ${
-            dark ? "text-white/70" : "text-muted-foreground"
-          }`}
-        >
+        <p className="mt-4 text-[17px] leading-8 text-white/55">
           {description}
         </p>
       )}
-    </div>
-  );
-}
-
-function IconBadge({
-  icon: Icon,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-}) {
-  return (
-    <div className="flex h-11 w-11 items-center justify-center rounded-full border border-current/15 text-current">
-      <Icon className="h-4.5 w-4.5" aria-hidden="true" />
     </div>
   );
 }
@@ -171,11 +156,12 @@ function ProofStat({
   value: string;
 }) {
   return (
-    <div className="rounded-[20px] border border-white/10 bg-white/5 px-5 py-4 backdrop-blur-sm">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50">
+    <div className="relative overflow-hidden rounded-[20px] border border-white/8 bg-white/[0.04] px-5 py-4 backdrop-blur-sm">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(232,194,106,0.06),transparent_70%)]" />
+      <p className="relative text-[11px] font-semibold uppercase tracking-[0.22em] text-white/45">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-bold tracking-tight text-gold">
+      <p className="relative mt-2 text-2xl font-bold tracking-tight text-gold">
         {value}
       </p>
     </div>
@@ -195,27 +181,27 @@ function HeroPreviewCard({
 }) {
   return (
     <div
-      className={`rounded-[24px] border p-5 backdrop-blur-sm transition-all ${
+      className={`group rounded-[24px] border p-5 backdrop-blur-sm transition-all duration-300 ${
         muted
-          ? "border-white/8 bg-white/[0.04]"
-          : "border-white/15 bg-white/[0.07] shadow-[0_0_30px_rgba(139,92,246,0.10),0_18px_60px_rgba(0,0,0,0.28)]"
+          ? "border-white/[0.07] bg-white/[0.03]"
+          : "border-white/12 bg-white/[0.06] shadow-[0_0_40px_rgba(139,92,246,0.12),0_20px_60px_rgba(0,0,0,0.35)] hover:border-white/18 hover:shadow-[0_0_60px_rgba(139,92,246,0.18),0_20px_80px_rgba(0,0,0,0.40)]"
       }`}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className="inline-flex items-center rounded-full border border-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/72">
+        <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/65">
           {category}
         </span>
-        <span className="text-sm font-semibold text-gold">{price}</span>
+        <span className="text-sm font-bold text-gold">{price}</span>
       </div>
-      <h3 className="mt-4 text-[17px] font-semibold leading-7 text-white">
+      <h3 className="mt-4 text-[17px] font-semibold leading-7 text-white/90">
         {title}
       </h3>
-      <div className="mt-3 space-y-1.5">
-        <div className="h-2 w-[85%] rounded-full bg-white/10 blur-[2px]" />
-        <div className="h-2 w-[70%] rounded-full bg-white/[0.07] blur-[2px]" />
-        <div className="h-2 w-[55%] rounded-full bg-white/[0.05] blur-[2px]" />
+      <div className="mt-3 space-y-2">
+        <div className="h-[6px] w-[82%] rounded-full bg-white/[0.09]" />
+        <div className="h-[6px] w-[67%] rounded-full bg-white/[0.06]" />
+        <div className="h-[6px] w-[50%] rounded-full bg-white/[0.04]" />
       </div>
-      <div className="mt-4 flex items-center gap-1.5 text-[11px] text-white/35">
+      <div className="mt-4 flex items-center gap-1.5 text-[11px] text-white/30">
         <Lock className="h-3 w-3" />
         <span>Full idea hidden until unlocked</span>
       </div>
@@ -252,23 +238,33 @@ export default async function HomePage() {
 
   return (
     <div className="bg-background text-foreground">
-      <section className="relative overflow-hidden bg-[hsl(252,40%,6%)] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(109,90,230,0.22),transparent_40%),radial-gradient(ellipse_at_85%_15%,rgba(232,194,106,0.08),transparent_40%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(109,90,230,0.08),transparent_60%)]" />
 
-        <div className="container relative mx-auto max-w-[1400px] px-6 pb-20 pt-20 lg:px-8 lg:pb-24 lg:pt-24">
-          <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+      {/* ─── HERO ─────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-[hsl(252,32%,4%)] text-white">
+        {/* Atmospheric background glows */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_-10%_20%,rgba(109,90,230,0.28),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_90%_10%,rgba(232,194,106,0.10),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_100%,rgba(109,90,230,0.10),transparent_60%)]" />
+        {/* Subtle dot-grid pattern */}
+        <div className="absolute inset-0 dot-grid-md" />
+
+        <div className="container relative mx-auto max-w-[1400px] px-6 pb-24 pt-24 lg:px-8 lg:pb-32 lg:pt-32">
+          <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/72 backdrop-blur-sm">
-                <Sparkles className="h-4 w-4 text-gold" />
+              {/* Eyebrow badge */}
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-gold/20 bg-gold/8 px-4 py-2 text-sm font-medium text-gold/85 backdrop-blur-sm">
+                <Sparkles className="h-3.5 w-3.5" />
                 Ideas worth keeping secret
               </div>
 
-              <h1 className="mt-7 text-[44px] font-bold tracking-[-0.05em] text-white sm:text-[60px] sm:leading-[1.02] lg:text-[72px]">
-                The best ideas aren&apos;t free.
+              <h1 className="mt-8 text-[46px] font-extrabold tracking-[-0.055em] text-white sm:text-[64px] sm:leading-[1.01] lg:text-[76px]">
+                The best ideas<br className="hidden sm:block" />
+                <span className="bg-gradient-to-r from-gold via-amber-300 to-gold bg-clip-text text-transparent">
+                  {" "}aren&apos;t free.
+                </span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-[18px] leading-[1.7] text-white/70 sm:text-[20px]">
+              <p className="mt-7 max-w-xl text-[18px] leading-[1.75] text-white/60 sm:text-[20px]">
                 Browse what creators won&apos;t share publicly. Unlock the ideas
                 worth paying for.
               </p>
@@ -277,7 +273,7 @@ export default async function HomePage() {
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 rounded-[12px] bg-gold px-7 font-semibold text-gold-foreground shadow-[var(--shadow-gold-glow)] hover:bg-gold/90"
+                  className="h-12 rounded-[12px] bg-gold px-8 font-semibold text-gold-foreground shadow-[var(--shadow-gold-glow)] hover:bg-gold/90 hover:shadow-[0_6px_28px_rgba(232,194,106,0.45)] transition-all duration-300"
                 >
                   <Link href="/ideas">
                     Start exploring
@@ -288,13 +284,13 @@ export default async function HomePage() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="h-12 rounded-[12px] border-white/15 bg-white/5 px-7 text-white hover:bg-white/10 hover:text-white"
+                  className="h-12 rounded-[12px] border-white/12 bg-white/[0.04] px-8 text-white hover:bg-white/[0.08] hover:text-white hover:border-white/18 transition-all duration-300"
                 >
                   <Link href="/sign-up">Sell your ideas</Link>
                 </Button>
               </div>
 
-              <div className="mt-12 grid gap-4 sm:grid-cols-3">
+              <div className="mt-14 grid gap-4 sm:grid-cols-3">
                 <ProofStat
                   label="Published ideas"
                   value={totalIdeas.toLocaleString()}
@@ -310,22 +306,25 @@ export default async function HomePage() {
               </div>
             </div>
 
+            {/* Hero preview card */}
             <div className="relative">
-              <div className="absolute -left-6 top-8 h-36 w-36 rounded-full bg-primary/8 blur-3xl" />
-              <div className="absolute right-0 top-0 h-44 w-44 rounded-full bg-gold/6 blur-3xl" />
+              <div className="absolute -left-8 top-6 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
+              <div className="absolute right-2 top-0 h-56 w-56 rounded-full bg-gold/6 blur-3xl" />
+              <div className="absolute bottom-0 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full bg-primary/8 blur-2xl" />
 
-              <div className="rounded-[30px] border border-white/10 bg-white/[0.04] p-4 backdrop-blur-md shadow-[0_30px_90px_rgba(0,0,0,0.4)] sm:p-5">
-                <div className="rounded-[26px] border border-white/10 bg-[hsl(252,35%,8%)] p-5">
-                  <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+              <div className="relative rounded-[32px] border border-white/10 bg-white/[0.03] p-4 shadow-[0_40px_100px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.05)] backdrop-blur-md sm:p-5">
+                <div className="rounded-[28px] border border-white/8 bg-[hsl(252,30%,7%)] p-5">
+                  <div className="flex items-center justify-between gap-4 border-b border-white/8 pb-4">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/40">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/35">
                         Live marketplace
                       </p>
-                      <p className="mt-1.5 text-sm text-white/55">
+                      <p className="mt-1.5 text-sm text-white/50">
                         Real ideas. Real prices. Locked until purchased.
                       </p>
                     </div>
-                    <div className="rounded-full border border-gold/20 bg-gold/10 px-3 py-1 text-xs text-gold/80">
+                    <div className="flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/8 px-3 py-1 text-xs font-medium text-gold/75">
+                      <span className="h-1.5 w-1.5 rounded-full bg-gold/80" />
                       Live
                     </div>
                   </div>
@@ -355,41 +354,52 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,hsl(252,40%,6%))]" />
         </div>
+
+        {/* Bottom fade to next section */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
       </section>
 
-      <section className="bg-background py-24 lg:py-28">
-        <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
+      {/* ─── HOW IT WORKS ─────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-background py-28 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(109,90,230,0.08),transparent_70%)]" />
+
+        <div className="container relative mx-auto max-w-[1400px] px-6 lg:px-8">
           <SectionHeader
             eyebrow="How it works"
             title="Three steps to your next great idea"
             description="Browse, discover, unlock. Each step is designed to respect your curiosity and reward your investment."
           />
 
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
+          <div className="mt-16 grid gap-6 md:grid-cols-3">
             {HOW_IT_WORKS.map((item) => {
               const Icon = item.icon;
               return (
                 <article
                   key={item.title}
-                  className="rounded-[26px] border border-border bg-surface p-7 shadow-[0_8px_28px_rgba(15,23,42,0.03)]"
+                  className="group relative overflow-hidden rounded-[28px] border border-white/8 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-300 hover:border-white/12 hover:bg-white/[0.05] hover:shadow-[0_8px_40px_rgba(109,90,230,0.12)]"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="text-foreground">
-                      <IconBadge icon={Icon} />
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(109,90,230,0.07),transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="relative">
+                    <div className="flex items-center justify-between">
+                      <div className="text-primary/80">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/20 bg-primary/8">
+                          <Icon className="h-5 w-5" aria-hidden="true" />
+                        </div>
+                      </div>
+                      <span className="font-mono text-[32px] font-bold tracking-tight text-white/8 group-hover:text-gold/20 transition-colors duration-300">
+                        {item.step}
+                      </span>
                     </div>
-                    <span className="text-[28px] font-bold tracking-tight text-gold/40">
-                      {item.step}
-                    </span>
+                    <h3 className="mt-7 text-[21px] font-bold tracking-tight text-white/90">
+                      {item.title}
+                    </h3>
+                    <p className="mt-4 text-[15px] leading-[1.8] text-white/50">
+                      {item.description}
+                    </p>
                   </div>
-                  <h3 className="mt-6 text-[22px] font-semibold tracking-tight text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-4 text-[15px] leading-7 text-muted-foreground">
-                    {item.description}
-                  </p>
+                  {/* Bottom accent line */}
+                  <div className={`absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary/60 to-gold/40 transition-all duration-500 group-hover:w-full`} />
                 </article>
               );
             })}
@@ -397,17 +407,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface py-24 lg:py-28">
-        <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      {/* ─── FEATURED IDEAS ───────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-surface py-28 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_30%_50%,rgba(109,90,230,0.06),transparent_60%)]" />
+
+        <div className="container relative mx-auto max-w-[1400px] px-6 lg:px-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold/70">
                 Curated picks
               </p>
-              <h2 className="mt-3 text-[30px] font-bold tracking-[-0.03em] text-foreground sm:text-[40px]">
+              <h2 className="mt-3 text-[30px] font-bold tracking-[-0.03em] text-white sm:text-[40px]">
                 Ideas people are already unlocking
               </h2>
-              <p className="mt-4 text-[17px] leading-8 text-muted-foreground">
+              <p className="mt-4 text-[17px] leading-8 text-white/50">
                 Real listings from real creators. Browse a few to get a feel
                 for what&apos;s on offer.
               </p>
@@ -416,7 +429,7 @@ export default async function HomePage() {
             <Button
               asChild
               variant="outline"
-              className="rounded-[12px] border-border bg-background"
+              className="rounded-[12px] border-white/10 bg-white/[0.04] text-white/80 hover:bg-white/[0.07] hover:text-white hover:border-white/15"
             >
               <Link href="/ideas">
                 Browse all ideas
@@ -426,11 +439,12 @@ export default async function HomePage() {
           </div>
 
           {featuredIdeas.length === 0 ? (
-            <div className="mt-10 rounded-[24px] border border-dashed border-border bg-background p-12 text-center text-muted-foreground">
+            <div className="mt-12 rounded-[24px] border border-white/8 border-dashed bg-white/[0.02] p-14 text-center text-white/35">
+              <Eye className="mx-auto mb-4 h-8 w-8 opacity-40" />
               <p>New ideas are being curated. Check back soon.</p>
             </div>
           ) : (
-            <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
               {featuredIdeas.map((idea) => (
                 <IdeaCard
                   key={idea.id}
@@ -454,86 +468,104 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-background py-24 lg:py-28">
-        <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
+      {/* ─── BUYER / CREATOR SPLIT ────────────────────────────── */}
+      <section className="relative overflow-hidden bg-background py-28 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_0%_50%,rgba(232,194,106,0.05),transparent_55%),radial-gradient(ellipse_50%_60%_at_100%_50%,rgba(109,90,230,0.07),transparent_55%)]" />
+
+        <div className="container relative mx-auto max-w-[1400px] px-6 lg:px-8">
           <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-[30px] border border-white/10 bg-[hsl(252,35%,10%)] p-8 text-white shadow-[0_24px_70px_rgba(90,70,200,0.18)] sm:p-10 lg:p-12">
-              <SectionHeader
-                eyebrow="For buyers"
-                title="Stop guessing. Start discovering."
-                description="Browse curated ideas with real context. You see what you're paying for before you pay — then unlock and keep access forever."
-                align="left"
-                dark
-              />
+            {/* Buyers card — gold accented */}
+            <div className="relative overflow-hidden rounded-[32px] border border-gold/12 bg-[hsl(252,30%,7%)] p-8 shadow-[0_24px_80px_rgba(232,194,106,0.10)] sm:p-10 lg:p-12">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(232,194,106,0.08),transparent_55%)]" />
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+              <div className="relative">
+                <SectionHeader
+                  eyebrow="For buyers"
+                  title="Stop guessing. Start discovering."
+                  description="Browse curated ideas with real context. You see what you're paying for before you pay — then unlock and keep access forever."
+                  align="left"
+                />
 
-              <div className="mt-8 space-y-4">
-                {BUYER_POINTS.map((point) => (
-                  <div key={point} className="flex items-start gap-3">
-                    <div className="mt-0.5 text-gold">
-                      <IconBadge icon={CheckCircle2} />
+                <div className="mt-8 space-y-4">
+                  {BUYER_POINTS.map((point) => (
+                    <div key={point} className="flex items-start gap-3.5">
+                      <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                      </div>
+                      <p className="text-[15px] leading-7 text-white/65">
+                        {point}
+                      </p>
                     </div>
-                    <p className="text-[15px] leading-7 text-white/72">
-                      {point}
-                    </p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <div className="mt-8">
-                <Button
-                  asChild
-                  className="rounded-[12px] bg-gold font-semibold text-gold-foreground hover:bg-gold/90"
-                >
-                  <Link href="/ideas">Explore the marketplace</Link>
-                </Button>
+                <div className="mt-10">
+                  <Button
+                    asChild
+                    className="rounded-[12px] bg-gold font-semibold text-gold-foreground hover:bg-gold/90 shadow-[var(--shadow-gold-glow)]"
+                  >
+                    <Link href="/ideas">Explore the marketplace</Link>
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <div className="rounded-[30px] border border-border bg-surface p-8 sm:p-10 lg:p-12">
-              <SectionHeader
-                eyebrow="For creators"
-                title="Your expertise deserves a real price tag"
-                description="Package what you know, set your own price, and let the marketplace bring buyers to you — without giving everything away for free."
-                align="left"
-              />
+            {/* Creators card — purple accented */}
+            <div className="relative overflow-hidden rounded-[32px] border border-primary/15 bg-[hsl(252,30%,7%)] p-8 sm:p-10 lg:p-12">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(109,90,230,0.10),transparent_55%)]" />
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+              <div className="relative">
+                <SectionHeader
+                  eyebrow="For creators"
+                  title="Your expertise deserves a real price tag"
+                  description="Package what you know, set your own price, and let the marketplace bring buyers to you — without giving everything away for free."
+                  align="left"
+                />
 
-              <div className="mt-8 space-y-4">
-                {CREATOR_POINTS.map((point) => (
-                  <div key={point} className="flex items-start gap-3">
-                    <div className="mt-0.5 text-primary">
-                      <IconBadge icon={CheckCircle2} />
+                <div className="mt-8 space-y-4">
+                  {CREATOR_POINTS.map((point) => (
+                    <div key={point} className="flex items-start gap-3.5">
+                      <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                      </div>
+                      <p className="text-[15px] leading-7 text-white/65">
+                        {point}
+                      </p>
                     </div>
-                    <p className="text-[15px] leading-7 text-muted-foreground">
-                      {point}
-                    </p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button
-                  asChild
-                  className="rounded-[12px] bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  <Link href="/sign-up">Sell your ideas</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-[12px] border-border bg-background"
-                >
-                  <Link href="/ideas">See live listings</Link>
-                </Button>
+                <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    asChild
+                    className="rounded-[12px] bg-primary text-primary-foreground hover:bg-primary/90 shadow-[var(--shadow-primary-glow)]"
+                  >
+                    <Link href="/sign-up">Sell your ideas</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="rounded-[12px] border-white/10 bg-white/[0.04] text-white/80 hover:bg-white/[0.07] hover:text-white"
+                  >
+                    <Link href="/ideas">See live listings</Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-border bg-surface py-24 lg:py-28">
-        <div className="container mx-auto max-w-[1400px] px-6 lg:px-8">
-          <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-            <div className="rounded-[30px] border border-border bg-background p-8 sm:p-10 lg:p-12">
+      {/* ─── CATEGORIES + FAQ ─────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-surface py-28 lg:py-32">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_80%_at_100%_50%,rgba(109,90,230,0.06),transparent_60%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/6 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/6 to-transparent" />
+
+        <div className="container relative mx-auto max-w-[1400px] px-6 lg:px-8">
+          <div className="grid gap-8 xl:grid-cols-[0.9fr_1.1fr]">
+            {/* Categories */}
+            <div className="rounded-[32px] border border-white/8 bg-white/[0.025] p-8 backdrop-blur-sm sm:p-10 lg:p-12">
               <SectionHeader
                 eyebrow="Explore by category"
                 title="Find ideas in the domains you know best"
@@ -548,15 +580,17 @@ export default async function HomePage() {
                     <Link
                       key={category.slug}
                       href={`/ideas/category/${category.slug}`}
-                      className="group rounded-[22px] border border-border bg-surface p-5 transition-all hover:-translate-y-[1px] hover:border-gold/30 hover:bg-background hover:shadow-[0_4px_20px_rgba(232,194,106,0.10)]"
+                      className={`group relative overflow-hidden rounded-[22px] border border-white/8 bg-white/[0.03] p-5 transition-all duration-300 hover:-translate-y-[2px] hover:border-white/12 hover:bg-white/[0.06] ${category.glow}`}
                     >
-                      <div className="text-primary transition-colors group-hover:text-gold">
-                        <IconBadge icon={Icon} />
+                      <div className={`${category.color} transition-transform duration-300 group-hover:scale-110`}>
+                        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-current/20 bg-current/10">
+                          <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                        </div>
                       </div>
-                      <h3 className="mt-5 text-base font-semibold text-foreground">
+                      <h3 className="mt-5 text-[15px] font-semibold text-white/85">
                         {category.name}
                       </h3>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      <p className="mt-2 text-sm leading-6 text-white/45">
                         {category.desc}
                       </p>
                     </Link>
@@ -565,7 +599,8 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="rounded-[30px] border border-border bg-background p-8 sm:p-10 lg:p-12">
+            {/* FAQ */}
+            <div className="rounded-[32px] border border-white/8 bg-white/[0.025] p-8 backdrop-blur-sm sm:p-10 lg:p-12">
               <SectionHeader
                 eyebrow="Common questions"
                 title="Everything you need to know before your first unlock"
@@ -577,14 +612,19 @@ export default async function HomePage() {
                 {FAQS.map((item) => (
                   <div
                     key={item.question}
-                    className="rounded-[22px] border border-border bg-surface p-6"
+                    className="group rounded-[22px] border border-white/8 bg-white/[0.03] p-6 transition-all duration-200 hover:border-white/12 hover:bg-white/[0.05]"
                   >
-                    <h3 className="text-[18px] font-semibold text-foreground">
-                      {item.question}
-                    </h3>
-                    <p className="mt-3 text-[15px] leading-7 text-muted-foreground">
-                      {item.answer}
-                    </p>
+                    <div className="flex items-start gap-3">
+                      <Star className="mt-0.5 h-4 w-4 shrink-0 text-gold/50 group-hover:text-gold/75 transition-colors" />
+                      <div>
+                        <h3 className="text-[17px] font-semibold text-white/85">
+                          {item.question}
+                        </h3>
+                        <p className="mt-3 text-[15px] leading-7 text-white/50">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -593,26 +633,40 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-background py-24">
-        <div className="container mx-auto max-w-[1100px] px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-[32px] border border-white/8 bg-[hsl(252,35%,10%)] px-8 py-14 text-center text-white shadow-[0_24px_80px_rgba(90,70,200,0.20)] sm:px-12 sm:py-16">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,194,106,0.08),transparent_50%),radial-gradient(ellipse_at_bottom_left,rgba(109,90,230,0.12),transparent_50%)]" />
+      {/* ─── CTA ──────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-background py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,rgba(109,90,230,0.14),transparent_65%)]" />
+        <div className="absolute inset-0 dot-grid-sm" />
+
+        <div className="container relative mx-auto max-w-[1100px] px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[hsl(252,30%,6%)] px-8 py-16 text-center text-white shadow-[0_30px_100px_rgba(109,90,230,0.18),0_0_0_1px_rgba(255,255,255,0.04)] sm:px-14 sm:py-20">
+            {/* Inner radial glows */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,194,106,0.08),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(109,90,230,0.14),transparent_55%),radial-gradient(ellipse_at_bottom_right,rgba(109,90,230,0.10),transparent_55%)]" />
+            {/* Top edge glow */}
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+            {/* Bottom edge glow */}
+            <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
             <div className="relative">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/40">
+                <Zap className="h-3.5 w-3.5 text-gold/60" />
                 Ready to explore
-              </p>
-              <h2 className="mt-4 text-[34px] font-bold tracking-[-0.03em] text-white sm:text-[46px]">
-                Your next great idea is already here.
+              </div>
+              <h2 className="mt-6 text-[34px] font-extrabold tracking-[-0.04em] text-white sm:text-[50px]">
+                Your next great idea<br className="hidden sm:block" />
+                <span className="bg-gradient-to-r from-gold via-amber-300 to-gold bg-clip-text text-transparent">
+                  {" "}is already here.
+                </span>
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-[17px] leading-8 text-white/65">
+              <p className="mx-auto mt-5 max-w-xl text-[17px] leading-[1.8] text-white/55">
                 Browse the marketplace, unlock what intrigues you, or start
                 selling your own expertise.
               </p>
-              <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+              <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 rounded-[12px] bg-gold px-7 font-semibold text-gold-foreground shadow-[var(--shadow-gold-glow)] hover:bg-gold/90"
+                  className="h-12 rounded-[12px] bg-gold px-8 font-semibold text-gold-foreground shadow-[var(--shadow-gold-glow)] hover:bg-gold/90 hover:shadow-[0_6px_28px_rgba(232,194,106,0.45)] transition-all duration-300"
                 >
                   <Link href="/ideas">Explore ideas</Link>
                 </Button>
@@ -620,7 +674,7 @@ export default async function HomePage() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="h-12 rounded-[12px] border-white/15 bg-white/5 px-7 text-white hover:bg-white/10 hover:text-white"
+                  className="h-12 rounded-[12px] border-white/12 bg-white/[0.04] px-8 text-white hover:bg-white/[0.08] hover:text-white hover:border-white/18 transition-all duration-300"
                 >
                   <Link href="/sign-up">Become a creator</Link>
                 </Button>

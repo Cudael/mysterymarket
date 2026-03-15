@@ -4,29 +4,29 @@
 
 @layer base {
   :root {
-    --background: 40 20% 99%;
-    --foreground: 240 15% 12%;
-    --card: 35 25% 99.5%;
-    --card-foreground: 240 15% 12%;
-    --primary: 252 85% 60%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 30 20% 95%;
-    --secondary-foreground: 240 15% 20%;
-    --muted: 30 20% 95%;
-    --muted-foreground: 30 8% 46%;
-    --accent: 30 20% 95%;
-    --accent-foreground: 240 15% 20%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 30 18% 88%;
-    --input: 30 18% 88%;
-    --ring: 252 85% 60%;
+    --background: 252 28% 5%;
+    --foreground: 220 18% 92%;
+    --card: 252 24% 8%;
+    --card-foreground: 220 18% 92%;
+    --primary: 252 85% 62%;
+    --primary-foreground: 252 20% 5%;
+    --secondary: 252 22% 12%;
+    --secondary-foreground: 220 18% 88%;
+    --muted: 252 22% 10%;
+    --muted-foreground: 220 12% 52%;
+    --accent: 252 22% 12%;
+    --accent-foreground: 220 18% 88%;
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 252 20% 14%;
+    --input: 252 20% 14%;
+    --ring: 252 85% 62%;
     --radius: 0.75rem;
     --gold: 45 93% 58%;
-    --gold-foreground: 30 30% 15%;
-    --surface: 35 30% 97%;
-    --shadow-primary-glow: 0 4px 16px hsl(252 85% 60% / 0.25);
-    --shadow-gold-glow: 0 4px 16px hsl(45 93% 58% / 0.30);
+    --gold-foreground: 30 35% 8%;
+    --surface: 252 24% 7%;
+    --shadow-primary-glow: 0 4px 24px hsl(252 85% 62% / 0.30);
+    --shadow-gold-glow: 0 4px 24px hsl(45 93% 58% / 0.35);
   }
 }
 
@@ -44,7 +44,33 @@
   100% { transform: translateX(100%); }
 }
 
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 @layer components {
+  .dot-grid-sm {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.20) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.12;
+  }
+  .dot-grid-md {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.18) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.15;
+  }
   .blog-content h2 {
     @apply text-2xl font-bold mt-10 mb-4 text-foreground;
   }
