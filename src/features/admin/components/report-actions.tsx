@@ -44,7 +44,7 @@ export function ReportActions({
         variant="outline"
         disabled={loading}
         onClick={() => handleAction("DISMISSED")}
-        className="h-8 text-xs border-[#D9DCE3]"
+        className="h-8 text-xs border-border"
       >
         Dismiss
       </Button>
@@ -53,7 +53,7 @@ export function ReportActions({
         variant="outline"
         disabled={loading}
         onClick={() => handleAction("REVIEWED")}
-        className="h-8 text-xs border-blue-200 text-blue-700 hover:bg-blue-50"
+        className="h-8 text-xs border-blue-500/20 text-blue-400 hover:bg-blue-500/10"
       >
         Mark Reviewed
       </Button>

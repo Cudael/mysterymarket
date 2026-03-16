@@ -40,7 +40,7 @@ export default async function NotificationsPage() {
               <Button
                 type="submit"
                 variant="outline"
-                className="border-[#D9DCE3] text-[#3A5FCD] hover:bg-[#3A5FCD]/5"
+                className="border-border text-primary hover:bg-primary/5"
               >
                 Mark all as read
               </Button>
@@ -54,11 +54,11 @@ export default async function NotificationsPage() {
         bodyClassName="p-0"
         action={
           unreadCount > 0 ? (
-            <span className="rounded-full bg-[#3A5FCD]/10 px-2.5 py-1 text-[12px] font-medium text-[#3A5FCD]">
+            <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[12px] font-medium text-primary">
               {unreadCount} unread
             </span>
           ) : (
-            <span className="rounded-full bg-[#F5F6FA] px-2.5 py-1 text-[12px] font-medium text-[#1A1A1A]/50">
+            <span className="rounded-full bg-muted px-2.5 py-1 text-[12px] font-medium text-muted-foreground">
               All caught up
             </span>
           )

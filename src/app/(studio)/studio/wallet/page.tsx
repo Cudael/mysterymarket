@@ -38,14 +38,14 @@ export default async function StudioWalletPage() {
         <ContentCard bodyClassName="p-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#3A5FCD]/10">
-                <CreditCard className="h-5 w-5 text-[#3A5FCD]" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+                <CreditCard className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-[15px] font-semibold text-[#1A1A1A]">
+                <p className="text-[15px] font-semibold text-foreground">
                   Complete payout setup
                 </p>
-                <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/60">
+                <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
                   Your wallet can still receive earnings, but Stripe must be fully
                   connected before payouts can be enabled.
                 </p>

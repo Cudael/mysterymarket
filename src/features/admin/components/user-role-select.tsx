@@ -36,7 +36,7 @@ export function UserRoleSelect({
       value={role}
       onChange={(e) => handleChange(e.target.value as Role)}
       disabled={loading}
-      className="rounded-[8px] border border-[#D9DCE3] bg-[#FFFFFF] px-3 py-1.5 text-xs font-medium text-[#1A1A1A] focus:border-[#3A5FCD] focus:outline-none focus:ring-1 focus:ring-[#3A5FCD] disabled:opacity-50"
+      className="rounded-[8px] border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
     >
       <option value="USER">USER</option>
       <option value="CREATOR">CREATOR</option>

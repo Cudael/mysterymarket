@@ -34,10 +34,10 @@ export default async function AdminPage() {
           <Shield className="h-5 w-5 text-red-500" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Admin Dashboard
           </h1>
-          <p className="mt-1 text-[15px] text-[#1A1A1A]/60">
+          <p className="mt-1 text-[15px] text-muted-foreground">
             Platform overview and key operational metrics.
           </p>
         </div>
@@ -51,8 +51,8 @@ export default async function AdminPage() {
               href="/admin/reports?status=PENDING"
               className={`flex items-center gap-3 rounded-[12px] border p-4 transition-colors flex-1 min-w-[200px] ${
                 staleReports
-                  ? "border-red-300 bg-red-50 text-red-800 hover:bg-red-100"
-                  : "border-orange-200 bg-orange-50 text-orange-800 hover:bg-orange-100"
+                  ? "border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/15"
+                  : "border-orange-500/20 bg-orange-500/10 text-orange-400 hover:bg-orange-500/15"
               }`}
             >
               <AlertCircle className={`h-5 w-5 shrink-0 ${staleReports ? "text-red-500" : "text-orange-500"}`} />
@@ -66,7 +66,7 @@ export default async function AdminPage() {
           {stats.pendingRefunds > 0 && (
             <Link
               href="/admin/refunds?status=PENDING"
-              className="flex items-center gap-3 rounded-[12px] border border-yellow-200 bg-yellow-50 p-4 text-yellow-800 transition-colors hover:bg-yellow-100 flex-1 min-w-[200px]"
+              className="flex items-center gap-3 rounded-[12px] border border-yellow-500/20 bg-yellow-500/10 p-4 text-yellow-400 transition-colors hover:bg-yellow-500/15 flex-1 min-w-[200px]"
             >
               <AlertCircle className="h-5 w-5 shrink-0 text-yellow-500" />
               <span className="text-sm font-medium">
@@ -76,7 +76,7 @@ export default async function AdminPage() {
             </Link>
           )}
           {highRefundRate && (
-            <div className="flex items-center gap-3 rounded-[12px] border border-red-300 bg-red-50 p-4 text-red-800 flex-1 min-w-[200px]">
+            <div className="flex items-center gap-3 rounded-[12px] border border-red-500/20 bg-red-500/10 p-4 text-red-400 flex-1 min-w-[200px]">
               <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
               <span className="text-sm font-medium">
                 Elevated refund rate: {stats.refundRate}% — review idea quality
@@ -172,31 +172,31 @@ export default async function AdminPage() {
       {/* Top Categories + Recent Activity */}
       <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Top Categories */}
-        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4 flex items-center gap-2">
-            <Tag className="h-4 w-4 text-[#1A1A1A]/40" />
-            <h2 className="text-[15px] font-semibold text-[#1A1A1A]">
+        <div className="rounded-[12px] border border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-border bg-muted px-6 py-4 flex items-center gap-2">
+            <Tag className="h-4 w-4 text-foreground/40" />
+            <h2 className="text-[15px] font-semibold text-foreground">
               Top Categories
             </h2>
           </div>
           {stats.topCategories.length === 0 ? (
-            <p className="p-6 text-sm text-[#1A1A1A]/50">No category data yet.</p>
+            <p className="p-6 text-sm text-muted-foreground">No category data yet.</p>
           ) : (
-            <div className="divide-y divide-[#D9DCE3]">
+            <div className="divide-y divide-border">
               {stats.topCategories.map((cat, i) => (
                 <div
                   key={cat.category}
                   className="flex items-center justify-between px-6 py-3"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-[#1A1A1A]/30 w-4">
+                    <span className="text-xs font-bold text-foreground/30 w-4">
                       {i + 1}
                     </span>
-                    <span className="text-sm font-medium text-[#1A1A1A] capitalize">
+                    <span className="text-sm font-medium text-foreground capitalize">
                       {cat.category}
                     </span>
                   </div>
-                  <span className="text-xs font-semibold text-[#3A5FCD]">
+                  <span className="text-xs font-semibold text-primary">
                     {cat.count} purchase{cat.count !== 1 ? "s" : ""}
                   </span>
                 </div>
@@ -206,34 +206,34 @@ export default async function AdminPage() {
         </div>
 
         {/* Recent Purchases */}
-        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[15px] font-semibold text-[#1A1A1A]">
+        <div className="rounded-[12px] border border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-border bg-muted px-6 py-4">
+            <h2 className="text-[15px] font-semibold text-foreground">
               Recent Purchases
             </h2>
           </div>
           {stats.recentPurchases.length === 0 ? (
-            <p className="p-6 text-sm text-[#1A1A1A]/50">No purchases yet.</p>
+            <p className="p-6 text-sm text-muted-foreground">No purchases yet.</p>
           ) : (
-            <div className="divide-y divide-[#D9DCE3]">
+            <div className="divide-y divide-border">
               {stats.recentPurchases.map((purchase) => (
                 <div
                   key={purchase.id}
                   className="flex items-center justify-between px-6 py-4"
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-[#1A1A1A]">
+                    <p className="truncate text-sm font-medium text-foreground">
                       {purchase.idea.title}
                     </p>
-                    <p className="text-xs text-[#1A1A1A]/50">
+                    <p className="text-xs text-muted-foreground">
                       {purchase.buyer.name ?? purchase.buyer.email}
                     </p>
                   </div>
                   <div className="ml-4 shrink-0 text-right">
-                    <p className="text-sm font-semibold text-[#3A5FCD]">
+                    <p className="text-sm font-semibold text-primary">
                       {formatPrice(purchase.amountInCents)}
                     </p>
-                    <p className="text-xs text-[#1A1A1A]/50">
+                    <p className="text-xs text-muted-foreground">
                       {new Date(purchase.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -247,26 +247,26 @@ export default async function AdminPage() {
         </div>
 
         {/* Recent Users */}
-        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
-          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">
-            <h2 className="text-[15px] font-semibold text-[#1A1A1A]">
+        <div className="rounded-[12px] border border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-border bg-muted px-6 py-4">
+            <h2 className="text-[15px] font-semibold text-foreground">
               Recent Signups
             </h2>
           </div>
           {stats.recentUsers.length === 0 ? (
-            <p className="p-6 text-sm text-[#1A1A1A]/50">No users yet.</p>
+            <p className="p-6 text-sm text-muted-foreground">No users yet.</p>
           ) : (
-            <div className="divide-y divide-[#D9DCE3]">
+            <div className="divide-y divide-border">
               {stats.recentUsers.map((user) => (
                 <div
                   key={user.id}
                   className="flex items-center justify-between px-6 py-4"
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-[#1A1A1A]">
+                    <p className="truncate text-sm font-medium text-foreground">
                       {user.name ?? "Anonymous"}
                     </p>
-                    <p className="truncate text-xs text-[#1A1A1A]/50">
+                    <p className="truncate text-xs text-muted-foreground">
                       {user.email}
                     </p>
                   </div>
@@ -274,15 +274,15 @@ export default async function AdminPage() {
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
                         user.role === "ADMIN"
-                          ? "bg-red-100 text-red-700"
+                          ? "bg-red-500/10 text-red-400"
                           : user.role === "CREATOR"
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-[#F5F6FA] text-[#1A1A1A]/60"
+                          ? "bg-blue-500/10 text-blue-400"
+                          : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {user.role}
                     </span>
-                    <p className="mt-0.5 text-xs text-[#1A1A1A]/50">
+                    <p className="mt-0.5 text-xs text-muted-foreground">
                       {new Date(user.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -319,16 +319,16 @@ function StatCard({
       href={href}
       className={`group rounded-[12px] border p-6 shadow-[0_4px_14px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 ${
         danger
-          ? "border-red-200 bg-red-50 hover:border-red-300"
+          ? "border-red-500/20 bg-red-500/10 hover:border-red-500/30"
           : accent
-          ? "border-[#3A5FCD]/20 bg-[#3A5FCD]/5 hover:border-[#3A5FCD]/30"
-          : "border-[#D9DCE3] bg-[#FFFFFF] hover:border-[#3A5FCD]/20"
+          ? "border-primary/20 bg-primary/5 hover:border-primary/30"
+          : "border-border bg-card hover:border-primary/20"
       }`}
     >
       <div className="flex items-center justify-between">
         <span
           className={`text-sm font-medium ${
-            danger ? "text-red-600" : "text-[#1A1A1A]/60"
+            danger ? "text-red-400" : "text-muted-foreground"
           }`}
         >
           {label}
@@ -338,14 +338,14 @@ function StatCard({
             danger
               ? "text-red-400"
               : accent
-              ? "text-[#3A5FCD]"
-              : "text-[#1A1A1A]/30"
+              ? "text-primary"
+              : "text-foreground/30"
           }`}
         />
       </div>
       <p
         className={`mt-4 text-3xl font-bold ${
-          danger ? "text-red-700" : "text-[#1A1A1A]"
+          danger ? "text-red-400" : "text-foreground"
         }`}
       >
         {value}

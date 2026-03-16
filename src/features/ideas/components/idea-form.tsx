@@ -182,7 +182,7 @@ export function IdeaForm({
   }
 
   const inputClasses =
-    "w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3 text-[15px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]";
+    "w-full rounded-[8px] border border-border bg-muted px-4 py-3 text-[15px] text-foreground placeholder:text-muted-foreground/70 outline-none transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]";
 
   const textareaClasses = `${inputClasses} resize-none`;
 
@@ -190,11 +190,11 @@ export function IdeaForm({
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Wallet-first info banner — only shown in create mode */}
       {isCreateMode && (
-        <div className="flex items-start gap-3 rounded-[8px] border border-[#3A5FCD]/20 bg-[#3A5FCD]/5 px-4 py-3 text-[14px] text-[#3A5FCD]">
+        <div className="flex items-start gap-3 rounded-[8px] border border-primary/20 bg-primary/5 px-4 py-3 text-[14px] text-primary">
           <Wallet className="mt-0.5 h-4 w-4 shrink-0" />
           <p>
             No payout setup required to publish.{" "}
-            <span className="text-[#1A1A1A]/70">
+            <span className="text-foreground/70">
               Earnings go straight to your in-app wallet. Connect Stripe later when you&apos;re ready to withdraw.
             </span>
           </p>
@@ -209,9 +209,9 @@ export function IdeaForm({
       )}
 
       {/* Listing Quality Checklist */}
-      <div className="rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
+      <div className="rounded-[8px] border border-border bg-muted p-4">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[13px] font-semibold text-[#1A1A1A]">Listing quality</p>
+          <p className="text-[13px] font-semibold text-foreground">Listing quality</p>
           <span
             className="text-[13px] font-bold"
             style={{ color: qualityColor }}
@@ -219,7 +219,7 @@ export function IdeaForm({
             {qualityPercent}%
           </span>
         </div>
-        <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-[#D9DCE3]">
+        <div className="mb-3 h-1.5 w-full overflow-hidden rounded-full bg-border">
           <div
             className="h-full rounded-full transition-all duration-300"
             style={{ width: `${qualityPercent}%`, backgroundColor: qualityColor }}
@@ -231,16 +231,16 @@ export function IdeaForm({
               {item.met ? (
                 <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" />
               ) : (
-                <Circle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#1A1A1A]/25" />
+                <Circle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground/50" />
               )}
               <span
                 className={`text-[12px] leading-snug ${
-                  item.met ? "text-[#1A1A1A]/70" : "text-[#1A1A1A]/45"
+                  item.met ? "text-foreground/70" : "text-muted-foreground"
                 }`}
               >
                 {item.label}
                 {!item.met && (
-                  <span className="block text-[11px] text-[#1A1A1A]/35">{item.hint}</span>
+                  <span className="block text-[11px] text-muted-foreground/60">{item.hint}</span>
                 )}
               </span>
             </li>
@@ -252,7 +252,7 @@ export function IdeaForm({
       <div className="space-y-2">
         <Label
           htmlFor="title"
-          className="text-[14px] font-semibold text-[#1A1A1A]"
+          className="text-[14px] font-semibold text-foreground"
         >
           Title <span className="text-red-500">*</span>
         </Label>
@@ -270,10 +270,10 @@ export function IdeaForm({
       <div className="space-y-2">
         <Label
           htmlFor="teaserText"
-          className="text-[14px] font-semibold text-[#1A1A1A]"
+          className="text-[14px] font-semibold text-foreground"
         >
           Teaser Text{" "}
-          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+          <span className="text-[12px] font-normal text-muted-foreground">
             — visible to everyone before purchase
           </span>
         </Label>
@@ -287,11 +287,11 @@ export function IdeaForm({
           className={textareaClasses}
         />
         <div className="flex items-start justify-between gap-2">
-          <p className="text-[12px] text-[#1A1A1A]/40">
+          <p className="text-[12px] text-muted-foreground/70">
             <AlertCircle className="mb-0.5 mr-1 inline h-3 w-3" />
             Great teasers create curiosity without revealing the answer
           </p>
-          <p className="shrink-0 text-[12px] text-[#1A1A1A]/40">
+          <p className="shrink-0 text-[12px] text-muted-foreground/70">
             {teaserText.length}/500
           </p>
         </div>
@@ -299,14 +299,14 @@ export function IdeaForm({
 
       {/* Teaser Image */}
       <div className="space-y-2">
-        <Label className="text-[14px] font-semibold text-[#1A1A1A]">
+        <Label className="text-[14px] font-semibold text-foreground">
           Teaser Image{" "}
-          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+          <span className="text-[12px] font-normal text-muted-foreground">
             — optional preview image
           </span>
         </Label>
         {teaserImageUrl ? (
-          <div className="relative overflow-hidden rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC]">
+          <div className="relative overflow-hidden rounded-[8px] border border-border bg-muted">
             <Image
               src={teaserImageUrl}
               alt="Teaser preview"
@@ -317,15 +317,15 @@ export function IdeaForm({
             <button
               type="button"
               onClick={() => setTeaserImageUrl("")}
-              className="absolute right-2 top-2 rounded-[6px] border border-[#D9DCE3] bg-[#FFFFFF]/90 px-3 py-1.5 text-[13px] font-medium text-[#1A1A1A] transition-colors hover:bg-[#F8F9FC]"
+              className="absolute right-2 top-2 rounded-[6px] border border-border bg-card/90 px-3 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
             >
               Remove
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-center rounded-[8px] border-2 border-dashed border-[#D9DCE3] bg-[#F8F9FC] p-8">
+          <div className="flex items-center justify-center rounded-[8px] border-2 border-dashed border-border bg-muted p-8">
             <div className="text-center">
-              <ImagePlus className="mx-auto mb-3 h-8 w-8 text-[#1A1A1A]/20" />
+              <ImagePlus className="mx-auto mb-3 h-8 w-8 text-foreground/20" />
               <UploadButton
                 endpoint="teaserImageUploader"
                 onClientUploadComplete={(res) => {
@@ -342,13 +342,13 @@ export function IdeaForm({
       <div className="space-y-2">
         <Label
           htmlFor="hiddenContent"
-          className="text-[14px] font-semibold text-[#1A1A1A]"
+          className="text-[14px] font-semibold text-foreground"
         >
           <span className="inline-flex items-center gap-1.5">
             <Lock className="h-3.5 w-3.5" />
             Hidden Content <span className="text-red-500">*</span>
           </span>{" "}
-          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+          <span className="text-[12px] font-normal text-muted-foreground">
             — only visible after purchase
           </span>
         </Label>
@@ -361,7 +361,7 @@ export function IdeaForm({
           required
           className={textareaClasses}
         />
-        <p className="text-[12px] text-[#1A1A1A]/40">
+        <p className="text-[12px] text-muted-foreground/70">
           {hiddenContent.length < 150 && (
             <span className="text-amber-500">
               Add {150 - hiddenContent.length} more characters for a quality listing ·{" "}
@@ -375,12 +375,12 @@ export function IdeaForm({
       <div className="space-y-2">
         <Label
           htmlFor="price"
-          className="text-[14px] font-semibold text-[#1A1A1A]"
+          className="text-[14px] font-semibold text-foreground"
         >
           Price (USD) <span className="text-red-500">*</span>
         </Label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[15px] text-[#1A1A1A]/50">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[15px] text-muted-foreground">
             $
           </span>
           <input
@@ -396,23 +396,23 @@ export function IdeaForm({
             className={`${inputClasses} pl-8`}
           />
         </div>
-        <p className="text-[12px] text-[#1A1A1A]/40">
+        <p className="text-[12px] text-muted-foreground/70">
           Minimum $0.99 · Maximum $1,000.00 ·{" "}
-          <span className="text-[#3A5FCD]">$5–$49 converts best for most ideas</span>
+          <span className="text-primary">$5–$49 converts best for most ideas</span>
         </p>
       </div>
 
       {/* Unlock Type */}
       <div className="space-y-3">
-        <Label className="text-[14px] font-semibold text-[#1A1A1A]">
+        <Label className="text-[14px] font-semibold text-foreground">
           Unlock Type <span className="text-red-500">*</span>
         </Label>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label
             className={`flex cursor-pointer items-start gap-3 rounded-[8px] border p-4 transition-all ${
               unlockType === "MULTI"
-                ? "border-[#3A5FCD] bg-[#3A5FCD]/5 ring-1 ring-[#3A5FCD]/20"
-                : "border-[#D9DCE3] bg-[#F8F9FC] hover:border-[#3A5FCD]/40"
+                ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                : "border-border bg-muted hover:border-primary/40"
             }`}
           >
             <input
@@ -424,10 +424,10 @@ export function IdeaForm({
               className="mt-0.5 accent-[#3A5FCD]"
             />
             <div>
-              <p className="text-[14px] font-semibold text-[#1A1A1A]">
+              <p className="text-[14px] font-semibold text-foreground">
                 Multi-unlock
               </p>
-              <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
+              <p className="mt-0.5 text-[13px] text-muted-foreground">
                 Unlimited buyers — maximise reach and passive income
               </p>
             </div>
@@ -435,8 +435,8 @@ export function IdeaForm({
           <label
             className={`flex cursor-pointer items-start gap-3 rounded-[8px] border p-4 transition-all ${
               unlockType === "EXCLUSIVE"
-                ? "border-[#3A5FCD] bg-[#3A5FCD]/5 ring-1 ring-[#3A5FCD]/20"
-                : "border-[#D9DCE3] bg-[#F8F9FC] hover:border-[#3A5FCD]/40"
+                ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                : "border-border bg-muted hover:border-primary/40"
             }`}
           >
             <input
@@ -448,10 +448,10 @@ export function IdeaForm({
               className="mt-0.5 accent-[#3A5FCD]"
             />
             <div>
-              <p className="text-[14px] font-semibold text-[#1A1A1A]">
+              <p className="text-[14px] font-semibold text-foreground">
                 Exclusive
               </p>
-              <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
+              <p className="mt-0.5 text-[13px] text-muted-foreground">
                 One buyer only — commands a premium price point
               </p>
             </div>
@@ -461,10 +461,10 @@ export function IdeaForm({
           <div className="mt-2 space-y-2">
             <Label
               htmlFor="maxUnlocks"
-              className="text-[14px] font-medium text-[#1A1A1A]/70"
+              className="text-[14px] font-medium text-foreground/70"
             >
               Max Unlocks{" "}
-              <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+              <span className="text-[12px] font-normal text-muted-foreground">
                 — leave blank for unlimited
               </span>
             </Label>
@@ -485,7 +485,7 @@ export function IdeaForm({
       <div className="space-y-2">
         <Label
           htmlFor="category"
-          className="text-[14px] font-semibold text-[#1A1A1A]"
+          className="text-[14px] font-semibold text-foreground"
         >
           Category
         </Label>
@@ -507,7 +507,7 @@ export function IdeaForm({
             ))}
           </select>
           <svg
-            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40"
+            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -527,10 +527,10 @@ export function IdeaForm({
         <div className="space-y-2">
           <Label
             htmlFor="subcategory"
-            className="text-[14px] font-semibold text-[#1A1A1A]"
+            className="text-[14px] font-semibold text-foreground"
           >
             Subcategory{" "}
-            <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+            <span className="text-[12px] font-normal text-muted-foreground">
               — optional
             </span>
           </Label>
@@ -549,7 +549,7 @@ export function IdeaForm({
               ))}
             </select>
             <svg
-              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40"
+              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -569,10 +569,10 @@ export function IdeaForm({
       <div className="space-y-2">
         <Label
           htmlFor="maturityLevel"
-          className="text-[14px] font-semibold text-[#1A1A1A]"
+          className="text-[14px] font-semibold text-foreground"
         >
           Maturity Level{" "}
-          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+          <span className="text-[12px] font-normal text-muted-foreground">
             — optional
           </span>
         </Label>
@@ -591,7 +591,7 @@ export function IdeaForm({
             ))}
           </select>
           <svg
-            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A1A]/40"
+            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/70"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -610,10 +610,10 @@ export function IdeaForm({
       <div className="space-y-2">
         <Label
           htmlFor="tags"
-          className="text-[14px] font-semibold text-[#1A1A1A]"
+          className="text-[14px] font-semibold text-foreground"
         >
           Tags{" "}
-          <span className="text-[12px] font-normal text-[#1A1A1A]/50">
+          <span className="text-[12px] font-normal text-muted-foreground">
             — comma-separated, up to 10
           </span>
         </Label>
@@ -628,7 +628,7 @@ export function IdeaForm({
 
       {/* Publish toggle — only shown in create mode */}
       {isCreateMode && (
-        <div className="rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
+        <div className="rounded-[8px] border border-border bg-muted p-4">
           <label className="flex cursor-pointer items-start gap-3">
             <input
               type="checkbox"
@@ -637,20 +637,20 @@ export function IdeaForm({
               className="mt-0.5 h-4 w-4 rounded accent-[#3A5FCD]"
             />
             <div>
-              <p className="text-[14px] font-semibold text-[#1A1A1A]">
+              <p className="text-[14px] font-semibold text-foreground">
                 {publishNow ? (
                   <span className="inline-flex items-center gap-1.5">
-                    <Eye className="h-4 w-4 text-[#3A5FCD]" />
+                    <Eye className="h-4 w-4 text-primary" />
                     Publish immediately
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1.5">
-                    <EyeOff className="h-4 w-4 text-[#1A1A1A]/40" />
+                    <EyeOff className="h-4 w-4 text-muted-foreground/70" />
                     Save as draft
                   </span>
                 )}
               </p>
-              <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
+              <p className="mt-0.5 text-[13px] text-muted-foreground">
                 {publishNow
                   ? "Your idea will be visible in the marketplace right away."
                   : "Your idea will be saved privately. You can publish it later from Creator Studio."}
@@ -661,7 +661,7 @@ export function IdeaForm({
       )}
 
       {/* Submit / Cancel */}
-      <div className="flex flex-col gap-3 border-t border-[#D9DCE3] pt-6 sm:flex-row">
+      <div className="flex flex-col gap-3 border-t border-border pt-6 sm:flex-row">
         <Button
           type="button"
           variant="outline"

@@ -20,10 +20,10 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
         return (
           <span key={index} className="flex items-center gap-1.5">
             {index > 0 && (
-              <ChevronRight className="h-3.5 w-3.5 text-[#1A1A1A]/30 shrink-0" />
+              <ChevronRight className="h-3.5 w-3.5 text-foreground/30 shrink-0" />
             )}
             {isLast || !item.href ? (
-              <span className="text-[13px] font-medium text-[#1A1A1A]">
+              <span className="text-[13px] font-medium text-foreground">
                 {item.label === "Home" ? (
                   <span className="flex items-center gap-1">
                     <Home className="h-3.5 w-3.5" />
@@ -36,7 +36,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             ) : (
               <Link
                 href={item.href}
-                className="text-[13px] text-[#1A1A1A]/60 hover:text-[#3A5FCD] transition-colors flex items-center gap-1"
+                className="text-[13px] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
               >
                 {item.label === "Home" ? (
                   <>

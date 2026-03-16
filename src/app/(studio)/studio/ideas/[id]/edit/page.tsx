@@ -46,12 +46,12 @@ export default async function EditIdeaPage({
       {idea._count.purchases > 0 && (
         <ContentCard bodyClassName="p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 h-5 w-5 text-[#B8860B]" />
+            <AlertCircle className="mt-0.5 h-5 w-5 text-yellow-400" />
             <div>
-              <p className="text-[14px] font-semibold text-[#1A1A1A]">
+              <p className="text-[14px] font-semibold text-foreground">
                 This idea already has purchases
               </p>
-              <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/60">
+              <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
                 You can still update content and pricing rules where allowed, but
                 deletion is disabled to preserve purchase history.
               </p>

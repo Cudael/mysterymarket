@@ -12,14 +12,14 @@ export default function BookmarksLoading() {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="overflow-hidden rounded-[16px] border border-[#D9DCE3] bg-[#FFFFFF]"
+            className="overflow-hidden rounded-[16px] border border-border bg-card"
           >
             <Skeleton className="h-48 w-full rounded-none" />
             <div className="space-y-4 p-5">
               <Skeleton className="h-5 w-3/4 rounded-lg" />
               <Skeleton className="h-4 w-full rounded-lg" />
               <Skeleton className="h-4 w-2/3 rounded-lg" />
-              <div className="flex items-center justify-between border-t border-[#D9DCE3] pt-4">
+              <div className="flex items-center justify-between border-t border-border pt-4">
                 <Skeleton className="h-6 w-20 rounded-full" />
                 <Skeleton className="h-9 w-24 rounded-lg" />
               </div>

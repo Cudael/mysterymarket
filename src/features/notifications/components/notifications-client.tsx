@@ -96,7 +96,7 @@ export function NotificationsClient({
   if (notifications.length === 0) {
     return (
       <EmptyState
-        icon={<Bell className="h-9 w-9 text-[#1A1A1A]/40" />}
+        icon={<Bell className="h-9 w-9 text-muted-foreground/40" />}
         title="All caught up"
         description="You'll see notifications here when there's activity on your purchases or account."
       />
@@ -110,13 +110,13 @@ export function NotificationsClient({
           <button
             onClick={handleMarkAllRead}
             disabled={isPending}
-            className="text-[13px] font-medium text-[#3A5FCD] hover:underline disabled:opacity-50"
+            className="text-[13px] font-medium text-primary hover:underline disabled:opacity-50"
           >
             Mark all as read
           </button>
         </div>
       )}
-      <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+      <div className="rounded-[12px] border border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
         {notifications.map((notification) => {
           const Icon = getNotificationIcon(notification.type);
           return (
@@ -124,22 +124,22 @@ export function NotificationsClient({
               key={notification.id}
               onClick={() => handleNotificationClick(notification)}
               className={cn(
-                "w-full text-left flex items-start gap-4 border-b border-[#D9DCE3] last:border-b-0 p-5 transition-colors hover:bg-[#F8F9FC]",
-                !notification.read ? "bg-[#F5F6FA]" : "bg-white"
+                "w-full text-left flex items-start gap-4 border-b border-border last:border-b-0 p-5 transition-colors hover:bg-muted",
+                !notification.read ? "bg-muted/50" : "bg-card"
               )}
             >
               <div
                 className={cn(
                   "flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] border",
                   !notification.read
-                    ? "bg-[#3A5FCD]/10 border-[#3A5FCD]/20"
-                    : "bg-[#F5F6FA] border-[#D9DCE3]"
+                    ? "bg-primary/10 border-primary/20"
+                    : "bg-muted border-border"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-4.5 w-4.5",
-                    !notification.read ? "text-[#3A5FCD]" : "text-[#1A1A1A]/50"
+                    !notification.read ? "text-primary" : "text-muted-foreground"
                   )}
                 />
               </div>
@@ -149,20 +149,20 @@ export function NotificationsClient({
                     className={cn(
                       "text-[14px] leading-snug",
                       !notification.read
-                        ? "font-semibold text-[#1A1A1A]"
-                        : "font-medium text-[#1A1A1A]/80"
+                        ? "font-semibold text-foreground"
+                        : "font-medium text-foreground/80"
                     )}
                   >
                     {notification.title}
                   </p>
                   {!notification.read && (
-                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[#3A5FCD]" />
+                    <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
                   )}
                 </div>
-                <p className="mt-0.5 text-[13px] text-[#1A1A1A]/60">
+                <p className="mt-0.5 text-[13px] text-muted-foreground">
                   {notification.message}
                 </p>
-                <p className="mt-1.5 text-[11px] text-[#1A1A1A]/40">
+                <p className="mt-1.5 text-[11px] text-muted-foreground/70">
                   {formatRelativeTime(notification.createdAt)}
                 </p>
               </div>

@@ -15,7 +15,7 @@ function CategoryBadge({ category }: { category: string }) {
   return (
     <span
       className={`inline-flex items-center rounded-[6px] border px-2.5 py-1 text-xs font-medium ${
-        CATEGORY_COLORS[category] ?? "bg-[#F5F6FA] text-[#1A1A1A] border-[#D9DCE3]"
+        CATEGORY_COLORS[category] ?? "bg-muted text-foreground border-border"
       }`}
     >
       {CATEGORY_LABELS[category] ?? category}
@@ -27,10 +27,10 @@ function BlogCard({ post }: { post: BlogPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-[#6D7BE0]/40"
+      className="group flex flex-col overflow-hidden rounded-[12px] border border-border bg-card shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-primary/40"
     >
       {/* Cover image or gradient placeholder */}
-      <div className="relative h-44 w-full overflow-hidden border-b border-[#D9DCE3] bg-gradient-to-br from-[#F5F6FA] to-[#EEF0F8]">
+      <div className="relative h-44 w-full overflow-hidden border-b border-border bg-muted">
         {post.coverImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -40,8 +40,8 @@ function BlogCard({ post }: { post: BlogPost }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <div className="h-12 w-12 rounded-full bg-[#3A5FCD]/10 flex items-center justify-center">
-              <Tag className="h-5 w-5 text-[#3A5FCD]/50" />
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Tag className="h-5 w-5 text-primary/50" />
             </div>
           </div>
         )}
@@ -51,21 +51,21 @@ function BlogCard({ post }: { post: BlogPost }) {
       </div>
 
       <div className="flex flex-1 flex-col p-6">
-        <h2 className="line-clamp-2 text-[18px] font-bold tracking-tight text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors">
+        <h2 className="line-clamp-2 text-[18px] font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
           {post.title}
         </h2>
-        <p className="mt-3 line-clamp-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
+        <p className="mt-3 line-clamp-2 text-[15px] leading-[1.6] text-muted-foreground">
           {post.excerpt}
         </p>
 
-        <div className="mt-auto pt-5 border-t border-[#D9DCE3] mt-5 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs text-[#1A1A1A]/50">
-            <div className="h-6 w-6 rounded-full bg-[#3A5FCD]/10 flex items-center justify-center text-[10px] font-bold text-[#3A5FCD]">
+        <div className="mt-auto pt-5 border-t border-border mt-5 flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
               {post.author.name.charAt(0)}
             </div>
-            <span className="font-medium text-[#1A1A1A]/70">{post.author.name}</span>
+            <span className="font-medium text-foreground/70">{post.author.name}</span>
           </div>
-          <div className="flex items-center gap-3 text-xs text-[#1A1A1A]/50">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
               {new Date(post.publishedAt).toLocaleDateString("en-US", {
@@ -89,9 +89,9 @@ function FeaturedCard({ post }: { post: BlogPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col md:flex-row overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-[#6D7BE0]/40"
+      className="group flex flex-col md:flex-row overflow-hidden rounded-[12px] border border-border bg-card shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-primary/40"
     >
-      <div className="relative h-48 md:h-auto md:w-64 flex-shrink-0 overflow-hidden border-b md:border-b-0 md:border-r border-[#D9DCE3] bg-gradient-to-br from-[#3A5FCD]/5 to-[#6D7BE0]/10">
+      <div className="relative h-48 md:h-auto md:w-64 flex-shrink-0 overflow-hidden border-b md:border-b-0 md:border-r border-border bg-primary/5">
         {post.coverImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -101,8 +101,8 @@ function FeaturedCard({ post }: { post: BlogPost }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <div className="h-14 w-14 rounded-full bg-[#3A5FCD]/10 flex items-center justify-center">
-              <Tag className="h-6 w-6 text-[#3A5FCD]/40" />
+            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+              <Tag className="h-6 w-6 text-primary/40" />
             </div>
           </div>
         )}
@@ -112,30 +112,30 @@ function FeaturedCard({ post }: { post: BlogPost }) {
         <div>
           <div className="flex items-center gap-3 mb-4">
             <CategoryBadge category={post.category} />
-            <span className="inline-flex items-center rounded-[6px] bg-[#E8C26A]/10 border border-[#E8C26A]/30 px-2.5 py-1 text-xs font-medium text-[#1A1A1A]">
+            <span className="inline-flex items-center rounded-[6px] bg-[#E8C26A]/10 border border-[#E8C26A]/30 px-2.5 py-1 text-xs font-medium text-[#E8C26A]">
               Featured
             </span>
           </div>
-          <h2 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] group-hover:text-[#3A5FCD] transition-colors leading-tight">
+          <h2 className="text-[22px] font-bold tracking-tight text-foreground group-hover:text-primary transition-colors leading-tight">
             {post.title}
           </h2>
-          <p className="mt-3 text-[15px] leading-[1.7] text-[#1A1A1A]/60 line-clamp-3">
+          <p className="mt-3 text-[15px] leading-[1.7] text-muted-foreground line-clamp-3">
             {post.excerpt}
           </p>
         </div>
 
-        <div className="flex items-center justify-between mt-6 pt-5 border-t border-[#D9DCE3]">
-          <div className="flex items-center gap-2 text-sm text-[#1A1A1A]/60">
-            <div className="h-7 w-7 rounded-full bg-[#3A5FCD]/10 flex items-center justify-center text-xs font-bold text-[#3A5FCD]">
+        <div className="flex items-center justify-between mt-6 pt-5 border-t border-border">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
               {post.author.name.charAt(0)}
             </div>
             <div>
-              <span className="font-medium text-[#1A1A1A]/80">{post.author.name}</span>
-              <span className="mx-1.5 text-[#D9DCE3]">&middot;</span>
+              <span className="font-medium text-foreground/80">{post.author.name}</span>
+              <span className="mx-1.5 text-border">&middot;</span>
               <span>{post.author.role}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-xs text-[#1A1A1A]/50">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
               {new Date(post.publishedAt).toLocaleDateString("en-US", {
@@ -180,12 +180,12 @@ export default async function BlogPage({
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Hero */}
-      <section className="bg-gradient-to-b from-[#EEF0F8] to-[#F5F6FA] border-b border-[#D9DCE3] py-20">
+      <section className="bg-muted border-b border-border py-20">
         <div className="container mx-auto px-6 lg:px-8 max-w-5xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-[#1A1A1A] md:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
             The MysteryMarket Blog
           </h1>
-          <p className="mt-4 text-[17px] leading-[1.7] text-[#1A1A1A]/60 max-w-2xl mx-auto">
+          <p className="mt-4 text-[17px] leading-[1.7] text-muted-foreground max-w-2xl mx-auto">
             Insights, guides, and creator stories to help you succeed &mdash; whether you&apos;re
             selling knowledge or discovering it.
           </p>
@@ -196,7 +196,7 @@ export default async function BlogPage({
         {/* Featured posts — only shown when no category filter */}
         {!category && featuredPosts.length > 0 && (
           <section className="mb-14">
-            <h2 className="text-[13px] font-bold uppercase tracking-wider text-[#1A1A1A]/40 mb-5">
+            <h2 className="text-[13px] font-bold uppercase tracking-wider text-muted-foreground mb-5">
               Featured
             </h2>
             <div className="flex flex-col gap-5">
@@ -215,8 +215,8 @@ export default async function BlogPage({
               href={cat.value ? `/blog?category=${cat.value}` : "/blog"}
               className={`inline-flex items-center rounded-full border px-4 py-1.5 text-[14px] font-medium transition-colors ${
                 (category ?? "") === cat.value
-                  ? "bg-[#3A5FCD] border-[#3A5FCD] text-white"
-                  : "bg-[#FFFFFF] border-[#D9DCE3] text-[#1A1A1A]/70 hover:border-[#3A5FCD]/40 hover:text-[#3A5FCD]"
+                  ? "bg-primary border-primary text-primary-foreground"
+                  : "bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-primary"
               }`}
             >
               {cat.label}
@@ -226,7 +226,7 @@ export default async function BlogPage({
 
         {/* Post grid */}
         {filteredPosts.length === 0 ? (
-          <div className="text-center py-20 text-[#1A1A1A]/40">
+          <div className="text-center py-20 text-muted-foreground">
             <p className="text-lg font-medium">No posts in this category yet.</p>
             <p className="mt-2 text-sm">Check back soon &mdash; we&apos;re always writing.</p>
           </div>
