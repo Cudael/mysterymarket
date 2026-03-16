@@ -65,27 +65,39 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--surface))]">
-      <div className="container mx-auto max-w-[1400px] px-6 py-10 lg:px-8">
-        <div className="mb-8 rounded-[24px] bg-[hsl(252,40%,6%)] px-8 py-10 text-white">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">Marketplace</p>
-          <h1 className="mt-2 text-[28px] font-bold tracking-tight sm:text-[36px]">
+    <div className="min-h-screen bg-background">
+      {/* ── Hero banner ── */}
+      <div className="relative overflow-hidden border-b border-white/[0.06] bg-[hsl(252,32%,4%)]">
+        {/* Atmospheric glows */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_-5%_50%,rgba(109,90,230,0.22),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_85%_20%,rgba(232,194,106,0.07),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 dot-grid-sm" />
+        {/* Bottom fade */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-background" />
+
+        <div className="container relative mx-auto max-w-[1400px] px-6 pb-12 pt-12 lg:px-8 lg:pb-16 lg:pt-16">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/30">
+            Marketplace
+          </p>
+          <h1 className="mt-3 text-[34px] font-extrabold tracking-[-0.045em] text-white sm:text-[46px]">
             Discover hidden ideas
           </h1>
-          <p className="mt-2 text-[15px] text-white/65 max-w-xl">
-            Browse premium concepts from top creators. Every idea stays locked until you unlock it.
+          <p className="mt-3 max-w-lg text-[16px] leading-[1.75] text-white/50">
+            Premium concepts from top creators — every idea stays locked until you unlock it.
           </p>
         </div>
+      </div>
 
+      <div className="container mx-auto max-w-[1400px] px-6 py-8 lg:px-8">
         {/* Category picker — shown when no search is active */}
         {!filters.search && (
-          <div className="mb-10">
+          <div className="mb-8">
             <CategoryPickerGrid />
           </div>
         )}
 
         <Suspense
-          fallback={<div className="h-[72px] animate-pulse rounded-[30px] bg-border/40" />}
+          fallback={<div className="h-[44px] animate-pulse rounded-full bg-white/[0.04]" />}
         >
           <IdeaFilters
             total={listing.total}
@@ -94,24 +106,29 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
 
         <section id="marketplace-results" className="scroll-mt-20 pb-16 pt-8">
           {listing.ideas.length === 0 ? (
-            <div className="mt-4 flex flex-col items-center justify-center rounded-[30px] border border-dashed border-border bg-card/95 px-6 py-20 text-center shadow-sm">
-              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-border bg-muted">
-                <Lightbulb className="h-7 w-7 text-primary/40" />
+            <div className="mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-[hsl(252,28%,6%)] px-6 py-20 text-center">
+              <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.03]">
+                <Lightbulb className="h-7 w-7 text-primary/30" />
               </div>
-              <p className="text-[22px] font-semibold tracking-[-0.03em] text-foreground">
+              <p className="text-[22px] font-bold tracking-[-0.03em] text-white/80">
                 No mysteries match this exact trail yet
               </p>
-              <p className="mt-3 max-w-lg text-[15px] leading-7 text-muted-foreground">
+              <p className="mt-3 max-w-lg text-[15px] leading-7 text-white/40">
                 Try a broader category, clear a few filters, or switch to a different
                 collection to see what creators are hiding there.
               </p>
-              <Button asChild className="mt-6 rounded-full px-6">
+              <Button asChild className="mt-6 rounded-full px-6 bg-primary text-primary-foreground shadow-[var(--shadow-primary-glow)]">
                 <Link href="/ideas">Reset marketplace</Link>
               </Button>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {/* Result count */}
+              <p className="mb-5 text-[13px] text-white/30">
+                {listing.total} {listing.total === 1 ? "idea" : "ideas"} found
+              </p>
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {listing.ideas.map((idea) => (
                   <IdeaCard
                     key={idea.id}
@@ -139,7 +156,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
               </div>
 
               {listing.totalPages > 1 && (
-                <div className="mt-12 flex justify-center border-t border-border pt-8">
+                <div className="mt-12 flex justify-center border-t border-white/[0.06] pt-8">
                   <Suspense fallback={null}>
                     <Pagination
                       currentPage={filters.page}

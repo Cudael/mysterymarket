@@ -25,8 +25,9 @@
     --gold: 45 93% 58%;
     --gold-foreground: 30 35% 8%;
     --surface: 252 24% 7%;
-    --shadow-primary-glow: 0 4px 24px hsl(252 85% 62% / 0.30);
-    --shadow-gold-glow: 0 4px 24px hsl(45 93% 58% / 0.35);
+    --shadow-primary-glow: 0 4px 28px hsl(252 85% 62% / 0.35);
+    --shadow-gold-glow: 0 4px 28px hsl(45 93% 58% / 0.40);
+    --shadow-card-hover: 0 20px 60px rgba(0,0,0,0.50), 0 0 0 1px rgba(139,92,246,0.12);
   }
 }
 
@@ -60,6 +61,21 @@
   100% { background-position: 0% 50%; }
 }
 
+@keyframes fade-up {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes reveal-width {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 24px hsl(252 85% 62% / 0.20); }
+  50% { box-shadow: 0 0 40px hsl(252 85% 62% / 0.40); }
+}
+
 @layer components {
   .dot-grid-sm {
     background-image: radial-gradient(circle, rgba(255,255,255,0.20) 1px, transparent 1px);
@@ -70,6 +86,20 @@
     background-image: radial-gradient(circle, rgba(255,255,255,0.18) 1px, transparent 1px);
     background-size: 32px 32px;
     opacity: 0.15;
+  }
+  .noise-overlay {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .animate-fade-up {
+    animation: fade-up 0.6s ease-out forwards;
+  }
+  .glow-primary {
+    box-shadow: var(--shadow-primary-glow);
+  }
+  .glow-gold {
+    box-shadow: var(--shadow-gold-glow);
   }
   .blog-content h2 {
     @apply text-2xl font-bold mt-10 mb-4 text-foreground;
