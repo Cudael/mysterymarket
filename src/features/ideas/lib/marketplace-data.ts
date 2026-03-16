@@ -10,7 +10,7 @@ import {
 } from "./marketplace-filters";
 
 export const marketplaceIdeaInclude = {
-  creator: { select: { id: true, name: true, avatarUrl: true } },
+  creator: { select: { id: true, name: true, avatarUrl: true, stripeOnboarded: true } },
   subcategory: { select: { id: true, name: true, slug: true } },
   _count: { select: { purchases: true, reviews: true } },
 } satisfies Prisma.IdeaInclude;

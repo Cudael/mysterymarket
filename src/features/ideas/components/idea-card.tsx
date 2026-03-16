@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Flame, Lock, Star, Unlock, Users, Zap } from "lucide-react";
+import { BadgeCheck, Flame, Lock, Star, Unlock, Users, Zap } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
@@ -37,6 +37,8 @@ export function IdeaCard({
   initialBookmarked = false,
   isAuthenticated = false,
   isTrending = false,
+  isCreatorVerified = false,
+  creatorTier,
 }: IdeaCardProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -130,21 +132,6 @@ export function IdeaCard({
               <>Multi</>
             )}
           </span>
-          {category && (
-            categorySlug ? (
-              <Link
-                href={`/ideas/category/${categorySlug}`}
-                onClick={(e) => e.stopPropagation()}
-                className="flex items-center rounded-full bg-violet-500/20 border border-violet-500/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-300 backdrop-blur-sm hover:border-violet-400/50 hover:text-violet-200 transition-colors"
-              >
-                {category}
-              </Link>
-            ) : (
-              <span className="flex items-center rounded-full bg-violet-500/20 border border-violet-500/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-300 backdrop-blur-sm">
-                {category}
-              </span>
-            )
-          )}
         </div>
 
         {/* Bookmark button — top-right corner */}
@@ -161,6 +148,49 @@ export function IdeaCard({
 
       {/* Card body */}
       <div className="relative flex flex-1 flex-col p-4">
+        {/* Creator row — prominent, at top of body */}
+        {(creatorId || creatorName) && (
+          <div className="mb-3 flex items-center gap-2.5">
+            <Link
+              href={creatorId ? `/creators/${creatorId}` : "#"}
+              onClick={(e) => !creatorId && e.preventDefault()}
+              className="shrink-0"
+            >
+              <Avatar className="h-8 w-8 ring-1 ring-white/10 transition-opacity hover:opacity-80">
+                <AvatarImage src={normalizedCreatorAvatarUrl ?? undefined} />
+                <AvatarFallback className="text-[10px] bg-primary/10 text-primary">{creatorInitials}</AvatarFallback>
+              </Avatar>
+            </Link>
+            <div className="min-w-0 flex-1">
+              <Link
+                href={creatorId ? `/creators/${creatorId}` : "#"}
+                onClick={(e) => !creatorId && e.preventDefault()}
+                className="block truncate text-[13px] font-semibold text-white/85 hover:text-primary transition-colors"
+              >
+                {creatorName ?? "Creator"}
+              </Link>
+              {(creatorTier || isCreatorVerified) && (
+                <div className="mt-0.5 flex items-center gap-1.5">
+                  {creatorTier && (
+                    <span className="text-[10px] font-medium uppercase tracking-wide text-primary/70">
+                      {creatorTier}
+                    </span>
+                  )}
+                  {creatorTier && isCreatorVerified && (
+                    <span className="text-white/20">·</span>
+                  )}
+                  {isCreatorVerified && (
+                    <span className="flex items-center gap-0.5 text-[10px] font-medium text-emerald-400/90">
+                      <BadgeCheck className="h-3 w-3" />
+                      verified
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Title */}
         <Link
           href={`/ideas/${id}`}
@@ -168,25 +198,6 @@ export function IdeaCard({
         >
           {title}
         </Link>
-
-        {/* Creator row */}
-        {(creatorId || creatorName) && (
-          <div className="mt-2 flex items-center gap-1.5">
-            <Link
-              href={creatorId ? `/creators/${creatorId}` : "#"}
-              className="flex items-center gap-1.5 min-w-0"
-              onClick={(e) => !creatorId && e.preventDefault()}
-            >
-              <Avatar className="h-5 w-5 shrink-0 ring-1 ring-white/10">
-                <AvatarImage src={normalizedCreatorAvatarUrl ?? undefined} />
-                <AvatarFallback className="text-[9px] bg-primary/10 text-primary">{creatorInitials}</AvatarFallback>
-              </Avatar>
-              <span className="truncate text-xs text-white/35 hover:text-primary transition-colors">
-                {creatorName ?? "Creator"}
-              </span>
-            </Link>
-          </div>
-        )}
 
         {/* Teaser text */}
         {teaserText && (
@@ -225,9 +236,21 @@ export function IdeaCard({
         <div className="mt-4 border-t border-white/[0.06] pt-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <span className="block text-[10px] uppercase tracking-[0.16em] text-white/25">
-                Price
-              </span>
+              {category && (
+                <span className="block text-[10px] uppercase tracking-[0.16em] text-white/25">
+                  {categorySlug ? (
+                    <Link
+                      href={`/ideas/category/${categorySlug}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="hover:text-white/40 transition-colors"
+                    >
+                      {category}
+                    </Link>
+                  ) : (
+                    category
+                  )}
+                </span>
+              )}
               <span className="text-xl font-bold tracking-tight text-white/90">
                 {formatPrice(priceInCents)}
               </span>
