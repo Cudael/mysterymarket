@@ -9,7 +9,7 @@ interface CategoryBreakdownProps {
 export function CategoryBreakdown({ data }: CategoryBreakdownProps) {
   if (data.length === 0) {
     return (
-      <p className="text-[14px] text-[#1A1A1A]/40 py-4">
+      <p className="text-[14px] text-muted-foreground py-4">
         No purchase data yet.
       </p>
     );
@@ -21,20 +21,20 @@ export function CategoryBreakdown({ data }: CategoryBreakdownProps) {
     <div className="flex flex-col gap-3">
       {data.map((item) => (
         <div key={item.category} className="flex items-center gap-3">
-          <span className="w-[120px] shrink-0 text-[13px] font-medium text-[#1A1A1A] truncate">
+          <span className="w-[120px] shrink-0 text-[13px] font-medium text-foreground truncate">
             {item.category}
           </span>
-          <div className="flex-1 h-2 rounded-full bg-[#F5F6FA] overflow-hidden">
+          <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
             <div
-              className="h-full rounded-full bg-[#3A5FCD]"
+              className="h-full rounded-full bg-primary"
               style={{ width: `${(item.count / maxCount) * 100}%` }}
             />
           </div>
           <div className="shrink-0 text-right min-w-[100px]">
-            <span className="text-[13px] font-semibold text-[#1A1A1A]">
+            <span className="text-[13px] font-semibold text-foreground">
               {item.count} {item.count === 1 ? "idea" : "ideas"}
             </span>
-            <span className="text-[12px] text-[#1A1A1A]/50 ml-2">
+            <span className="text-[12px] text-muted-foreground ml-2">
               {formatPrice(item.totalSpent)}
             </span>
           </div>

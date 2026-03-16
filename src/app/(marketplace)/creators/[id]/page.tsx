@@ -152,13 +152,13 @@ export default async function CreatorProfilePage({
                 </span>
               )}
               {isTopRated && (
-                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-amber-300/40 bg-amber-50 px-2.5 py-1 text-[12px] font-semibold text-amber-700">
+                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[12px] font-semibold text-amber-400">
                   <Trophy className="h-3.5 w-3.5" />
                   Top Rated
                 </span>
               )}
               {isPopularCreator && (
-                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-orange-300/40 bg-orange-50 px-2.5 py-1 text-[12px] font-semibold text-orange-700">
+                <span className="inline-flex items-center gap-1.5 rounded-[6px] border border-orange-500/30 bg-orange-500/10 px-2.5 py-1 text-[12px] font-semibold text-orange-400">
                   <Flame className="h-3.5 w-3.5" />
                   Popular Creator
                 </span>

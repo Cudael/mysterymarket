@@ -25,7 +25,7 @@ function formatDate(date: string | Date): string {
 export function PurchaseTimeline({ purchases }: PurchaseTimelineProps) {
   if (purchases.length === 0) {
     return (
-      <p className="text-[14px] text-[#1A1A1A]/40 py-4">
+      <p className="text-[14px] text-muted-foreground py-4">
         No purchases yet. Browse the marketplace to get started!
       </p>
     );
@@ -34,13 +34,13 @@ export function PurchaseTimeline({ purchases }: PurchaseTimelineProps) {
   return (
     <div className="relative flex flex-col">
       {/* Vertical line */}
-      <div className="absolute left-[7px] top-3 bottom-3 w-px bg-[#D9DCE3]" />
+      <div className="absolute left-[7px] top-3 bottom-3 w-px bg-border" />
 
       {purchases.map((purchase, i) => (
         <div key={`${purchase.id}-${i}`} className="relative flex gap-4 pb-6 last:pb-0">
           {/* Dot */}
           <div className="relative mt-1 flex h-4 w-4 shrink-0 items-center justify-center">
-            <div className="h-3 w-3 rounded-full border-2 border-[#3A5FCD] bg-[#3A5FCD]" />
+            <div className="h-3 w-3 rounded-full border-2 border-primary bg-primary" />
           </div>
 
           {/* Content */}
@@ -49,27 +49,27 @@ export function PurchaseTimeline({ purchases }: PurchaseTimelineProps) {
               <div className="min-w-0">
                 <Link
                   href={`/ideas/${purchase.id}`}
-                  className="text-[14px] font-semibold text-[#1A1A1A] hover:text-[#3A5FCD] transition-colors line-clamp-1"
+                  className="text-[14px] font-semibold text-foreground hover:text-primary transition-colors line-clamp-1"
                 >
                   {purchase.ideaTitle}
                 </Link>
                 {purchase.creatorName && (
-                  <p className="text-[12px] text-[#1A1A1A]/50 mt-0.5">
+                  <p className="text-[12px] text-muted-foreground mt-0.5">
                     by {purchase.creatorName}
                   </p>
                 )}
               </div>
               <div className="text-right shrink-0">
-                <p className="text-[14px] font-bold text-[#1A1A1A]">
+                <p className="text-[14px] font-bold text-foreground">
                   {formatPrice(purchase.amountInCents)}
                 </p>
-                <p className="text-[11px] text-[#1A1A1A]/40 mt-0.5">
+                <p className="text-[11px] text-muted-foreground/70 mt-0.5">
                   {formatDate(purchase.date)}
                 </p>
               </div>
             </div>
             {purchase.category && (
-              <span className="mt-1.5 inline-flex items-center rounded-full border border-[#D9DCE3] bg-[#F5F6FA] px-2 py-0.5 text-[11px] font-medium text-[#1A1A1A]/60">
+              <span className="mt-1.5 inline-flex items-center rounded-full border border-border bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
                 {purchase.category}
               </span>
             )}

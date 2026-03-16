@@ -10,6 +10,7 @@ import {
   Wallet2,
   Bell,
   Lightbulb,
+  Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getUnreadCount } from "@/features/notifications/actions";
@@ -18,6 +19,7 @@ const BUYER_NAV = [
   { href: "/my", label: "My Library", icon: ShoppingBag, exact: true },
   { href: "/my/saved", label: "Saved Ideas", icon: Bookmark, exact: false },
   { href: "/my/activity", label: "Activity", icon: PieChart, exact: false },
+  { href: "/my/reviews", label: "My Reviews", icon: Star, exact: false },
   { href: "/my/wallet", label: "Wallet", icon: Wallet2, exact: false },
   { href: "/my/notifications", label: "Notifications", icon: Bell, exact: false },
 ];

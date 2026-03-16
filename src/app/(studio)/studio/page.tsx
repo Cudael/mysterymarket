@@ -12,8 +12,10 @@ import {
   ArrowRight,
   Sparkles,
   ReceiptText,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
 import { CreatorPublishToggle } from "@/features/ideas/components/creator-publish-toggle";
 import { PageHeader } from "@/components/shared/page-header";
@@ -75,6 +77,13 @@ export default async function StudioPage() {
   const publishedIdeas = ideas.filter((idea) => idea.published).length;
   const draftIdeas = ideas.length - publishedIdeas;
 
+  const motivationalMessage =
+    totalSales === 0
+      ? "Your studio is ready. Publish your first idea to start earning."
+      : totalSales < 10
+        ? `You've made ${totalSales} ${totalSales === 1 ? "sale" : "sales"}. Keep publishing to grow your audience.`
+        : `${totalSales} sales and counting — your ideas are resonating with buyers.`;
+
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
@@ -91,6 +100,7 @@ export default async function StudioPage() {
         }
       />
 
+      {/* Hero card */}
       <ContentCard bodyClassName="p-6">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-4">
@@ -98,15 +108,21 @@ export default async function StudioPage() {
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <h2 className="text-[20px] font-semibold text-foreground">
-                Your creator workspace
+                Your creative workspace
               </h2>
               <p className="max-w-2xl text-[14px] leading-6 text-muted-foreground">
-                Use this space to publish ideas, review sales activity, and keep
-                your payout setup in good standing. Your wallet balance updates as
-                purchases are completed.
+                {motivationalMessage}
               </p>
+              {draftIdeas > 0 && (
+                <div className="flex items-center gap-2 rounded-[8px] border border-amber-500/20 bg-amber-500/5 px-3 py-2">
+                  <Zap className="h-3.5 w-3.5 text-amber-400" />
+                  <p className="text-[13px] text-amber-300">
+                    {draftIdeas} draft {draftIdeas === 1 ? "idea" : "ideas"} ready to publish
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -144,6 +160,15 @@ export default async function StudioPage() {
               View Wallet
             </Link>
           </Button>
+
+          {ideas.length > 0 && (
+            <Button asChild variant="outline" className="sm:w-auto">
+              <Link href="/studio/analytics" className="gap-2">
+                <BarChart3 className="h-4 w-4" />
+                View Analytics
+              </Link>
+            </Button>
+          )}
         </div>
       </ContentCard>
 
@@ -257,15 +282,16 @@ export default async function StudioPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center rounded-[999px] px-2.5 py-1 text-xs font-medium border ${
+                        <Badge
+                          variant={idea.published ? "default" : "secondary"}
+                          className={
                             idea.published
-                              ? "border-emerald-200/50 bg-emerald-50 text-emerald-800"
-                              : "border-border bg-muted text-muted-foreground"
-                          }`}
+                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                              : ""
+                          }
                         >
                           {idea.published ? "Published" : "Draft"}
-                        </span>
+                        </Badge>
                       </td>
                       <td className="px-6 py-4 text-foreground/70">
                         {idea._count.purchases}
@@ -305,19 +331,20 @@ export default async function StudioPage() {
                         {idea.title}
                       </p>
                       <p className="mt-1 text-[13px] text-muted-foreground">
-                        {formatPrice(idea.priceInCents)} • {idea._count.purchases} sales
+                        {formatPrice(idea.priceInCents)} · {idea._count.purchases} sales
                       </p>
                     </div>
 
-                    <span
-                      className={`inline-flex items-center rounded-[999px] px-2.5 py-1 text-xs font-medium border ${
+                    <Badge
+                      variant={idea.published ? "default" : "secondary"}
+                      className={
                         idea.published
-                          ? "border-emerald-200/50 bg-emerald-50 text-emerald-800"
-                          : "border-border bg-muted text-muted-foreground"
-                      }`}
+                          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                          : ""
+                      }
                     >
                       {idea.published ? "Published" : "Draft"}
-                    </span>
+                    </Badge>
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -347,16 +374,6 @@ export default async function StudioPage() {
           </>
         )}
       </ContentCard>
-
-      {draftIdeas > 0 && (
-        <ContentCard title="Publishing Tip" bodyClassName="p-6">
-          <p className="text-[14px] leading-6 text-muted-foreground">
-            You currently have <span className="font-semibold text-foreground">{draftIdeas}</span>{" "}
-            draft {draftIdeas === 1 ? "idea" : "ideas"}. If an idea is ready,
-            publishing it can improve visibility and sales momentum.
-          </p>
-        </ContentCard>
-      )}
     </div>
   );
 }

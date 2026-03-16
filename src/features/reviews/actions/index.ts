@@ -83,3 +83,63 @@ export async function getAverageRating(ideaId: string) {
     count: result._count.rating,
   };
 }
+
+export async function getUserReviews() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
+
+  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  if (!user) throw new Error("User not found");
+
+  return prisma.review.findMany({
+    where: { buyerId: user.id },
+    include: {
+      idea: {
+        select: {
+          id: true,
+          title: true,
+          teaserText: true,
+          teaserImageUrl: true,
+          category: true,
+          priceInCents: true,
+          creator: { select: { id: true, name: true, avatarUrl: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getPurchasesWithoutReviews() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
+
+  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  if (!user) throw new Error("User not found");
+
+  const purchases = await prisma.purchase.findMany({
+    where: {
+      buyerId: user.id,
+      status: "COMPLETED",
+      idea: {
+        reviews: {
+          none: { buyerId: user.id },
+        },
+      },
+    },
+    include: {
+      idea: {
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          creator: { select: { name: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
+
+  return purchases;
+}

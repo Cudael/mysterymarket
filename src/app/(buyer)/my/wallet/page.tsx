@@ -47,9 +47,9 @@ export default async function BuyerWalletPage({
       />
 
       {deposit === "success" && (
-        <div className="flex items-center gap-3 rounded-[12px] border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-          <CheckCircle2 className="h-5 w-5 text-emerald-700" />
-          <p className="text-[14px] font-medium text-emerald-700">
+        <div className="flex items-center gap-3 rounded-[12px] border border-emerald-500/30 bg-emerald-500/10 p-4">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+          <p className="text-[14px] font-medium text-emerald-400">
             Funds added successfully. Your wallet balance has been updated.
           </p>
         </div>
