@@ -72,7 +72,7 @@ export function IdeaCard({
       <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.07),transparent_60%)]" />
 
       {/* Image area */}
-      <div className="relative h-36 overflow-hidden bg-[hsl(252,32%,6%)]">
+      <div className="relative h-44 overflow-hidden bg-[hsl(252,32%,6%)]">
         {hasImage ? (
           <>
             <Image
@@ -146,30 +146,32 @@ export function IdeaCard({
             )
           )}
         </div>
-      </div>
 
-      {/* Card body */}
-      <div className="relative flex flex-1 flex-col p-4">
-        {/* Title row */}
-        <div className="flex items-start justify-between gap-2">
-          <Link
-            href={`/ideas/${id}`}
-            className="flex-1 text-[13px] font-bold leading-snug line-clamp-2 text-white/90 hover:text-primary transition-colors"
-          >
-            <span>{title}</span>
-          </Link>
-          {!isOwner && (
+        {/* Bookmark button — top-right corner */}
+        {!isOwner && (
+          <div className="absolute right-2.5 top-2.5">
             <BookmarkButton
               ideaId={id}
               initialBookmarked={initialBookmarked}
               isAuthenticated={isAuthenticated}
             />
-          )}
-        </div>
+          </div>
+        )}
+      </div>
+
+      {/* Card body */}
+      <div className="relative flex flex-1 flex-col p-4">
+        {/* Title */}
+        <Link
+          href={`/ideas/${id}`}
+          className="text-sm font-bold leading-snug line-clamp-2 text-white/90 hover:text-primary transition-colors"
+        >
+          {title}
+        </Link>
 
         {/* Creator row */}
         {(creatorId || creatorName) && (
-          <div className="mt-2 flex items-center justify-between">
+          <div className="mt-2 flex items-center gap-1.5">
             <Link
               href={creatorId ? `/creators/${creatorId}` : "#"}
               className="flex items-center gap-1.5 min-w-0"
@@ -183,32 +185,36 @@ export function IdeaCard({
                 {creatorName ?? "Creator"}
               </span>
             </Link>
-            {typeof purchaseCount === "number" && (
-              <span className="flex items-center gap-1 text-xs text-white/30 shrink-0">
-                <Users className="h-3.5 w-3.5" />
-                {purchaseCount}
-              </span>
-            )}
           </div>
         )}
 
         {/* Teaser text */}
         {teaserText && (
-          <p className="mt-2.5 text-[12px] leading-relaxed text-white/40 line-clamp-2">
+          <p className="mt-2.5 text-[12px] leading-relaxed text-white/40 line-clamp-3">
             {teaserText}
           </p>
         )}
 
-        {/* Rating row */}
-        {typeof averageRating === "number" && typeof reviewCount === "number" && reviewCount > 0 && (
-          <div className="mt-2 flex items-center gap-1.5">
-            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" aria-label={`Rating: ${averageRating.toFixed(1)} out of 5 stars`} />
-            <span className="text-xs font-semibold text-white/70">
-              {averageRating.toFixed(1)}
-            </span>
-            <span className="text-xs text-white/30">
-              ({reviewCount})
-            </span>
+        {/* Stats chips row */}
+        {((typeof averageRating === "number" && typeof reviewCount === "number" && reviewCount > 0) ||
+          typeof purchaseCount === "number") && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {typeof averageRating === "number" && typeof reviewCount === "number" && reviewCount > 0 && (
+              <span
+                className="flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 text-[11px] font-semibold text-amber-400"
+                aria-label={`Rating: ${averageRating.toFixed(1)} out of 5 stars`}
+              >
+                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                {averageRating.toFixed(1)}
+                <span className="font-normal text-amber-400/60">({reviewCount})</span>
+              </span>
+            )}
+            {typeof purchaseCount === "number" && (
+              <span className="flex items-center gap-1 rounded-full bg-white/[0.05] border border-white/[0.08] px-2.5 py-1 text-[11px] font-semibold text-white/45">
+                <Users className="h-3 w-3" />
+                {purchaseCount} buyers
+              </span>
+            )}
           </div>
         )}
 
@@ -216,47 +222,49 @@ export function IdeaCard({
         <div className="flex-1" />
 
         {/* Footer */}
-        <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">
-          <div>
-            <span className="block text-[10px] uppercase tracking-[0.16em] text-white/25">
-              Price
-            </span>
-            <span className="text-[18px] font-bold tracking-tight text-white/90">
-              {formatPrice(priceInCents)}
-            </span>
+        <div className="mt-4 border-t border-white/[0.06] pt-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <span className="block text-[10px] uppercase tracking-[0.16em] text-white/25">
+                Price
+              </span>
+              <span className="text-xl font-bold tracking-tight text-white/90">
+                {formatPrice(priceInCents)}
+              </span>
+            </div>
+            {isOwner ? (
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="h-9 px-5 text-xs rounded-xl border-white/10 bg-white/[0.03] text-white/50 hover:border-primary/30 hover:text-primary hover:bg-primary/5"
+              >
+                <Link href={`/studio/ideas/${id}/edit`}>Edit</Link>
+              </Button>
+            ) : isPurchased ? (
+              <Button
+                asChild
+                size="sm"
+                className="h-9 px-5 text-xs rounded-xl bg-emerald-500/90 hover:bg-emerald-500 text-white shadow-[0_2px_12px_rgba(16,185,129,0.25)]"
+              >
+                <Link href={`/ideas/${id}`}>
+                  <Unlock className="mr-1.5 h-3.5 w-3.5" />
+                  Read
+                </Link>
+              </Button>
+            ) : (
+              <Button
+                asChild
+                size="sm"
+                className="h-9 px-5 text-xs rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[var(--shadow-primary-glow)] transition-all"
+              >
+                <Link href={`/ideas/${id}`}>
+                  <Unlock className="mr-1.5 h-3.5 w-3.5" />
+                  Unlock
+                </Link>
+              </Button>
+            )}
           </div>
-          {isOwner ? (
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="h-8 px-4 text-xs rounded-xl border-white/10 bg-white/[0.03] text-white/50 hover:border-primary/30 hover:text-primary hover:bg-primary/5"
-            >
-              <Link href={`/studio/ideas/${id}/edit`}>Edit</Link>
-            </Button>
-          ) : isPurchased ? (
-            <Button
-              asChild
-              size="sm"
-              className="h-8 px-4 text-xs rounded-xl bg-emerald-500/90 hover:bg-emerald-500 text-white shadow-[0_2px_12px_rgba(16,185,129,0.25)]"
-            >
-              <Link href={`/ideas/${id}`}>
-                <Unlock className="mr-1.5 h-3.5 w-3.5" />
-                Read
-              </Link>
-            </Button>
-          ) : (
-            <Button
-              asChild
-              size="sm"
-              className="h-8 px-5 text-xs rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[var(--shadow-primary-glow)] transition-all"
-            >
-              <Link href={`/ideas/${id}`}>
-                <Unlock className="mr-1.5 h-3.5 w-3.5" />
-                Unlock
-              </Link>
-            </Button>
-          )}
         </div>
       </div>
     </div>
