@@ -37,9 +37,7 @@ export function IdeaCard({
   initialBookmarked = false,
   isAuthenticated = false,
   isTrending = false,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  index,
-}: IdeaCardProps & { index?: number }) {
+}: IdeaCardProps) {
   const [imageError, setImageError] = useState(false);
 
   const normalizedImageUrl = normalizeUrl(teaserImageUrl);
@@ -185,7 +183,7 @@ export function IdeaCard({
                 {creatorName ?? "Creator"}
               </span>
             </Link>
-            {typeof purchaseCount === "number" && purchaseCount > 0 && (
+            {typeof purchaseCount === "number" && (
               <span className="flex items-center gap-1 text-xs text-white/30 shrink-0">
                 <Users className="h-3.5 w-3.5" />
                 {purchaseCount}
