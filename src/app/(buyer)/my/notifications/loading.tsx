@@ -8,8 +8,8 @@ export default function NotificationsLoading() {
         <Skeleton className="h-12 w-full max-w-[420px] rounded-xl" />
       </div>
 
-      <div className="rounded-[16px] border border-[#D9DCE3] bg-[#FFFFFF] overflow-hidden">
-        <div className="flex items-center justify-between border-b border-[#D9DCE3] px-6 py-5">
+      <div className="rounded-[16px] border border-border bg-card overflow-hidden">
+        <div className="flex items-center justify-between border-b border-border px-6 py-5">
           <div className="space-y-2">
             <Skeleton className="h-5 w-36 rounded-lg" />
             <Skeleton className="h-4 w-48 rounded-lg" />
@@ -20,7 +20,7 @@ export default function NotificationsLoading() {
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-start gap-4 border-b border-[#D9DCE3] p-5 last:border-b-0"
+            className="flex items-start gap-4 border-b border-border p-5 last:border-b-0"
           >
             <Skeleton className="h-10 w-10 shrink-0 rounded-[10px]" />
             <div className="flex-1 space-y-2">

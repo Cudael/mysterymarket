@@ -17,9 +17,9 @@ const STATUS_TABS = [
 ];
 
 const STATUS_BADGE: Record<string, string> = {
-  PENDING: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  APPROVED: "bg-green-50 text-green-700 border-green-200",
-  DENIED: "bg-red-50 text-red-700 border-red-200",
+  PENDING: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+  APPROVED: "bg-green-500/10 text-green-400 border-green-500/20",
+  DENIED: "bg-red-500/10 text-red-400 border-red-500/20",
 };
 
 function daysSince(date: Date): number {
@@ -38,14 +38,14 @@ export default async function AdminRefundsPage({
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-green-50 border border-green-200">
-          <DollarSign className="h-5 w-5 text-green-600" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-green-500/10 border border-green-500/20">
+          <DollarSign className="h-5 w-5 text-green-400" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Refunds
           </h1>
-          <p className="mt-1 text-[15px] text-[#1A1A1A]/60">
+          <p className="mt-1 text-[15px] text-muted-foreground">
             Manage refund requests from buyers. Review and respond within 3 business days.
           </p>
         </div>
@@ -63,8 +63,8 @@ export default async function AdminRefundsPage({
             }
             className={`rounded-[8px] px-4 py-2 text-sm font-medium transition-colors ${
               activeStatus === tab.value
-                ? "bg-[#3A5FCD] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
-                : "bg-[#FFFFFF] border border-[#D9DCE3] text-[#1A1A1A]/70 hover:bg-[#F5F6FA]"
+                ? "bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
+                : "bg-card border border-border text-muted-foreground hover:bg-muted"
             }`}
           >
             {tab.label}
@@ -73,82 +73,82 @@ export default async function AdminRefundsPage({
       </div>
 
       {refunds.length === 0 ? (
-        <div className="rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#FFFFFF] p-16 text-center">
-          <DollarSign className="mx-auto h-10 w-10 text-[#D9DCE3]" />
-          <p className="mt-4 text-[16px] text-[#1A1A1A]/60">
+        <div className="rounded-[12px] border border-dashed border-border bg-card p-16 text-center">
+          <DollarSign className="mx-auto h-10 w-10 text-border" />
+          <p className="mt-4 text-[16px] text-muted-foreground">
             No refund requests found.
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div className="overflow-hidden rounded-[12px] border border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-[#D9DCE3] bg-[#F8F9FC]">
+              <thead className="border-b border-border bg-muted">
                 <tr>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Buyer
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Idea & Creator
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Amount
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Reason
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Age
                   </th>
-                  <th className="px-6 py-4 text-right font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-right font-semibold text-muted-foreground">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9DCE3]">
+              <tbody className="divide-y divide-border">
                 {refunds.map((refund) => {
                   const age = daysSince(refund.createdAt);
                   const overdue = refund.status === "PENDING" && age >= 3;
                   return (
                     <tr
                       key={refund.id}
-                      className={`transition-colors hover:bg-[#F5F6FA] ${overdue ? "bg-yellow-50/40" : ""}`}
+                      className={`transition-colors hover:bg-muted/50 ${overdue ? "bg-yellow-500/5" : ""}`}
                     >
                       <td className="px-6 py-4">
-                        <p className="font-medium text-[#1A1A1A]">
+                        <p className="font-medium text-foreground">
                           {refund.purchase.buyer.name ?? "Anonymous"}
                         </p>
-                        <p className="text-xs text-[#1A1A1A]/50">
+                        <p className="text-xs text-muted-foreground">
                           {refund.purchase.buyer.email}
                         </p>
                       </td>
                       <td className="px-6 py-4 max-w-[220px]">
                         <div className="flex items-center gap-1.5">
-                          <p className="font-medium text-[#1A1A1A] truncate">
+                          <p className="font-medium text-foreground truncate">
                             {refund.purchase.idea.title}
                           </p>
                           <Link
                             href={`/ideas/${refund.purchase.idea.id}`}
-                            className="text-[#3A5FCD] hover:text-[#6D7BE0] shrink-0"
+                            className="text-primary hover:text-primary/80 shrink-0"
                           >
                             <ExternalLink className="h-3.5 w-3.5" />
                           </Link>
                         </div>
-                        <p className="text-xs text-[#1A1A1A]/50">
+                        <p className="text-xs text-muted-foreground">
                           by{" "}
                           {refund.purchase.idea.creator.name ??
                             refund.purchase.idea.creator.email}
                         </p>
                       </td>
-                      <td className="px-6 py-4 font-medium text-[#3A5FCD]">
+                      <td className="px-6 py-4 font-medium text-primary">
                         {formatPrice(refund.purchase.amountInCents)}
                       </td>
                       <td className="px-6 py-4 max-w-[200px]">
                         <p
-                          className="text-xs text-[#1A1A1A]/70 line-clamp-3"
+                          className="text-xs text-muted-foreground line-clamp-3"
                           title={refund.reason}
                         >
                           {refund.reason}
@@ -165,7 +165,7 @@ export default async function AdminRefundsPage({
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className={`flex items-center gap-1 text-xs ${overdue ? "text-yellow-700 font-medium" : "text-[#1A1A1A]/50"}`}>
+                        <div className={`flex items-center gap-1 text-xs ${overdue ? "text-yellow-400 font-medium" : "text-muted-foreground"}`}>
                           {overdue && <Clock className="h-3.5 w-3.5" />}
                           <span>
                             {age === 0 ? "Today" : `${age}d ago`}

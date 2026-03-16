@@ -44,14 +44,14 @@ export default async function AdminIdeasPage({
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10 border border-[#3A5FCD]/20">
-          <Lightbulb className="h-5 w-5 text-[#3A5FCD]" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-primary/10 border border-primary/20">
+          <Lightbulb className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Ideas
           </h1>
-          <p className="mt-1 text-[15px] text-[#1A1A1A]/60">
+          <p className="mt-1 text-[15px] text-muted-foreground">
             {total.toLocaleString()} total idea{total !== 1 ? "s" : ""}
           </p>
         </div>
@@ -64,7 +64,7 @@ export default async function AdminIdeasPage({
             name="search"
             defaultValue={search}
             placeholder="Search by title..."
-            className="w-full max-w-sm rounded-[8px] border border-[#D9DCE3] bg-[#FFFFFF] px-4 py-2.5 text-sm text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 focus:border-[#3A5FCD] focus:outline-none focus:ring-1 focus:ring-[#3A5FCD]"
+            className="w-full max-w-sm rounded-[8px] border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
           {status && <input type="hidden" name="status" value={status} />}
         </form>
@@ -80,8 +80,8 @@ export default async function AdminIdeasPage({
                 href={href}
                 className={`rounded-[8px] px-4 py-2 text-sm font-medium transition-colors ${
                   activeStatus === tab.value
-                    ? "bg-[#3A5FCD] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
-                    : "bg-[#FFFFFF] border border-[#D9DCE3] text-[#1A1A1A]/70 hover:bg-[#F5F6FA]"
+                    ? "bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
+                    : "bg-card border border-border text-muted-foreground hover:bg-muted"
                 }`}
               >
                 {tab.label}
@@ -92,95 +92,95 @@ export default async function AdminIdeasPage({
       </div>
 
       {ideas.length === 0 ? (
-        <div className="rounded-[12px] border border-dashed border-[#D9DCE3] bg-[#FFFFFF] p-16 text-center">
-          <Lightbulb className="mx-auto h-10 w-10 text-[#D9DCE3]" />
-          <p className="mt-4 text-[16px] text-[#1A1A1A]/60">No ideas found.</p>
+        <div className="rounded-[12px] border border-dashed border-border bg-card p-16 text-center">
+          <Lightbulb className="mx-auto h-10 w-10 text-border" />
+          <p className="mt-4 text-[16px] text-muted-foreground">No ideas found.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+        <div className="overflow-hidden rounded-[12px] border border-border bg-card shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-[#D9DCE3] bg-[#F8F9FC]">
+              <thead className="border-b border-border bg-muted">
                 <tr>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Title
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Creator
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Price
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Purchases
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Reports
                   </th>
-                  <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-left font-semibold text-muted-foreground">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-right font-semibold text-[#1A1A1A]/70">
+                  <th className="px-6 py-4 text-right font-semibold text-muted-foreground">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9DCE3]">
+              <tbody className="divide-y divide-border">
                 {ideas.map((idea) => (
                   <tr
                     key={idea.id}
-                    className="transition-colors hover:bg-[#F5F6FA]"
+                    className="transition-colors hover:bg-muted/50"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-[#1A1A1A]">
+                        <p className="font-medium text-foreground">
                           {idea.title}
                         </p>
                         <Link
                           href={`/ideas/${idea.id}`}
-                          className="text-[#3A5FCD] hover:text-[#6D7BE0]"
+                          className="text-primary hover:text-primary/80"
                         >
                           <ExternalLink className="h-3.5 w-3.5" />
                         </Link>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-[#1A1A1A]/70">
+                      <p className="text-muted-foreground">
                         {idea.creator.name ?? idea.creator.email}
                       </p>
                     </td>
-                    <td className="px-6 py-4 font-medium text-[#3A5FCD]">
+                    <td className="px-6 py-4 font-medium text-primary">
                       {formatPrice(idea.priceInCents)}
                     </td>
                     <td className="px-6 py-4">
                       <span
                         className={`inline-flex items-center rounded-[6px] border px-2.5 py-1 text-xs font-medium ${
                           idea.published
-                            ? "bg-green-50 text-green-700 border-green-200"
-                            : "bg-[#F5F6FA] text-[#1A1A1A]/60 border-[#D9DCE3]"
+                            ? "bg-green-500/10 text-green-400 border-green-500/20"
+                            : "bg-muted text-muted-foreground border-border"
                         }`}
                       >
                         {idea.published ? "Published" : "Unpublished"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-[#1A1A1A]/70">
+                    <td className="px-6 py-4 text-muted-foreground">
                       {idea._count.purchases}
                     </td>
                     <td className="px-6 py-4">
                       <span
                         className={
                           idea._count.reports > 0
-                            ? "font-semibold text-red-600"
-                            : "text-[#1A1A1A]/70"
+                            ? "font-semibold text-red-400"
+                            : "text-muted-foreground"
                         }
                       >
                         {idea._count.reports}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-xs text-[#1A1A1A]/50">
+                    <td className="px-6 py-4 text-xs text-muted-foreground">
                       {new Date(idea.createdAt).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -206,7 +206,7 @@ export default async function AdminIdeasPage({
         <div className="mt-6 flex items-center justify-center gap-2">
           {getPageWindow(currentPage, totalPages).map((p, i) => {
             if (p === null) {
-              return <span key={`ellipsis-${i}`} className="px-1 text-[#1A1A1A]/40">…</span>;
+              return <span key={`ellipsis-${i}`} className="px-1 text-muted-foreground">…</span>;
             }
             const params = new URLSearchParams();
             if (search) params.set("search", search);
@@ -218,8 +218,8 @@ export default async function AdminIdeasPage({
                 href={`/admin/ideas${params.toString() ? `?${params.toString()}` : ""}`}
                 className={`flex h-9 w-9 items-center justify-center rounded-[8px] text-sm font-medium transition-colors ${
                   currentPage === p
-                    ? "bg-[#3A5FCD] text-white"
-                    : "bg-[#FFFFFF] border border-[#D9DCE3] text-[#1A1A1A]/70 hover:bg-[#F5F6FA]"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card border border-border text-muted-foreground hover:bg-muted"
                 }`}
               >
                 {p}

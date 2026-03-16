@@ -54,10 +54,10 @@ export function FollowButton({
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           aria-label={loading ? "Loading" : hovered ? "Unfollow creator" : "Following creator"}
-          className={`h-9 min-w-[110px] rounded-[8px] border border-[#D9DCE3] text-[14px] font-medium transition-colors ${
+          className={`h-9 min-w-[110px] rounded-[8px] border border-border text-[14px] font-medium transition-colors ${
             hovered
-              ? "border-red-300 bg-red-50 text-red-600 hover:bg-red-50"
-              : "bg-[#FFFFFF] text-[#1A1A1A]"
+              ? "border-red-500/50 bg-red-500/10 text-red-400 hover:bg-red-500/10"
+              : "bg-card text-foreground"
           }`}
         >
           {loading ? "..." : hovered ? "Unfollow" : "Following"}
@@ -67,12 +67,12 @@ export function FollowButton({
           onClick={handleClick}
           disabled={loading}
           aria-label={loading ? "Loading" : "Follow creator"}
-          className="h-9 min-w-[110px] rounded-[8px] bg-[#3A5FCD] text-[14px] font-medium text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] hover:bg-[#6D7BE0] transition-colors"
+          className="h-9 min-w-[110px] rounded-[8px] text-[14px] font-medium transition-colors"
         >
           {loading ? "..." : "Follow"}
         </Button>
       )}
-      <span className="flex items-center gap-1 text-[12px] text-[#1A1A1A]/50">
+      <span className="flex items-center gap-1 text-[12px] text-muted-foreground">
         <Users className="h-3 w-3" />
         {followerCount} follower{followerCount !== 1 ? "s" : ""}
       </span>

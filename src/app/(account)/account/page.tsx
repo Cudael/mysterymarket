@@ -111,7 +111,7 @@ export default function AccountPage() {
       <PageHeader
         title="Account"
         description="Manage your public profile and account preferences."
-        icon={<Settings className="h-6 w-6 text-[#FFFFFF]" />}
+        icon={<Settings className="h-6 w-6 text-primary-foreground" />}
       />
 
       <div className="space-y-8">
@@ -119,25 +119,25 @@ export default function AccountPage() {
         <ContentCard title="Public Profile">
           <form onSubmit={handleSave} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-[14px] font-medium text-[#1A1A1A]">Display Name</Label>
+              <Label htmlFor="name" className="text-[14px] font-medium text-foreground">Display Name</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Jane Doe"
-                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+                className="h-10 rounded-[8px]"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="bio" className="text-[14px] font-medium text-[#1A1A1A]">Biography</Label>
+              <Label htmlFor="bio" className="text-[14px] font-medium text-foreground">Biography</Label>
               <Textarea
                 id="bio"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Tell buyers about your expertise..."
                 rows={4}
-                className="rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] resize-none transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+                className="rounded-[8px] resize-none"
               />
             </div>
             
@@ -145,7 +145,6 @@ export default function AccountPage() {
               <Button 
                 type="submit" 
                 disabled={isSaving}
-                className="bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white font-medium px-6 h-10 shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all"
               >
                 {isSaving ? (
                   "Saving..."
@@ -163,35 +162,35 @@ export default function AccountPage() {
         <ContentCard title="Social Links">
           <form onSubmit={handleSaveSocial} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="twitterUrl" className="text-[14px] font-medium text-[#1A1A1A]">Twitter / X URL</Label>
+              <Label htmlFor="twitterUrl" className="text-[14px] font-medium text-foreground">Twitter / X URL</Label>
               <Input
                 id="twitterUrl"
                 value={twitterUrl}
                 onChange={(e) => setTwitterUrl(e.target.value)}
                 placeholder="https://twitter.com/yourusername"
-                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+                className="h-10 rounded-[8px]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="linkedinUrl" className="text-[14px] font-medium text-[#1A1A1A]">LinkedIn URL</Label>
+              <Label htmlFor="linkedinUrl" className="text-[14px] font-medium text-foreground">LinkedIn URL</Label>
               <Input
                 id="linkedinUrl"
                 value={linkedinUrl}
                 onChange={(e) => setLinkedinUrl(e.target.value)}
                 placeholder="https://linkedin.com/in/yourusername"
-                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+                className="h-10 rounded-[8px]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="websiteUrl" className="text-[14px] font-medium text-[#1A1A1A]">Website URL</Label>
+              <Label htmlFor="websiteUrl" className="text-[14px] font-medium text-foreground">Website URL</Label>
               <Input
                 id="websiteUrl"
                 value={websiteUrl}
                 onChange={(e) => setWebsiteUrl(e.target.value)}
                 placeholder="https://yourwebsite.com"
-                className="h-10 rounded-[8px] border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] transition-colors focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20"
+                className="h-10 rounded-[8px]"
               />
             </div>
 
@@ -199,7 +198,6 @@ export default function AccountPage() {
               <Button
                 type="submit"
                 disabled={isSavingSocial}
-                className="bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white font-medium px-6 h-10 shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all"
               >
                 {isSavingSocial ? (
                   "Saving..."
@@ -217,22 +215,22 @@ export default function AccountPage() {
         <ContentCard title="Account Details">
           <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
             <div className="sm:col-span-1">
-              <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Email Address</dt>
-              <dd className="mt-1 text-[15px] font-medium text-[#1A1A1A]">
+              <dt className="text-[13px] font-medium uppercase tracking-wider text-muted-foreground">Email Address</dt>
+              <dd className="mt-1 text-[15px] font-medium text-foreground">
                 {clerkUser?.primaryEmailAddress?.emailAddress ?? dbUser?.email ?? "—"}
               </dd>
             </div>
             <div className="sm:col-span-1">
-              <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Account Role</dt>
+              <dt className="text-[13px] font-medium uppercase tracking-wider text-muted-foreground">Account Role</dt>
               <dd className="mt-1">
-                <span className="inline-flex items-center rounded-[6px] bg-[#F5F6FA] px-2.5 py-1 text-[13px] font-semibold text-[#1A1A1A] border border-[#D9DCE3]">
+                <span className="inline-flex items-center rounded-[6px] bg-muted px-2.5 py-1 text-[13px] font-semibold text-foreground border border-border">
                   {dbUser?.role ?? "USER"}
                 </span>
               </dd>
             </div>
             <div className="sm:col-span-1">
-              <dt className="text-[13px] font-medium uppercase tracking-wider text-[#1A1A1A]/50">Member Since</dt>
-              <dd className="mt-1 text-[15px] text-[#1A1A1A]/80">
+              <dt className="text-[13px] font-medium uppercase tracking-wider text-muted-foreground">Member Since</dt>
+              <dd className="mt-1 text-[15px] text-foreground/80">
                 {dbUser?.createdAt
                   ? new Date(dbUser.createdAt).toLocaleDateString("en-US", {
                       month: "long",
@@ -250,17 +248,17 @@ export default function AccountPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             {dbUser?.stripeOnboarded ? (
-              <div className="flex items-center gap-2 text-emerald-600 font-medium">
+              <div className="flex items-center gap-2 text-emerald-400 font-medium">
                 <CheckCircle2 className="h-5 w-5" />
                 <span>Stripe Connected</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-amber-600 font-medium">
+              <div className="flex items-center gap-2 text-amber-400 font-medium">
                 <AlertCircle className="h-5 w-5" />
                 <span>Stripe Not Connected</span>
               </div>
             )}
-            <p className="mt-1 text-[14px] text-[#1A1A1A]/60">
+            <p className="mt-1 text-[14px] text-muted-foreground">
               {dbUser?.stripeOnboarded 
                 ? "Your account is active and ready to receive payouts." 
                 : "Connect your Stripe account to start earning from your ideas."}
@@ -270,10 +268,6 @@ export default function AccountPage() {
           <Button 
             asChild 
             variant={dbUser?.stripeOnboarded ? "outline" : "default"}
-            className={dbUser?.stripeOnboarded 
-              ? "bg-[#FFFFFF] border-[#D9DCE3] text-[#1A1A1A]" 
-              : "bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)]"
-            }
           >
             {dbUser?.stripeOnboarded ? (
               <a href="https://dashboard.stripe.com" target="_blank" rel="noopener noreferrer">

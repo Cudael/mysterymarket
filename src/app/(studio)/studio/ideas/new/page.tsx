@@ -24,13 +24,13 @@ export default async function NewIdeaPage() {
       />
 
       <ContentCard bodyClassName="p-6 sm:p-8">
-        <div className="mb-6 flex items-start gap-3 rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
-          <Sparkles className="mt-0.5 h-5 w-5 text-[#3A5FCD]" />
+        <div className="mb-6 flex items-start gap-3 rounded-[12px] border border-border bg-muted p-4">
+          <Sparkles className="mt-0.5 h-5 w-5 text-primary" />
           <div>
-            <p className="text-[14px] font-semibold text-[#1A1A1A]">
+            <p className="text-[14px] font-semibold text-foreground">
               Publishing tip
             </p>
-            <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/60">
+            <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
               Clear teaser copy and strong pricing usually convert better than
               vague summaries. Draft first, then publish when the value is obvious.
             </p>

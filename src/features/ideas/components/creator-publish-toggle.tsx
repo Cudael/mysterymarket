@@ -44,8 +44,8 @@ export function CreatorPublishToggle({
       onClick={handleToggle}
       className={`h-8 text-xs ${
         isPublished
-          ? "border-red-200 text-red-700 hover:bg-red-50"
-          : "bg-[#3A5FCD] text-white hover:bg-[#2D4DB5]"
+          ? "border-red-500/30 text-red-400 hover:bg-red-500/10"
+          : ""
       }`}
     >
       {loading ? "..." : isPublished ? "Unpublish" : "Publish"}

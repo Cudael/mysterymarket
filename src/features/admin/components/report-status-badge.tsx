@@ -1,10 +1,10 @@
 import { ReportStatus } from "@prisma/client";
 
 const STATUS_STYLES: Record<ReportStatus, string> = {
-  PENDING: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  REVIEWED: "bg-blue-50 text-blue-700 border-blue-200",
-  DISMISSED: "bg-[#F5F6FA] text-[#1A1A1A]/60 border-[#D9DCE3]",
-  ACTION_TAKEN: "bg-red-50 text-red-700 border-red-200",
+  PENDING: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+  REVIEWED: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  DISMISSED: "bg-muted text-muted-foreground border-border",
+  ACTION_TAKEN: "bg-red-500/10 text-red-400 border-red-500/20",
 };
 
 const STATUS_LABEL: Record<ReportStatus, string> = {

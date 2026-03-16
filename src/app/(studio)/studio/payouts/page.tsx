@@ -40,17 +40,17 @@ function StatusRow({
   const positive = Boolean(value);
 
   return (
-    <div className="flex items-center justify-between rounded-[10px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3">
-      <span className="text-[14px] font-medium text-[#1A1A1A]/70">{label}</span>
+    <div className="flex items-center justify-between rounded-[10px] border border-border bg-muted px-4 py-3">
+      <span className="text-[14px] font-medium text-muted-foreground">{label}</span>
       {positive ? (
         <div className="flex items-center gap-1.5">
-          <CheckCircle className="h-4 w-4 text-[#054F31]" />
-          <span className="text-[13px] font-semibold text-[#054F31]">Enabled</span>
+          <CheckCircle className="h-4 w-4 text-green-400" />
+          <span className="text-[13px] font-semibold text-green-400">Enabled</span>
         </div>
       ) : (
         <div className="flex items-center gap-1.5">
-          <XCircle className="h-4 w-4 text-[#D32F2F]" />
-          <span className="text-[13px] font-semibold text-[#D32F2F]">Needs attention</span>
+          <XCircle className="h-4 w-4 text-destructive" />
+          <span className="text-[13px] font-semibold text-destructive">Needs attention</span>
         </div>
       )}
     </div>
@@ -146,16 +146,16 @@ export default function PayoutsPage() {
       />
 
       {successMessage && (
-        <div className="flex items-center gap-3 rounded-[12px] border border-[#C8E6C9] bg-[#E8F5E9] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-          <CheckCircle className="h-5 w-5 text-[#054F31]" />
-          <p className="text-[14px] font-medium text-[#054F31]">{successMessage}</p>
+        <div className="flex items-center gap-3 rounded-[12px] border border-green-500/20 bg-green-500/10 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+          <CheckCircle className="h-5 w-5 text-green-400" />
+          <p className="text-[14px] font-medium text-green-400">{successMessage}</p>
         </div>
       )}
 
       {error && (
-        <div className="flex items-center gap-3 rounded-[12px] border border-[#FFEAEA] bg-[#FFF0F0] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-          <AlertCircle className="h-5 w-5 text-[#D32F2F]" />
-          <p className="text-[14px] font-medium text-[#D32F2F]">{error}</p>
+        <div className="flex items-center gap-3 rounded-[12px] border border-destructive/20 bg-destructive/10 p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+          <AlertCircle className="h-5 w-5 text-destructive" />
+          <p className="text-[14px] font-medium text-destructive">{error}</p>
         </div>
       )}
 
@@ -163,42 +163,42 @@ export default function PayoutsPage() {
         <ContentCard title="Stripe Connection" bodyClassName="p-0">
           {loading ? (
             <div className="flex flex-col items-center gap-3 py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-[#3A5FCD]" />
-              <p className="text-[14px] font-medium text-[#1A1A1A]/50">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-[14px] font-medium text-muted-foreground">
                 Loading account status...
               </p>
             </div>
           ) : state === "not_connected" ? (
             <div className="px-6 py-10 sm:px-8">
-              <div className="flex h-14 w-14 items-center justify-center rounded-[14px] bg-[#F8F9FC] border border-[#D9DCE3]">
-                <CreditCard className="h-7 w-7 text-[#3A5FCD]" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-[14px] bg-muted border border-border">
+                <CreditCard className="h-7 w-7 text-primary" />
               </div>
 
-              <h2 className="mt-5 text-[22px] font-bold text-[#1A1A1A]">
+              <h2 className="mt-5 text-[22px] font-bold text-foreground">
                 Connect Stripe to enable payouts
               </h2>
-              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[#1A1A1A]/60">
+              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted-foreground">
                 You can create and publish ideas before connecting payouts, but a
                 completed Stripe setup is required before funds can be transferred
                 out of your creator wallet.
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
-                  <p className="text-[14px] font-semibold text-[#1A1A1A]">
+                <div className="rounded-[12px] border border-border bg-muted p-4">
+                  <p className="text-[14px] font-semibold text-foreground">
                     Secure onboarding
                   </p>
-                  <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/55">
+                  <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
                     You&apos;ll be redirected to Stripe to complete verification and
                     account setup.
                   </p>
                 </div>
 
-                <div className="rounded-[12px] border border-[#D9DCE3] bg-[#F8F9FC] p-4">
-                  <p className="text-[14px] font-semibold text-[#1A1A1A]">
+                <div className="rounded-[12px] border border-border bg-muted p-4">
+                  <p className="text-[14px] font-semibold text-foreground">
                     Required for withdrawals
                   </p>
-                  <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/55">
+                  <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
                     Earnings can accumulate in your wallet, but payouts require an
                     active connected account.
                   </p>
@@ -220,14 +220,14 @@ export default function PayoutsPage() {
             </div>
           ) : state === "incomplete" ? (
             <div className="px-6 py-10 sm:px-8">
-              <div className="flex h-14 w-14 items-center justify-center rounded-[14px] border border-[#FFECB3] bg-[#FFF8E1]">
-                <AlertCircle className="h-7 w-7 text-[#B8860B]" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-[14px] border border-yellow-500/20 bg-yellow-500/10">
+                <AlertCircle className="h-7 w-7 text-yellow-400" />
               </div>
 
-              <h2 className="mt-5 text-[22px] font-bold text-[#1A1A1A]">
+              <h2 className="mt-5 text-[22px] font-bold text-foreground">
                 Finish your Stripe onboarding
               </h2>
-              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[#1A1A1A]/60">
+              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted-foreground">
                 Your Stripe account exists, but setup is incomplete. Finish the
                 remaining steps to activate payments and payouts.
               </p>
@@ -254,17 +254,17 @@ export default function PayoutsPage() {
             </div>
           ) : (
             <div className="px-6 py-10 sm:px-8">
-              <div className="flex h-14 w-14 items-center justify-center rounded-[14px] border border-[#C8E6C9] bg-[#E8F5E9]">
-                <CheckCircle className="h-7 w-7 text-[#054F31]" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-[14px] border border-green-500/20 bg-green-500/10">
+                <CheckCircle className="h-7 w-7 text-green-400" />
               </div>
 
-              <h2 className="mt-5 text-[22px] font-bold text-[#1A1A1A]">
+              <h2 className="mt-5 text-[22px] font-bold text-foreground">
                 Stripe is connected
               </h2>
-              <p className="mt-2 text-[14px] text-[#1A1A1A]/50">
+              <p className="mt-2 text-[14px] text-muted-foreground">
                 Account ID: {status?.accountId}
               </p>
-              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[#1A1A1A]/60">
+              <p className="mt-3 max-w-2xl text-[15px] leading-7 text-muted-foreground">
                 Your payout setup looks healthy. You can use the Stripe dashboard
                 to review verification details, bank info, and payout activity.
               </p>
@@ -281,7 +281,7 @@ export default function PayoutsPage() {
                 disabled={actionLoading}
               >
                 {actionLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-[#3A5FCD]" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <ExternalLink className="h-4 w-4" />
                 )}
@@ -295,24 +295,24 @@ export default function PayoutsPage() {
           <ContentCard title="Why connect payouts?" bodyClassName="p-6">
             <div className="space-y-4">
               <div className="flex gap-3">
-                <Wallet2 className="mt-0.5 h-5 w-5 text-[#3A5FCD]" />
+                <Wallet2 className="mt-0.5 h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-[14px] font-semibold text-[#1A1A1A]">
+                  <p className="text-[14px] font-semibold text-foreground">
                     Withdraw earnings
                   </p>
-                  <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/55">
+                  <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
                     Stripe is required to move funds out of your wallet.
                   </p>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <ShieldCheck className="mt-0.5 h-5 w-5 text-[#3A5FCD]" />
+                <ShieldCheck className="mt-0.5 h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-[14px] font-semibold text-[#1A1A1A]">
+                  <p className="text-[14px] font-semibold text-foreground">
                     Verification and compliance
                   </p>
-                  <p className="mt-1 text-[13px] leading-6 text-[#1A1A1A]/55">
+                  <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
                     Identity checks and payout controls are handled securely
                     through Stripe onboarding.
                   </p>
@@ -322,7 +322,7 @@ export default function PayoutsPage() {
           </ContentCard>
 
           <ContentCard title="Platform fee" bodyClassName="p-6">
-            <p className="text-[14px] leading-6 text-[#1A1A1A]/60">
+            <p className="text-[14px] leading-6 text-muted-foreground">
               A 15% platform fee applies to each transaction. Your analytics and
               wallet views already reflect net creator earnings where applicable.
             </p>

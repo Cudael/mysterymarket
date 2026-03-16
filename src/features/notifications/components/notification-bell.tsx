@@ -111,7 +111,7 @@ export function NotificationBell() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-9 w-9 text-[#1A1A1A]/70 hover:text-[#3A5FCD] hover:bg-[#F8F9FC]"
+          className="relative h-9 w-9 text-muted-foreground hover:text-primary hover:bg-muted"
           aria-label="Notifications"
         >
           <Bell className="h-5 w-5" />
@@ -124,18 +124,18 @@ export function NotificationBell() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-[360px] p-0 border border-[#D9DCE3] shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-[12px] overflow-hidden"
+        className="w-[360px] p-0 border border-border shadow-[0_4px_20px_rgba(0,0,0,0.08)] rounded-[12px] overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3">
-          <span className="text-[14px] font-semibold text-[#1A1A1A]">
+        <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-3">
+          <span className="text-[14px] font-semibold text-foreground">
             Notifications
           </span>
           {unreadCount > 0 && (
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-[12px] text-[#3A5FCD] hover:text-[#3A5FCD] hover:bg-[#3A5FCD]/10"
+              className="h-7 px-2 text-[12px] text-primary hover:text-primary hover:bg-primary/10"
               onClick={handleMarkAllRead}
               disabled={isPending}
             >
@@ -149,8 +149,8 @@ export function NotificationBell() {
         <div className="max-h-[320px] overflow-y-auto">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-center px-4">
-              <Bell className="h-8 w-8 text-[#1A1A1A]/20 mb-2" />
-              <p className="text-[13px] font-medium text-[#1A1A1A]/60">
+              <Bell className="h-8 w-8 text-muted-foreground/40 mb-2" />
+              <p className="text-[13px] font-medium text-muted-foreground">
                 No notifications yet
               </p>
             </div>
@@ -159,22 +159,22 @@ export function NotificationBell() {
               <button
                 key={notification.id}
                 onClick={() => handleNotificationClick(notification)}
-                className={`w-full text-left px-4 py-3 border-b border-[#D9DCE3] last:border-b-0 transition-colors hover:bg-[#F8F9FC] cursor-pointer ${
-                  !notification.read ? "bg-[#F5F6FA]" : "bg-white"
+                className={`w-full text-left px-4 py-3 border-b border-border last:border-b-0 transition-colors hover:bg-muted cursor-pointer ${
+                  !notification.read ? "bg-muted/50" : "bg-card"
                 }`}
               >
                 <div className="flex items-start gap-2">
                   {!notification.read && (
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#3A5FCD]" />
+                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
                   )}
                   <div className={!notification.read ? "" : "pl-4"}>
-                    <p className="text-[13px] font-semibold text-[#1A1A1A] leading-snug">
+                    <p className="text-[13px] font-semibold text-foreground leading-snug">
                       {notification.title}
                     </p>
-                    <p className="mt-0.5 text-[12px] text-[#1A1A1A]/60 line-clamp-2">
+                    <p className="mt-0.5 text-[12px] text-muted-foreground line-clamp-2">
                       {notification.message}
                     </p>
-                    <p className="mt-1 text-[11px] text-[#1A1A1A]/40">
+                    <p className="mt-1 text-[11px] text-muted-foreground/70">
                       {formatRelativeTime(notification.createdAt)}
                     </p>
                   </div>
@@ -185,10 +185,10 @@ export function NotificationBell() {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-[#D9DCE3] bg-[#F8F9FC] px-4 py-2.5">
+        <div className="border-t border-border bg-muted px-4 py-2.5">
           <Link
             href="/my/notifications"
-            className="block text-center text-[12px] font-medium text-[#3A5FCD] hover:underline"
+            className="block text-center text-[12px] font-medium text-primary hover:underline"
             onClick={() => setOpen(false)}
           >
             View all notifications

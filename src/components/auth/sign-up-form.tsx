@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 
 const inputClass =
-  "h-11 rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] text-[15px] text-[#1A1A1A] focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20 placeholder:text-[#1A1A1A]/40 transition-colors";
+  "h-11 rounded-[8px] border border-border bg-muted/50 text-[15px] text-foreground focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary/20 placeholder:text-foreground/40 transition-colors";
 
-const labelClass = "text-[13px] font-semibold text-[#1A1A1A]/70 mb-1.5";
+const labelClass = "text-[13px] font-semibold text-muted-foreground mb-1.5";
 
 export function SignUpForm() {
   const { signUp, setActive, isLoaded } = useSignUp();
@@ -82,15 +82,15 @@ export function SignUpForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F6FA] flex items-center justify-center px-4 py-12">
-      <div className="bg-[#FFFFFF] border border-[#D9DCE3] rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.04)] w-full max-w-[420px] p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
+      <div className="bg-card border border-border rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.04)] w-full max-w-[420px] p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#3A5FCD]/10 border border-[#3A5FCD]/20">
+            <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-primary/10 border border-primary/20">
               <Sparkles className="h-5 w-5 text-[#E8C26A]" />
             </div>
-            <span className="text-[18px] font-bold text-[#1A1A1A] tracking-tight">
+            <span className="text-[18px] font-bold text-foreground tracking-tight">
               MysteryMarket
             </span>
           </Link>
@@ -99,12 +99,12 @@ export function SignUpForm() {
         {pendingVerification ? (
           /* Email verification step */
           <>
-            <h1 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] text-center">
+            <h1 className="text-[22px] font-bold tracking-tight text-foreground text-center">
               Check your email
             </h1>
-            <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-1">
+            <p className="text-[14px] text-muted-foreground text-center mt-1">
               We sent a 6-digit code to{" "}
-              <span className="font-medium text-[#1A1A1A]">{email}</span>
+              <span className="font-medium text-foreground">{email}</span>
             </p>
 
             <form onSubmit={handleVerify} className="mt-6 space-y-4">
@@ -121,18 +121,18 @@ export function SignUpForm() {
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   required
-                  className="h-14 rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] text-center text-[20px] tracking-[0.3em] font-mono text-[#1A1A1A] focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#3A5FCD]/20 placeholder:text-[#1A1A1A]/40 transition-colors"
+                  className="h-14 rounded-[8px] border border-border bg-muted/50 text-center text-[20px] tracking-[0.3em] font-mono text-foreground focus:border-primary focus:bg-background focus:ring-1 focus:ring-primary/20 placeholder:text-foreground/40 transition-colors"
                 />
               </div>
 
               {error && (
-                <p className="text-[13px] text-[#D32F2F]">{error}</p>
+                <p className="text-[13px] text-destructive">{error}</p>
               )}
 
               <Button
                 type="submit"
                 disabled={isLoading || !isLoaded}
-                className="w-full h-11 rounded-[8px] bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full h-11 rounded-[8px] bg-primary hover:bg-primary/80 text-primary-foreground text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Verifying..." : "Verify email"}
               </Button>
@@ -144,7 +144,7 @@ export function SignUpForm() {
                 setPendingVerification(false);
                 setError(null);
               }}
-              className="mt-4 flex items-center gap-1 text-[13px] text-[#3A5FCD] hover:text-[#6D7BE0] font-medium"
+              className="mt-4 flex items-center gap-1 text-[13px] text-primary hover:text-primary/80 font-medium"
             >
               ← Back to sign up
             </button>
@@ -152,10 +152,10 @@ export function SignUpForm() {
         ) : (
           /* Sign-up form */
           <>
-            <h1 className="text-[22px] font-bold tracking-tight text-[#1A1A1A] text-center">
+            <h1 className="text-[22px] font-bold tracking-tight text-foreground text-center">
               Create your account
             </h1>
-            <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-1">
+            <p className="text-[14px] text-muted-foreground text-center mt-1">
               Join MysteryMarket and start exploring ideas
             </p>
 
@@ -165,7 +165,7 @@ export function SignUpForm() {
                 type="button"
                 onClick={handleGoogleOAuth}
                 disabled={!isLoaded}
-                className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-[#D9DCE3] bg-[#FFFFFF] hover:bg-[#F8F9FC] text-[#1A1A1A] text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full h-11 flex items-center justify-center gap-3 rounded-[8px] border border-border bg-card hover:bg-muted text-foreground text-[15px] font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
                   <path
@@ -192,11 +192,11 @@ export function SignUpForm() {
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-5">
-              <div className="flex-1 h-px bg-[#D9DCE3]" />
-              <span className="text-[13px] text-[#1A1A1A]/50 font-medium">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-[13px] text-muted-foreground font-medium">
                 or
               </span>
-              <div className="flex-1 h-px bg-[#D9DCE3]" />
+              <div className="flex-1 h-px bg-border" />
             </div>
 
             {/* Form */}
@@ -250,24 +250,24 @@ export function SignUpForm() {
               </div>
 
               {error && (
-                <p className="text-[13px] text-[#D32F2F]">{error}</p>
+                <p className="text-[13px] text-destructive">{error}</p>
               )}
 
               <Button
                 type="submit"
                 disabled={isLoading || !isLoaded}
-                className="w-full h-11 rounded-[8px] bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full h-11 rounded-[8px] bg-primary hover:bg-primary/80 text-primary-foreground text-[15px] font-medium shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Creating account..." : "Create account"}
               </Button>
             </form>
 
             {/* Footer */}
-            <p className="text-[14px] text-[#1A1A1A]/60 text-center mt-6">
+            <p className="text-[14px] text-muted-foreground text-center mt-6">
               Already have an account?{" "}
               <Link
                 href="/sign-in"
-                className="text-[#3A5FCD] hover:text-[#6D7BE0] font-medium"
+                className="text-primary hover:text-primary/80 font-medium"
               >
                 Sign in
               </Link>

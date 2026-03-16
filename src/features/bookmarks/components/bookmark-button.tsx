@@ -68,8 +68,8 @@ export function BookmarkButton({
       className={cn(
         "inline-flex items-center justify-center rounded-[8px] border transition-all duration-200 disabled:opacity-50",
         bookmarked
-          ? "border-[#3A5FCD]/30 bg-[#3A5FCD]/10 text-[#3A5FCD] hover:bg-[#3A5FCD]/20"
-          : "border-[#D9DCE3] bg-[#FFFFFF] text-[#1A1A1A]/50 hover:border-[#3A5FCD]/30 hover:text-[#3A5FCD]",
+          ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
+          : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-primary",
         buttonSize,
         className
       )}
