@@ -6,18 +6,24 @@ import { revalidatePath } from "next/cache";
 import { trackEvent } from "@/lib/analytics";
 import { createNotification } from "@/features/notifications/actions";
 
+async function getAuthenticatedPrismaUser() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Not authenticated");
+
+  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+  if (!user) throw new Error("User not found");
+
+  return user;
+}
+
 export async function createReview(
   ideaId: string,
   rating: number,
   comment?: string
 ) {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Not authenticated");
-
   if (rating < 1 || rating > 5) throw new Error("Rating must be between 1 and 5");
 
-  const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-  if (!user) throw new Error("User not found");
+  const user = await getAuthenticatedPrismaUser();
 
   const purchase = await prisma.purchase.findUnique({
     where: { buyerId_ideaId: { buyerId: user.id, ideaId } },
@@ -82,4 +88,54 @@ export async function getAverageRating(ideaId: string) {
     average: result._avg.rating ?? 0,
     count: result._count.rating,
   };
+}
+
+export async function getUserReviews() {
+  const user = await getAuthenticatedPrismaUser();
+
+  return prisma.review.findMany({
+    where: { buyerId: user.id },
+    include: {
+      idea: {
+        select: {
+          id: true,
+          title: true,
+          teaserText: true,
+          teaserImageUrl: true,
+          category: true,
+          priceInCents: true,
+          creator: { select: { id: true, name: true, avatarUrl: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getPurchasesWithoutReviews() {
+  const user = await getAuthenticatedPrismaUser();
+
+  return prisma.purchase.findMany({
+    where: {
+      buyerId: user.id,
+      status: "COMPLETED",
+      idea: {
+        reviews: {
+          none: { buyerId: user.id },
+        },
+      },
+    },
+    include: {
+      idea: {
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          creator: { select: { name: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
 }

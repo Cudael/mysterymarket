@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ShoppingBag, PieChart, Bookmark, Wallet2, Bell } from "lucide-react";
+import { ShoppingBag, PieChart, Bookmark, Wallet2, Bell, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getUnreadCount } from "@/features/notifications/actions";
 
@@ -11,6 +11,7 @@ const BUYER_TABS = [
   { href: "/my", label: "My Library", icon: ShoppingBag, exact: true },
   { href: "/my/activity", label: "Activity", icon: PieChart, exact: false },
   { href: "/my/saved", label: "Saved Ideas", icon: Bookmark, exact: false },
+  { href: "/my/reviews", label: "Reviews", icon: Star, exact: false },
   { href: "/my/wallet", label: "Wallet", icon: Wallet2, exact: false },
   { href: "/my/notifications", label: "Notifications", icon: Bell, exact: false },
 ];

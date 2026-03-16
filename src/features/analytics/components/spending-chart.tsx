@@ -12,7 +12,7 @@ export function SpendingChart({ data }: SpendingChartProps) {
 
   if (!hasData) {
     return (
-      <p className="flex h-full items-center justify-center text-[14px] text-[#1A1A1A]/40">
+      <p className="flex h-full items-center justify-center text-[14px] text-muted-foreground">
         No spending data yet. Start discovering ideas!
       </p>
     );
@@ -25,18 +25,18 @@ export function SpendingChart({ data }: SpendingChartProps) {
           key={point.month}
           className="flex flex-1 flex-col items-center gap-1"
         >
-          <span className="text-[10px] font-medium text-[#1A1A1A]/50 whitespace-nowrap">
+          <span className="text-[10px] font-medium text-muted-foreground whitespace-nowrap">
             {point.amount > 0 ? formatPrice(point.amount) : ""}
           </span>
           <div
-            className="w-full rounded-t-[4px] bg-[#3A5FCD] transition-all hover:bg-[#3A5FCD]/80"
+            className="w-full rounded-t-[4px] bg-primary transition-all hover:bg-primary/80"
             style={{
               height: `${(point.amount / maxAmount) * 100}%`,
               minHeight: point.amount > 0 ? "4px" : "0px",
             }}
             title={`${point.month}: ${formatPrice(point.amount)}`}
           />
-          <span className="text-[10px] text-[#1A1A1A]/40 whitespace-nowrap">
+          <span className="text-[10px] text-muted-foreground/70 whitespace-nowrap">
             {point.month}
           </span>
         </div>
