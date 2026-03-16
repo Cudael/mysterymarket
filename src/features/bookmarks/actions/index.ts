@@ -72,7 +72,7 @@ export async function getBookmarks() {
           unlockType: true,
           category: true,
           published: true,
-          creator: { select: { id: true, name: true, avatarUrl: true } },
+          creator: { select: { id: true, name: true, avatarUrl: true, stripeOnboarded: true } },
           _count: { select: { purchases: true } },
         },
       },

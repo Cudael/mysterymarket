@@ -294,6 +294,7 @@ export default async function CreatorProfilePage({
               category={idea.category}
               creatorId={user.id}
               creatorName={user.name}
+              isCreatorVerified={user.stripeOnboarded}
               purchaseCount={idea._count.purchases}
             />
           ))}

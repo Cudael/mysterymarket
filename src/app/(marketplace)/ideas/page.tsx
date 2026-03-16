@@ -144,6 +144,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
                     creatorId={idea.creator.id}
                     creatorName={idea.creator.name}
                     creatorAvatarUrl={idea.creator.avatarUrl}
+                    isCreatorVerified={idea.creator.stripeOnboarded}
                     purchaseCount={idea._count.purchases}
                     reviewCount={idea._count.reviews}
                     averageRating={ratingMap.get(idea.id)}

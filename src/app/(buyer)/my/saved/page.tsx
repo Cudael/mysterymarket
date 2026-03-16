@@ -71,6 +71,7 @@ export default async function SavedPage() {
                 creatorId={idea.creator.id}
                 creatorName={idea.creator.name}
                 creatorAvatarUrl={idea.creator.avatarUrl}
+                isCreatorVerified={idea.creator.stripeOnboarded}
                 purchaseCount={idea._count.purchases}
                 initialBookmarked={true}
                 isAuthenticated={true}

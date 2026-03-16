@@ -217,7 +217,7 @@ export default async function HomePage() {
       prisma.idea.findMany({
         where: { published: true },
         include: {
-          creator: { select: { id: true, name: true, avatarUrl: true } },
+          creator: { select: { id: true, name: true, avatarUrl: true, stripeOnboarded: true } },
           _count: { select: { purchases: true } },
         },
         orderBy: { purchases: { _count: "desc" } },
@@ -458,6 +458,7 @@ export default async function HomePage() {
                   creatorId={idea.creator.id}
                   creatorName={idea.creator.name}
                   creatorAvatarUrl={idea.creator.avatarUrl}
+                  isCreatorVerified={idea.creator.stripeOnboarded}
                   purchaseCount={idea._count.purchases}
                   initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
                   isAuthenticated={!!clerkId}

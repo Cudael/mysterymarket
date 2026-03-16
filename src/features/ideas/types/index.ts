@@ -19,6 +19,8 @@ export interface IdeaCardProps {
   creatorId?: string | null;
   creatorName?: string | null;
   creatorAvatarUrl?: string | null;
+  isCreatorVerified?: boolean;
+  creatorTier?: string | null;
 
   // — Viewer state —
   isOwner?: boolean;
