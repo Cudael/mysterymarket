@@ -72,7 +72,7 @@ export function IdeaCard({
       <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(ellipse_at_top_left,rgba(139,92,246,0.07),transparent_60%)]" />
 
       {/* Image area */}
-      <div className="relative h-48 overflow-hidden bg-[hsl(252,32%,6%)]">
+      <div className="relative h-36 overflow-hidden bg-[hsl(252,32%,6%)]">
         {hasImage ? (
           <>
             <Image
@@ -121,7 +121,7 @@ export function IdeaCard({
               "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm",
               unlockType === "EXCLUSIVE"
                 ? "bg-primary/15 text-primary border border-primary/25 shadow-[0_0_8px_rgba(109,90,230,0.20)]"
-                : "bg-white/[0.06] text-white/45 border border-white/[0.08]"
+                : "bg-sky-500/20 text-sky-300 border border-sky-500/30"
             )}
           >
             {unlockType === "EXCLUSIVE" ? (
@@ -135,12 +135,12 @@ export function IdeaCard({
               <Link
                 href={`/ideas/category/${categorySlug}`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center rounded-full bg-[hsl(252,28%,10%)]/90 border border-white/[0.08] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white/55 backdrop-blur-sm hover:border-primary/30 hover:text-primary transition-colors"
+                className="flex items-center rounded-full bg-violet-500/20 border border-violet-500/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-300 backdrop-blur-sm hover:border-violet-400/50 hover:text-violet-200 transition-colors"
               >
                 {category}
               </Link>
             ) : (
-              <span className="flex items-center rounded-full bg-[hsl(252,28%,10%)]/90 border border-white/[0.08] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white/55 backdrop-blur-sm">
+              <span className="flex items-center rounded-full bg-violet-500/20 border border-violet-500/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-violet-300 backdrop-blur-sm">
                 {category}
               </span>
             )
@@ -149,12 +149,12 @@ export function IdeaCard({
       </div>
 
       {/* Card body */}
-      <div className="relative flex flex-1 flex-col p-5">
+      <div className="relative flex flex-1 flex-col p-4">
         {/* Title row */}
         <div className="flex items-start justify-between gap-2">
           <Link
             href={`/ideas/${id}`}
-            className="flex-1 text-[15px] font-bold leading-snug line-clamp-2 text-white/90 hover:text-primary transition-colors"
+            className="flex-1 text-[13px] font-bold leading-snug line-clamp-2 text-white/90 hover:text-primary transition-colors"
           >
             <span>{title}</span>
           </Link>
@@ -169,7 +169,7 @@ export function IdeaCard({
 
         {/* Creator row */}
         {(creatorId || creatorName) && (
-          <div className="mt-3 flex items-center justify-between">
+          <div className="mt-2 flex items-center justify-between">
             <Link
               href={creatorId ? `/creators/${creatorId}` : "#"}
               className="flex items-center gap-1.5 min-w-0"
@@ -194,7 +194,7 @@ export function IdeaCard({
 
         {/* Teaser text */}
         {teaserText && (
-          <p className="mt-2.5 text-[13px] leading-relaxed text-white/40 line-clamp-2">
+          <p className="mt-2.5 text-[12px] leading-relaxed text-white/40 line-clamp-2">
             {teaserText}
           </p>
         )}
@@ -216,12 +216,12 @@ export function IdeaCard({
         <div className="flex-1" />
 
         {/* Footer */}
-        <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-4">
+        <div className="mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">
           <div>
             <span className="block text-[10px] uppercase tracking-[0.16em] text-white/25">
               Price
             </span>
-            <span className="text-[22px] font-bold tracking-tight text-white/90">
+            <span className="text-[18px] font-bold tracking-tight text-white/90">
               {formatPrice(priceInCents)}
             </span>
           </div>
@@ -230,7 +230,7 @@ export function IdeaCard({
               asChild
               variant="outline"
               size="sm"
-              className="h-9 px-4 text-xs rounded-xl border-white/10 bg-white/[0.03] text-white/50 hover:border-primary/30 hover:text-primary hover:bg-primary/5"
+              className="h-8 px-4 text-xs rounded-xl border-white/10 bg-white/[0.03] text-white/50 hover:border-primary/30 hover:text-primary hover:bg-primary/5"
             >
               <Link href={`/studio/ideas/${id}/edit`}>Edit</Link>
             </Button>
@@ -238,7 +238,7 @@ export function IdeaCard({
             <Button
               asChild
               size="sm"
-              className="h-9 px-4 text-xs rounded-xl bg-emerald-500/90 hover:bg-emerald-500 text-white shadow-[0_2px_12px_rgba(16,185,129,0.25)]"
+              className="h-8 px-4 text-xs rounded-xl bg-emerald-500/90 hover:bg-emerald-500 text-white shadow-[0_2px_12px_rgba(16,185,129,0.25)]"
             >
               <Link href={`/ideas/${id}`}>
                 <Unlock className="mr-1.5 h-3.5 w-3.5" />
@@ -249,7 +249,7 @@ export function IdeaCard({
             <Button
               asChild
               size="sm"
-              className="h-9 px-5 text-xs rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[var(--shadow-primary-glow)] transition-all"
+              className="h-8 px-5 text-xs rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[var(--shadow-primary-glow)] transition-all"
             >
               <Link href={`/ideas/${id}`}>
                 <Unlock className="mr-1.5 h-3.5 w-3.5" />

@@ -128,7 +128,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
                 {listing.total} {listing.total === 1 ? "idea" : "ideas"} found
               </p>
 
-              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {listing.ideas.map((idea) => (
                   <IdeaCard
                     key={idea.id}
