@@ -104,9 +104,8 @@ export default async function MyPage() {
   const totalSpent = purchases.reduce((sum, p) => sum + p.amountInCents, 0);
   const recentPurchases = purchases.slice(0, RECENT_PURCHASES_LIMIT);
   const hasMorePurchases = purchases.length > RECENT_PURCHASES_LIMIT;
-  const unbookmarkedCount = bookmarks.filter(
-    (b) => !purchases.some((p) => p.idea.id === b.idea.id)
-  ).length;
+  const purchasedIdeaIds = new Set(purchases.map((p) => p.idea.id));
+  const unbookmarkedCount = bookmarks.filter((b) => !purchasedIdeaIds.has(b.idea.id)).length;
 
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">

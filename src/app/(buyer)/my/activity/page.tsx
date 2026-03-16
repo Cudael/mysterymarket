@@ -104,13 +104,11 @@ export default async function ActivityPage() {
         >
           {categoryBreakdown.length > 0 ? (
             <>
-              {categoryBreakdown[0] && (
-                <p className="mb-4 text-[13px] text-muted-foreground">
-                  You spend most on{" "}
-                  <span className="font-semibold text-foreground">{categoryBreakdown[0].category}</span>{" "}
-                  ideas.
-                </p>
-              )}
+              <p className="mb-4 text-[13px] text-muted-foreground">
+                You spend most on{" "}
+                <span className="font-semibold text-foreground">{categoryBreakdown[0].category}</span>{" "}
+                ideas.
+              </p>
               <CategoryBreakdown data={categoryBreakdown} />
             </>
           ) : (
