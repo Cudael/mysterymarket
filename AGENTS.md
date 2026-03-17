@@ -20,9 +20,18 @@ This repository contains **MysteryIdea**, a Next.js 15 marketplace where creator
 ## Working Directory Map
 
 - `src/app/` - App Router routes, layouts, route groups, API routes, metadata
+  - `(marketing)/` — Public marketing pages (landing, about, legal)
+  - `(marketplace)/` — Browse/detail pages for ideas, creator profiles, checkout
+  - `(buyer)/` — Buyer dashboard (`/my/*`)
+  - `(studio)/` — Creator dashboard (`/studio/*`)
+  - `(admin)/` — Admin panel (`/admin/*`)
+  - `(account)/` — Account settings (`/account/*`)
 - `src/features/` - Feature-scoped server actions, components, schemas, and types
+  - `analytics/`, `bookmarks/`, `follows/`, `ideas/`, `notifications/`, `purchases/`, `refunds/`, `reports/`, `reviews/`, `stripe/`, `users/`, `wallet/`
 - `src/components/` - Shared UI and layout components
 - `src/lib/` - Utilities and integrations such as Prisma, Stripe, logger, analytics, email helpers
+- `src/hooks/` - Custom React hooks (feature-specific hooks live in their feature module)
+- `src/types/` - Shared TypeScript interfaces (feature-specific types live in their feature module)
 - `prisma/schema.prisma` - Source of truth for the database schema
 - `prisma/migrations/` - Prisma migrations
 - `prisma/seed.ts` and `prisma/seed-categories.ts` - Seed scripts
