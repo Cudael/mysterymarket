@@ -14,8 +14,12 @@ import {
   Eye,
   Star,
   Zap,
+  Flame,
+  Bookmark,
+  BookOpen,
+  TrendingUp,
 } from "lucide-react";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
@@ -217,8 +221,293 @@ function HeroPreviewCard({
   return card;
 }
 
+type FeedIdea = {
+  id: string;
+  title: string;
+  teaserText: string | null;
+  teaserImageUrl: string | null;
+  priceInCents: number;
+  unlockType: "EXCLUSIVE" | "MULTI";
+  category: string | null;
+  creator: {
+    id: string;
+    name: string | null;
+    avatarUrl: string | null;
+    stripeOnboarded: boolean;
+  };
+  _count: {
+    purchases: number;
+  };
+};
+
+function LoggedInHomePage({
+  trendingIdeas,
+  newIdeas,
+  bookmarkedIdeaIds,
+  firstName,
+}: {
+  trendingIdeas: FeedIdea[];
+  newIdeas: FeedIdea[];
+  bookmarkedIdeaIds: Set<string>;
+  firstName: string | null;
+}) {
+  return (
+    <div className="bg-background text-foreground">
+      {/* ─── GREETING BANNER ──────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-[hsl(252,32%,4%)] py-16 lg:py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_-10%_20%,rgba(109,90,230,0.20),transparent_55%)]" />
+        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5 blur-3xl" />
+        <div className="container relative mx-auto max-w-[1400px] px-6 lg:px-8">
+          <div className="max-w-2xl">
+            <h1 className="text-[36px] font-extrabold tracking-[-0.04em] text-white sm:text-[48px]">
+              {firstName ? `Welcome back, ${firstName}` : "Welcome back"}
+            </h1>
+            <p className="mt-4 text-[17px] leading-relaxed text-white/60">
+              Here&apos;s what&apos;s new and trending on the marketplace.
+            </p>
+            <div className="mt-8">
+              <Button
+                asChild
+                size="lg"
+                className="h-12 rounded-[12px] bg-primary px-8 font-semibold text-primary-foreground shadow-[var(--shadow-primary-glow)] hover:bg-primary/90 transition-all duration-300"
+              >
+                <Link href="/ideas">
+                  Browse all ideas
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" />
+      </section>
+
+      <div className="container mx-auto max-w-[1400px] space-y-16 px-6 py-12 lg:px-8 lg:py-16">
+        {/* ─── TRENDING NOW ─────────────────────────────────────── */}
+        <section>
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                <Flame className="h-3.5 w-3.5 text-amber-400" />
+                Trending Now
+              </p>
+              <h2 className="mt-2 text-[26px] font-bold tracking-[-0.03em] text-foreground sm:text-[32px]">
+                Most popular this week
+              </h2>
+            </div>
+            <Link
+              href="/ideas"
+              className="flex items-center gap-1 text-[13px] font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              View all <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          {trendingIdeas.length === 0 ? (
+            <div className="rounded-[24px] border border-border border-dashed bg-card p-14 text-center text-muted-foreground">
+              <p>Ideas are coming soon. Check back later.</p>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {trendingIdeas.map((idea, idx) => (
+                <IdeaCard
+                  key={idea.id}
+                  id={idea.id}
+                  title={idea.title}
+                  teaserText={idea.teaserText}
+                  teaserImageUrl={idea.teaserImageUrl}
+                  priceInCents={idea.priceInCents}
+                  unlockType={idea.unlockType}
+                  category={idea.category}
+                  creatorId={idea.creator.id}
+                  creatorName={idea.creator.name}
+                  creatorAvatarUrl={idea.creator.avatarUrl}
+                  isCreatorVerified={idea.creator.stripeOnboarded}
+                  purchaseCount={idea._count.purchases}
+                  initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
+                  isAuthenticated={true}
+                  isTrending={idx < 3}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* ─── NEW THIS WEEK ────────────────────────────────────── */}
+        {newIdeas.length > 0 && (
+          <section>
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                  <Sparkles className="h-3.5 w-3.5 text-primary" />
+                  New This Week
+                </p>
+                <h2 className="mt-2 text-[26px] font-bold tracking-[-0.03em] text-foreground sm:text-[32px]">
+                  Fresh from the marketplace
+                </h2>
+              </div>
+              <Link
+                href="/ideas?sort=new"
+                className="flex items-center gap-1 text-[13px] font-medium text-primary transition-colors hover:text-primary/80"
+              >
+                See all new <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {newIdeas.map((idea) => (
+                <IdeaCard
+                  key={idea.id}
+                  id={idea.id}
+                  title={idea.title}
+                  teaserText={idea.teaserText}
+                  teaserImageUrl={idea.teaserImageUrl}
+                  priceInCents={idea.priceInCents}
+                  unlockType={idea.unlockType}
+                  category={idea.category}
+                  creatorId={idea.creator.id}
+                  creatorName={idea.creator.name}
+                  creatorAvatarUrl={idea.creator.avatarUrl}
+                  isCreatorVerified={idea.creator.stripeOnboarded}
+                  purchaseCount={idea._count.purchases}
+                  initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
+                  isAuthenticated={true}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ─── BROWSE BY CATEGORY ───────────────────────────────── */}
+        <section>
+          <div className="mb-8">
+            <h2 className="text-[26px] font-bold tracking-[-0.03em] text-foreground sm:text-[32px]">
+              Browse by Category
+            </h2>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {CATEGORIES.map((category) => {
+              const Icon = category.icon;
+              return (
+                <Link
+                  key={category.slug}
+                  href={`/ideas/category/${category.slug}`}
+                  className={`group relative overflow-hidden rounded-[22px] border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-[2px] hover:border-primary/20 ${category.glow}`}
+                >
+                  <div className={`${category.color} transition-transform duration-300 group-hover:scale-110`}>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full border border-current/20 bg-current/10">
+                      <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                    </div>
+                  </div>
+                  <h3 className="mt-5 text-[15px] font-semibold text-foreground">
+                    {category.name}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {category.desc}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ─── QUICK LINKS ──────────────────────────────────────── */}
+        <section>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <Link
+              href="/my"
+              className="group flex items-center gap-3 rounded-[12px] border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-[var(--shadow-primary-glow)]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+                <BookOpen className="h-5 w-5 text-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[14px] font-semibold text-foreground transition-colors group-hover:text-primary">
+                  My Library
+                </p>
+                <p className="text-[12px] text-muted-foreground">Your unlocked ideas</p>
+              </div>
+              <ArrowRight className="h-4 w-4 shrink-0 text-foreground/30 transition-colors group-hover:text-primary" />
+            </Link>
+
+            <Link
+              href="/my/saved"
+              className="group flex items-center gap-3 rounded-[12px] border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-[var(--shadow-primary-glow)]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+                <Bookmark className="h-5 w-5 text-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[14px] font-semibold text-foreground transition-colors group-hover:text-primary">
+                  Saved Ideas
+                </p>
+                <p className="text-[12px] text-muted-foreground">Your bookmarked picks</p>
+              </div>
+              <ArrowRight className="h-4 w-4 shrink-0 text-foreground/30 transition-colors group-hover:text-primary" />
+            </Link>
+
+            <Link
+              href="/my/activity"
+              className="group flex items-center gap-3 rounded-[12px] border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-[var(--shadow-primary-glow)]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+                <TrendingUp className="h-5 w-5 text-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[14px] font-semibold text-foreground transition-colors group-hover:text-primary">
+                  My Activity
+                </p>
+                <p className="text-[12px] text-muted-foreground">Spending &amp; insights</p>
+              </div>
+              <ArrowRight className="h-4 w-4 shrink-0 text-foreground/30 transition-colors group-hover:text-primary" />
+            </Link>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const { userId: clerkId } = await auth();
+
+  if (clerkId) {
+    const [trendingIdeas, allNewIdeas, bookmarkedIdeaIds, clerkUser] = await Promise.all([
+      prisma.idea.findMany({
+        where: { published: true },
+        include: {
+          creator: { select: { id: true, name: true, avatarUrl: true, stripeOnboarded: true } },
+          _count: { select: { purchases: true } },
+        },
+        orderBy: { purchases: { _count: "desc" } },
+        take: 6,
+      }),
+      prisma.idea.findMany({
+        where: { published: true },
+        include: {
+          creator: { select: { id: true, name: true, avatarUrl: true, stripeOnboarded: true } },
+          _count: { select: { purchases: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 9,
+      }),
+      prisma.bookmark
+        .findMany({ where: { user: { clerkId } }, select: { ideaId: true } })
+        .then((bs) => new Set(bs.map((b) => b.ideaId))),
+      currentUser(),
+    ]);
+
+    const trendingIds = new Set(trendingIdeas.map((i) => i.id));
+    const newIdeas = allNewIdeas.filter((i) => !trendingIds.has(i.id)).slice(0, 3);
+    const firstName = clerkUser?.firstName ?? clerkUser?.username ?? null;
+
+    return (
+      <LoggedInHomePage
+        trendingIdeas={trendingIdeas}
+        newIdeas={newIdeas}
+        bookmarkedIdeaIds={bookmarkedIdeaIds}
+        firstName={firstName}
+      />
+    );
+  }
 
   const [featuredIdeas, bookmarkedIdeaIds, totalIdeas, totalPurchases, totalCreators, heroPreviewIdeas] =
     await Promise.all([
