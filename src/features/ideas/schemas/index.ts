@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getPublishValidationIssues } from "@/features/ideas/lib/quality";
 
-export const createIdeaSchema = z.object({
+export const baseIdeaSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(200),
   teaserText: z.string().max(500).optional(),
   teaserImageUrl: z.string().url().optional().or(z.literal("")),
@@ -22,7 +22,9 @@ export const createIdeaSchema = z.object({
   maturityLevel: z.enum(["SEED", "CONCEPT", "BLUEPRINT", "PROTOTYPE_READY"]).optional(),
   tags: z.array(z.string()).max(10).optional(),
   published: z.boolean().optional(),
-}).superRefine((input, ctx) => {
+});
+
+export const createIdeaSchema = baseIdeaSchema.superRefine((input, ctx) => {
   if (!input.published) return;
 
   for (const issue of getPublishValidationIssues(input)) {

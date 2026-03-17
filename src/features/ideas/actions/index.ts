@@ -6,9 +6,9 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { createIdeaSchema } from "@/features/ideas/schemas";
+import { baseIdeaSchema, createIdeaSchema } from "@/features/ideas/schemas";
 import { trackEvent } from "@/lib/analytics";
-import { getPublishValidationIssues } from "@/features/ideas/lib/quality";
+import { getPublishValidationIssues, type IdeaQualityInput } from "@/features/ideas/lib/quality";
 
 function sanitizeIdeaText(input: Partial<z.infer<typeof createIdeaSchema>>) {
   return {
@@ -33,7 +33,7 @@ function sanitizeIdeaText(input: Partial<z.infer<typeof createIdeaSchema>>) {
   };
 }
 
-function assertIdeaPublishable(input: Partial<z.infer<typeof createIdeaSchema>>) {
+function assertIdeaPublishable(input: IdeaQualityInput) {
   const issues = getPublishValidationIssues(input);
   if (issues.length === 0) return;
 
@@ -64,8 +64,19 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
 
   const idea = await prisma.idea.create({
     data: {
-      ...sanitized,
+      title: sanitized.title ?? validated.title,
+      teaserText: sanitized.teaserText,
       teaserImageUrl: sanitized.teaserImageUrl || null,
+      hiddenContent: sanitized.hiddenContent ?? validated.hiddenContent,
+      originalityConfirmed:
+        sanitized.originalityConfirmed ?? validated.originalityConfirmed,
+      whatYoullGet: sanitized.whatYoullGet,
+      bestFitFor: sanitized.bestFitFor,
+      implementationNotes: sanitized.implementationNotes,
+      priceInCents: sanitized.priceInCents ?? validated.priceInCents,
+      unlockType: sanitized.unlockType ?? validated.unlockType,
+      maxUnlocks: sanitized.maxUnlocks,
+      category: sanitized.category,
       tags: sanitized.tags ?? [],
       published: sanitized.published ?? false,
       creatorId: user.id,
@@ -105,7 +116,7 @@ export async function updateIdea(
   const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
   if (!idea || idea.creatorId !== user.id) throw new Error("Idea not found or unauthorized");
 
-  const validatedInput = createIdeaSchema.partial().parse(input);
+  const validatedInput = baseIdeaSchema.partial().parse(input);
   const sanitizedInput = sanitizeIdeaText(validatedInput);
   const nextIdeaState = {
     ...idea,
