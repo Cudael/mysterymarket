@@ -25,9 +25,12 @@ MysteryIdea is a premium idea marketplace built with Next.js 15 (App Router), Pr
 ## Project Structure
 - `src/app/(marketing)/` — Public marketing pages (landing, about, legal)
 - `src/app/(marketplace)/` — Browse/detail pages for ideas, creator profiles, checkout
-- `src/app/(dashboard)/` — Protected buyer/creator dashboards
+- `src/app/(buyer)/` — Buyer dashboard (`/my/*`)
+- `src/app/(studio)/` — Creator dashboard (`/studio/*`)
+- `src/app/(admin)/` — Admin panel (`/admin/*`)
+- `src/app/(account)/` — Account settings (`/account/*`)
 - `src/features/` — Feature modules (each with actions/, components/, schemas/)
-  - `analytics/`, `bookmarks/`, `ideas/`, `purchases/`, `refunds/`, `reports/`, `reviews/`, `stripe/`, `users/`, `wallet/`
+  - `analytics/`, `bookmarks/`, `follows/`, `ideas/`, `notifications/`, `purchases/`, `refunds/`, `reports/`, `reviews/`, `stripe/`, `users/`, `wallet/`
 - `src/components/` — Shared components: `layout/`, `shared/`, `ui/` (shadcn)
 - `src/lib/` — Prisma client, Stripe SDK, utilities, rate-limit, email templates
 - `src/hooks/` — Custom React hooks

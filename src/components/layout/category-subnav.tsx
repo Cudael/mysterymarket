@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronDown, Compass, LayoutGrid, Sparkles } from "lucide-react";
-import { NAV_CATEGORIES } from "@/lib/category-nav";
+import { NAV_CATEGORIES } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 
 function SubcategoryDropdown({

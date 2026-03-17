@@ -84,6 +84,6 @@ export async function updateProfile(
     },
   });
 
-  revalidatePath("/settings");
+  revalidatePath("/account");
   return user;
 }

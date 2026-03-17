@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, ArrowRight, LayoutGrid } from "lucide-react";
-import { NAV_CATEGORIES, type NavCategory } from "@/lib/category-nav";
+import { NAV_CATEGORIES, type NavCategory } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 
 export function CategoryDropdown() {

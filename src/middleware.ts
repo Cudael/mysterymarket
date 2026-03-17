@@ -4,6 +4,7 @@ const isProtectedRoute = createRouteMatcher([
   "/my(.*)",
   "/studio(.*)",
   "/account(.*)",
+  "/admin(.*)",
   // Keep old routes protected during redirect period
   "/dashboard(.*)",
   "/creator(.*)",
