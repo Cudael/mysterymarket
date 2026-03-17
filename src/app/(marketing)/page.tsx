@@ -487,7 +487,7 @@ export default async function HomePage() {
           _count: { select: { purchases: true } },
         },
         orderBy: { createdAt: "desc" },
-        take: 9,
+        take: 12,
       }),
       prisma.bookmark
         .findMany({ where: { user: { clerkId } }, select: { ideaId: true } })
