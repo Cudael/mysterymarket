@@ -12,6 +12,7 @@ export interface IdeaCardProps {
   purchaseCount?: number;
   reviewCount?: number;
   averageRating?: number | null;
+  maxUnlocks?: number | null;
   tags?: string[];
   isTrending?: boolean;
 
