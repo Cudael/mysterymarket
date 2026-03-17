@@ -86,6 +86,10 @@ model Idea {
   teaserText     String?
   teaserImageUrl String?
   hiddenContent  String
+  originalityConfirmed Boolean @default(false)
+  whatYoullGet   String?
+  bestFitFor     String?
+  implementationNotes String?
   priceInCents   Int
   currency       String       @default("usd")
   unlockType     UnlockType   @default(MULTI)

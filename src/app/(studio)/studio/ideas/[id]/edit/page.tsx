@@ -34,7 +34,7 @@ export default async function EditIdeaPage({
     <div className="mx-auto max-w-4xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
       <PageHeader
         title="Edit Idea"
-        description="Refine your teaser, pricing, content, and publishing setup."
+        description="Refine your teaser, structured preview, trust signals, pricing, and publishing setup."
         icon={<Pencil className="h-6 w-6 text-white" />}
         action={
           idea._count.purchases === 0 ? (
@@ -67,10 +67,16 @@ export default async function EditIdeaPage({
             teaserText: idea.teaserText ?? undefined,
             teaserImageUrl: idea.teaserImageUrl ?? undefined,
             hiddenContent: idea.hiddenContent,
+            originalityConfirmed: idea.originalityConfirmed,
+            whatYoullGet: idea.whatYoullGet ?? undefined,
+            bestFitFor: idea.bestFitFor ?? undefined,
+            implementationNotes: idea.implementationNotes ?? undefined,
             priceInCents: idea.priceInCents,
             unlockType: idea.unlockType,
             maxUnlocks: idea.maxUnlocks ?? undefined,
             category: idea.category ?? undefined,
+            subcategory: idea.subcategory?.slug ?? undefined,
+            maturityLevel: idea.maturityLevel,
             tags: idea.tags,
           }}
           onSubmit={handleUpdate}

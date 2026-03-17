@@ -36,6 +36,10 @@ export interface IdeaWithCreator {
   teaserText: string | null;
   teaserImageUrl: string | null;
   hiddenContent: string;
+  originalityConfirmed: boolean;
+  whatYoullGet: string | null;
+  bestFitFor: string | null;
+  implementationNotes: string | null;
   priceInCents: number;
   currency: string;
   unlockType: "EXCLUSIVE" | "MULTI";
