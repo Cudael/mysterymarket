@@ -19,6 +19,7 @@ import { auth } from "@clerk/nextjs/server";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
+import { formatPrice } from "@/lib/utils";
 
 const CATEGORIES = [
   {
@@ -173,13 +174,15 @@ function HeroPreviewCard({
   category,
   price,
   muted,
+  href,
 }: {
   title: string;
   category: string;
   price: string;
   muted?: boolean;
+  href?: string;
 }) {
-  return (
+  const card = (
     <div
       className={`group rounded-[24px] border p-5 backdrop-blur-sm transition-all duration-300 ${
         muted
@@ -207,12 +210,17 @@ function HeroPreviewCard({
       </div>
     </div>
   );
+
+  if (href) {
+    return <Link href={href} aria-label={`View idea: ${title}`}>{card}</Link>;
+  }
+  return card;
 }
 
 export default async function HomePage() {
   const { userId: clerkId } = await auth();
 
-  const [featuredIdeas, bookmarkedIdeaIds, totalIdeas, totalPurchases, totalCreators] =
+  const [featuredIdeas, bookmarkedIdeaIds, totalIdeas, totalPurchases, totalCreators, heroPreviewIdeas] =
     await Promise.all([
       prisma.idea.findMany({
         where: { published: true },
@@ -234,6 +242,17 @@ export default async function HomePage() {
       prisma.idea.count({ where: { published: true } }),
       prisma.purchase.count({ where: { status: "COMPLETED" } }),
       prisma.user.count({ where: { role: "CREATOR" } }),
+      prisma.idea.findMany({
+        where: { published: true },
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          priceInCents: true,
+        },
+        orderBy: { createdAt: "desc" },
+        take: 3,
+      }),
     ]);
 
   return (
@@ -330,25 +349,36 @@ export default async function HomePage() {
                   </div>
 
                   <div className="mt-5 space-y-4">
-                    <HeroPreviewCard
-                      category="AI & Automation"
-                      title="A workflow agencies can sell to local businesses in under 14 days"
-                      price="$49"
-                    />
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    {heroPreviewIdeas[0] && (
                       <HeroPreviewCard
-                        category="Startup Ideas"
-                        title="A niche marketplace model with built-in repeat demand"
-                        price="$79"
-                        muted
+                        category={heroPreviewIdeas[0].category ?? ""}
+                        title={heroPreviewIdeas[0].title}
+                        price={formatPrice(heroPreviewIdeas[0].priceInCents)}
+                        href={`/ideas/${heroPreviewIdeas[0].id}`}
                       />
-                      <HeroPreviewCard
-                        category="Design & Creative"
-                        title="A productized visual system offer for small B2B teams"
-                        price="$39"
-                        muted
-                      />
-                    </div>
+                    )}
+                    {(heroPreviewIdeas[1] || heroPreviewIdeas[2]) && (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {heroPreviewIdeas[1] && (
+                          <HeroPreviewCard
+                            category={heroPreviewIdeas[1].category ?? ""}
+                            title={heroPreviewIdeas[1].title}
+                            price={formatPrice(heroPreviewIdeas[1].priceInCents)}
+                            href={`/ideas/${heroPreviewIdeas[1].id}`}
+                            muted
+                          />
+                        )}
+                        {heroPreviewIdeas[2] && (
+                          <HeroPreviewCard
+                            category={heroPreviewIdeas[2].category ?? ""}
+                            title={heroPreviewIdeas[2].title}
+                            price={formatPrice(heroPreviewIdeas[2].priceInCents)}
+                            href={`/ideas/${heroPreviewIdeas[2].id}`}
+                            muted
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
