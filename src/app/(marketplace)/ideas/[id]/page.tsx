@@ -128,6 +128,9 @@ export default async function IdeaDetailPage({
   const avgRating = reviewAggregate._avg.rating;
 
   const showContent = isOwner || isPurchased;
+  const exclusiveSpotsLeft = idea.unlockType === "EXCLUSIVE" && idea.maxUnlocks
+    ? idea.maxUnlocks - idea._count.purchases
+    : null;
 
   trackEvent("idea_viewed", {
     ideaId: idea.id,
@@ -293,33 +296,36 @@ export default async function IdeaDetailPage({
               )}
             </div>
 
-            {/* Reviews section */}
-            <ReviewList ideaId={id} />
-            {isPurchased && !hasReviewed && <ReviewForm ideaId={id} />}
-
-            {/* What's next — shown after purchase */}
-            {isPurchased && similarIdeas.length > 0 && (
-              <div className="mt-8 rounded-xl border border-border bg-card p-6">
-                <h2 className="mb-1 text-base font-semibold text-foreground">
-                  {idea.category ? `More ${idea.category} insights` : "You might also like"}
+            {/* Similar ideas — shown to all visitors */}
+            {similarIdeas.length > 0 && (
+              <div className="mt-8 rounded-[28px] border border-white/[0.08] bg-white/[0.025] p-6 backdrop-blur-sm">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(var(--gold))]/70">
+                  Discover more
+                </p>
+                <h2 className="mb-1 text-base font-semibold text-white/85">
+                  {isPurchased
+                    ? (idea.category ? `More ${idea.category} insights` : "You might also like")
+                    : (idea.category ? `More ${idea.category} ideas` : "You might also like")}
                 </h2>
-                <p className="mb-4 text-xs text-muted-foreground">Keep exploring ideas in this category</p>
+                <p className="mb-4 text-xs text-white/45">
+                  {isPurchased ? "Keep exploring ideas in this category" : "Explore more hidden ideas in this space"}
+                </p>
                 <div className="flex flex-col gap-3">
                   {similarIdeas.map((sim) => (
                     <Link
                       key={sim.id}
                       href={`/ideas/${sim.id}`}
-                      className="group flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 transition-all hover:border-primary/30 hover:shadow-sm"
+                      className="group flex items-center justify-between rounded-[18px] border border-white/[0.08] bg-white/[0.03] px-4 py-3 transition-all hover:border-primary/20 hover:bg-white/[0.05]"
                     >
                       <div className="min-w-0">
-                        <p className="line-clamp-1 text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                        <p className="line-clamp-1 text-sm font-medium text-white/85 group-hover:text-primary transition-colors">
                           {sim.title}
                         </p>
                         {sim.creator.name && (
-                          <p className="mt-0.5 text-xs text-muted-foreground truncate">by {sim.creator.name}</p>
+                          <p className="mt-0.5 text-xs text-white/45 truncate">by {sim.creator.name}</p>
                         )}
                       </div>
-                      <span className="ml-3 shrink-0 text-sm font-bold text-primary">{formatPrice(sim.priceInCents)}</span>
+                      <span className="ml-3 shrink-0 text-sm font-bold text-[hsl(var(--gold))]">{formatPrice(sim.priceInCents)}</span>
                     </Link>
                   ))}
                 </div>
@@ -333,6 +339,10 @@ export default async function IdeaDetailPage({
                 </div>
               </div>
             )}
+
+            {/* Reviews section */}
+            <ReviewList ideaId={id} />
+            {isPurchased && !hasReviewed && <ReviewForm ideaId={id} />}
           </div>
 
           {/* Sidebar */}
@@ -382,6 +392,26 @@ export default async function IdeaDetailPage({
                 exclusiveClaimed={exclusiveClaimed}
                 walletBalance={walletBalance}
               />
+
+              {/* Spots remaining — EXCLUSIVE with maxUnlocks */}
+              {exclusiveSpotsLeft !== null && !isPurchased && !isOwner && (
+                exclusiveSpotsLeft <= 0 ? (
+                  <div className="mt-3 flex items-center justify-center gap-1.5 rounded-lg border border-destructive/25 bg-destructive/10 px-3 py-2 text-xs font-semibold text-destructive">
+                    <Users className="h-3.5 w-3.5" />
+                    All spots claimed
+                  </div>
+                ) : (
+                  <div className={cn(
+                    "mt-3 flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold",
+                    exclusiveSpotsLeft <= 3
+                      ? "border-amber-500/25 bg-amber-500/10 text-amber-400"
+                      : "border-white/[0.08] bg-white/[0.03] text-white/50"
+                  )}>
+                    <Users className="h-3.5 w-3.5" />
+                    {exclusiveSpotsLeft} of {idea.maxUnlocks} spots remaining
+                  </div>
+                )
+              )}
 
               {/* Reassurance cues */}
               {!isOwner && !isPurchased && !exclusiveClaimed && (

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Flame, Lock, Star, Unlock, Users, Zap } from "lucide-react";
+import { BadgeCheck, Flame, FlaskConical, Lightbulb, Lock, Map, Sprout, Star, Unlock, Users, Zap } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
@@ -32,6 +32,8 @@ export function IdeaCard({
   purchaseCount,
   reviewCount,
   averageRating,
+  maturityLevel,
+  maxUnlocks,
   isOwner = false,
   isPurchased = false,
   initialBookmarked = false,
@@ -58,6 +60,17 @@ export function IdeaCard({
 
   const hasImage = !!normalizedImageUrl && !imageError;
   const categorySlug = category ? CATEGORY_META[category]?.slug : null;
+
+  const maturityConfig = {
+    SEED: { label: "Seed", icon: <Sprout className="h-3 w-3" />, className: "bg-amber-500/15 text-amber-400 border border-amber-500/25" },
+    CONCEPT: { label: "Concept", icon: <Lightbulb className="h-3 w-3" />, className: "bg-sky-500/15 text-sky-300 border border-sky-500/25" },
+    BLUEPRINT: { label: "Blueprint", icon: <Map className="h-3 w-3" />, className: "bg-violet-500/15 text-violet-300 border border-violet-500/25" },
+    PROTOTYPE_READY: { label: "Prototype-Ready", icon: <FlaskConical className="h-3 w-3" />, className: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25" },
+  } as const;
+
+  const spotsLeft = unlockType === "EXCLUSIVE" && maxUnlocks && maxUnlocks > 0
+    ? maxUnlocks - (purchaseCount ?? 0)
+    : null;
 
   return (
     <div
@@ -91,11 +104,17 @@ export function IdeaCard({
             {/* Atmospheric background */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(109,90,230,0.12),transparent_70%)]" />
             <div className="absolute inset-0 dot-grid-sm" />
+            {/* Blurred teaser text */}
+            {teaserText && (
+              <div className="absolute inset-0 flex flex-col justify-center gap-2 px-5 select-none pointer-events-none" aria-hidden="true">
+                <p className="text-[13px] leading-relaxed text-white/60 blur-sm line-clamp-4">{teaserText}</p>
+              </div>
+            )}
             {/* Lock icon */}
-            <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-primary/8 shadow-[0_0_24px_rgba(109,90,230,0.15)]">
+            <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-primary/8 shadow-[0_0_24px_rgba(109,90,230,0.15)] backdrop-blur-sm">
               <Lock className="h-6 w-6 text-primary/50" />
             </div>
-            <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[hsl(252,28%,7%)] to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[hsl(252,28%,7%)] to-transparent" />
           </div>
         )}
 
@@ -116,6 +135,17 @@ export function IdeaCard({
           {isTrending && (
             <span className="flex items-center gap-1 rounded-full bg-orange-500/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-[0_2px_8px_rgba(249,115,22,0.35)]">
               <Flame className="h-3 w-3" /> Trending
+            </span>
+          )}
+          {maturityLevel && (
+            <span
+              className={cn(
+                "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm",
+                maturityConfig[maturityLevel].className
+              )}
+            >
+              {maturityConfig[maturityLevel].icon}
+              {maturityConfig[maturityLevel].label}
             </span>
           )}
           <span
@@ -208,7 +238,8 @@ export function IdeaCard({
 
         {/* Stats chips row */}
         {((typeof averageRating === "number" && typeof reviewCount === "number" && reviewCount > 0) ||
-          typeof purchaseCount === "number") && (
+          typeof purchaseCount === "number" ||
+          (spotsLeft !== null && spotsLeft > 0)) && (
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {typeof averageRating === "number" && typeof reviewCount === "number" && reviewCount > 0 && (
               <span
@@ -224,6 +255,17 @@ export function IdeaCard({
               <span className="flex items-center gap-1 rounded-full bg-white/[0.05] border border-white/[0.08] px-2.5 py-1 text-[11px] font-semibold text-white/45">
                 <Users className="h-3 w-3" />
                 {purchaseCount} buyers
+              </span>
+            )}
+            {spotsLeft !== null && spotsLeft > 0 && (
+              <span className={cn(
+                "flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold border",
+                spotsLeft <= 3
+                  ? "bg-amber-500/10 text-amber-400 border-amber-500/25"
+                  : "bg-white/[0.05] text-white/50 border-white/[0.08]"
+              )}>
+                <Users className="h-3 w-3" />
+                {spotsLeft} of {maxUnlocks} left
               </span>
             )}
           </div>

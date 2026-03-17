@@ -152,6 +152,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
                     initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
                     isAuthenticated={!!clerkId}
                     isTrending={trendingIds.has(idea.id)}
+                    maxUnlocks={idea.maxUnlocks}
                   />
                 ))}
               </div>
