@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, Flame, FlaskConical, Lightbulb, Lock, Map, Sprout, Star, Unlock, Users, Zap } from "lucide-react";
+import { BadgeCheck, Bot, Code, Flame, FlaskConical, Globe, Lightbulb, Lock, Map, Package, PenTool, Rocket, Sprout, Star, TrendingUp, Unlock, Users, Zap } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
@@ -17,6 +17,24 @@ function normalizeUrl(value: unknown): string | null {
   if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
   return null;
 }
+
+const categoryColors: Record<string, string> = {
+  "Startup & Business": "bg-rose-500/15 text-rose-300 border border-rose-500/25",
+  "Software & Tech":    "bg-cyan-500/15 text-cyan-300 border border-cyan-500/25",
+  "AI & Automation":    "bg-violet-500/15 text-violet-300 border border-violet-500/25",
+  "Marketing & Growth": "bg-orange-500/15 text-orange-300 border border-orange-500/25",
+  "Product & Design":   "bg-pink-500/15 text-pink-300 border border-pink-500/25",
+  "Creative & Content": "bg-teal-500/15 text-teal-300 border border-teal-500/25",
+};
+
+const categoryIconMap: Record<string, React.ElementType> = {
+  "Startup & Business": Rocket,
+  "Software & Tech":    Code,
+  "AI & Automation":    Bot,
+  "Marketing & Growth": TrendingUp,
+  "Product & Design":   Package,
+  "Creative & Content": PenTool,
+};
 
 export function IdeaCard({
   id,
@@ -106,13 +124,24 @@ export function IdeaCard({
             <div className="absolute inset-0 dot-grid-sm" />
             {/* Blurred teaser text */}
             {teaserText && (
-              <div className="absolute inset-0 flex flex-col justify-center gap-2 px-5 select-none pointer-events-none" aria-hidden="true">
-                <p className="text-[13px] leading-relaxed text-white/60 blur-sm line-clamp-4">{teaserText}</p>
+              <div
+                className="absolute inset-0 flex flex-col justify-center gap-[7px] px-5 py-6 select-none pointer-events-none"
+                aria-hidden="true"
+              >
+                <p className="text-[12px] leading-[1.5] text-white/55 blur-[2.5px] line-clamp-1 w-full">
+                  {teaserText}
+                </p>
+                <p className="text-[12px] leading-[1.5] text-white/40 blur-[3px] line-clamp-1 w-[88%]">
+                  {teaserText}
+                </p>
+                <p className="text-[12px] leading-[1.5] text-white/28 blur-[3.5px] line-clamp-1 w-[70%]">
+                  {teaserText}
+                </p>
               </div>
             )}
             {/* Lock icon */}
-            <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-primary/8 shadow-[0_0_24px_rgba(109,90,230,0.15)] backdrop-blur-sm">
-              <Lock className="h-6 w-6 text-primary/50" />
+            <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-primary/10 shadow-[0_0_24px_rgba(109,90,230,0.18)] backdrop-blur-sm">
+              <Lock className="h-6 w-6 text-primary/60" />
             </div>
             <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[hsl(252,28%,7%)] to-transparent" />
           </div>
@@ -148,6 +177,21 @@ export function IdeaCard({
               {maturityConfig[maturityLevel].label}
             </span>
           )}
+          {!maturityLevel && category && categoryColors[category] && (() => {
+            const CategoryIcon = categoryIconMap[category];
+            const pillClass = cn(
+              "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm",
+              categoryColors[category]
+            );
+            const pillContent = <>{CategoryIcon && <CategoryIcon className="h-3 w-3" />}{category}</>;
+            return categorySlug ? (
+              <Link href={`/ideas/category/${categorySlug}`} onClick={(e) => e.stopPropagation()} className={pillClass}>
+                {pillContent}
+              </Link>
+            ) : (
+              <span className={pillClass}>{pillContent}</span>
+            );
+          })()}
           <span
             className={cn(
               "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm",
@@ -159,7 +203,7 @@ export function IdeaCard({
             {unlockType === "EXCLUSIVE" ? (
               <><Zap className="h-3 w-3" /> Exclusive</>
             ) : (
-              <>Multi</>
+              <><Globe className="h-3 w-3" /> Open</>
             )}
           </span>
         </div>
@@ -277,26 +321,9 @@ export function IdeaCard({
         {/* Footer */}
         <div className="mt-4 border-t border-white/[0.06] pt-4">
           <div className="flex items-center justify-between gap-3">
-            <div>
-              {category && (
-                <span className="block text-[10px] uppercase tracking-[0.16em] text-white/25">
-                  {categorySlug ? (
-                    <Link
-                      href={`/ideas/category/${categorySlug}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="hover:text-white/40 transition-colors"
-                    >
-                      {category}
-                    </Link>
-                  ) : (
-                    category
-                  )}
-                </span>
-              )}
-              <span className="text-xl font-bold tracking-tight text-white/90">
-                {formatPrice(priceInCents)}
-              </span>
-            </div>
+            <span className="text-xl font-bold tracking-tight text-white/90">
+              {formatPrice(priceInCents)}
+            </span>
             {isOwner ? (
               <Button
                 asChild
