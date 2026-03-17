@@ -7,8 +7,8 @@ import { Sparkles, Menu, ChevronDown, Lightbulb, ShoppingBag, PieChart, Bookmark
 import {
   SignedIn,
   SignedOut,
-  UserButton,
 } from "@clerk/nextjs";
+import { UserDropdown } from "@/components/layout/user-dropdown";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -109,14 +109,7 @@ export function Navbar() {
             </Link>
             <div className="h-4 w-px bg-white/[0.08] mx-0.5"></div>
             <NotificationBell />
-            <UserButton 
-              afterSignOutUrl="/" 
-              appearance={{
-                elements: {
-                  avatarBox: "h-8 w-8 ring-1 ring-white/10 transition-all hover:ring-primary/30"
-                }
-              }}
-            />
+            <UserDropdown />
           </SignedIn>
           <SignedOut>
             <Button
@@ -139,7 +132,7 @@ export function Navbar() {
         <div className="flex items-center gap-3 md:hidden">
           <SignedIn>
             <NotificationBell />
-            <UserButton afterSignOutUrl="/" />
+            <UserDropdown />
           </SignedIn>
           <Sheet>
             <SheetTrigger asChild>
