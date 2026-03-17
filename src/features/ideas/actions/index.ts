@@ -8,6 +8,37 @@ import { sanitizeHtml } from "@/lib/sanitize";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createIdeaSchema } from "@/features/ideas/schemas";
 import { trackEvent } from "@/lib/analytics";
+import { getPublishValidationIssues } from "@/features/ideas/lib/quality";
+
+function sanitizeIdeaText(input: Partial<z.infer<typeof createIdeaSchema>>) {
+  return {
+    ...input,
+    ...(input.teaserText !== undefined && {
+      teaserText: input.teaserText ? sanitizeHtml(input.teaserText) : input.teaserText,
+    }),
+    ...(input.hiddenContent !== undefined && {
+      hiddenContent: sanitizeHtml(input.hiddenContent),
+    }),
+    ...(input.whatYoullGet !== undefined && {
+      whatYoullGet: input.whatYoullGet ? sanitizeHtml(input.whatYoullGet) : input.whatYoullGet,
+    }),
+    ...(input.bestFitFor !== undefined && {
+      bestFitFor: input.bestFitFor ? sanitizeHtml(input.bestFitFor) : input.bestFitFor,
+    }),
+    ...(input.implementationNotes !== undefined && {
+      implementationNotes: input.implementationNotes
+        ? sanitizeHtml(input.implementationNotes)
+        : input.implementationNotes,
+    }),
+  };
+}
+
+function assertIdeaPublishable(input: Partial<z.infer<typeof createIdeaSchema>>) {
+  const issues = getPublishValidationIssues(input);
+  if (issues.length === 0) return;
+
+  throw new Error(issues[0]?.message ?? "This idea needs a few more details before publishing.");
+}
 
 export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
   const { userId } = await auth();
@@ -22,11 +53,7 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
 
   const { subcategory: subcategoryName, maturityLevel, ...rest } = validated;
 
-  const sanitized = {
-    ...rest,
-    teaserText: rest.teaserText ? sanitizeHtml(rest.teaserText) : rest.teaserText,
-    hiddenContent: sanitizeHtml(rest.hiddenContent),
-  };
+  const sanitized = sanitizeIdeaText(rest);
 
   // Resolve subcategoryId from slug if provided (slug has a unique index)
   let subcategoryId: string | undefined;
@@ -78,11 +105,17 @@ export async function updateIdea(
   const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
   if (!idea || idea.creatorId !== user.id) throw new Error("Idea not found or unauthorized");
 
-  const sanitizedInput = {
-    ...input,
-    ...(input.teaserText !== undefined && { teaserText: input.teaserText ? sanitizeHtml(input.teaserText) : input.teaserText }),
-    ...(input.hiddenContent !== undefined && { hiddenContent: sanitizeHtml(input.hiddenContent) }),
+  const validatedInput = createIdeaSchema.partial().parse(input);
+  const sanitizedInput = sanitizeIdeaText(validatedInput);
+  const nextIdeaState = {
+    ...idea,
+    ...sanitizedInput,
+    tags: sanitizedInput.tags ?? idea.tags,
   };
+
+  if (nextIdeaState.published) {
+    assertIdeaPublishable(nextIdeaState);
+  }
 
   // Resolve subcategoryId from slug if provided (slug has a unique index)
   const { subcategory: subcategoryName, maturityLevel, ...restInput } = sanitizedInput;
@@ -140,6 +173,10 @@ export async function publishIdea(ideaId: string, published: boolean) {
   const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
   if (!idea || idea.creatorId !== user.id) throw new Error("Idea not found or unauthorized");
 
+  if (published) {
+    assertIdeaPublishable(idea);
+  }
+
   await prisma.idea.update({
     where: { id: ideaId },
     data: { published },
@@ -178,7 +215,16 @@ export async function getIdeaById(ideaId: string) {
   return await prisma.idea.findUnique({
     where: { id: ideaId },
     include: {
-      creator: { select: { id: true, name: true, avatarUrl: true, clerkId: true } },
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          avatarUrl: true,
+          clerkId: true,
+          stripeOnboarded: true,
+        },
+      },
+      subcategory: { select: { slug: true } },
       _count: { select: { purchases: true } },
     },
   });

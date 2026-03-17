@@ -31,8 +31,8 @@ export default async function NewIdeaPage() {
               Publishing tip
             </p>
             <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
-              Clear teaser copy and strong pricing usually convert better than
-              vague summaries. Draft first, then publish when the value is obvious.
+              The best listings clearly frame what the buyer gets, who it fits, and any important caveats.
+              Draft first, then publish once the trust and value signals feel obvious.
             </p>
           </div>
         </div>

@@ -10,25 +10,10 @@ import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
 import { ImagePlus, Lock, Eye, EyeOff, Wallet, CheckCircle2, Circle, AlertCircle } from "lucide-react";
 import { CATEGORIES, IDEA_MATURITY_LEVELS, getSubcategoriesByCategory } from "@/lib/constants";
+import { createIdeaSchema } from "@/features/ideas/schemas";
+import { getIdeaQualityItems, getPublishValidationIssues } from "@/features/ideas/lib/quality";
 
-const ideaFormSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters").max(200),
-  teaserText: z.string().max(500).optional(),
-  teaserImageUrl: z.string().url().optional().or(z.literal("")),
-  hiddenContent: z
-    .string()
-    .min(10, "Hidden content must be at least 10 characters"),
-  priceInCents: z.number().int().min(99, "Minimum price is $0.99").max(100000),
-  unlockType: z.enum(["EXCLUSIVE", "MULTI"]),
-  maxUnlocks: z.number().int().min(1).optional().nullable(),
-  category: z.string().max(100).optional(),
-  subcategory: z.string().max(100).optional(),
-  maturityLevel: z.enum(["SEED", "CONCEPT", "BLUEPRINT", "PROTOTYPE_READY"]).optional(),
-  tags: z.array(z.string()).max(10).optional(),
-  published: z.boolean().optional(),
-});
-
-export type IdeaFormData = z.infer<typeof ideaFormSchema>;
+export type IdeaFormData = z.infer<typeof createIdeaSchema>;
 
 interface IdeaFormProps {
   initialData?: Partial<IdeaFormData>;
@@ -54,6 +39,16 @@ export function IdeaForm({
   const [hiddenContent, setHiddenContent] = useState(
     initialData?.hiddenContent ?? ""
   );
+  const [originalityConfirmed, setOriginalityConfirmed] = useState(
+    initialData?.originalityConfirmed ?? false
+  );
+  const [whatYoullGet, setWhatYoullGet] = useState(
+    initialData?.whatYoullGet ?? ""
+  );
+  const [bestFitFor, setBestFitFor] = useState(initialData?.bestFitFor ?? "");
+  const [implementationNotes, setImplementationNotes] = useState(
+    initialData?.implementationNotes ?? ""
+  );
   const [priceStr, setPriceStr] = useState(
     initialData?.priceInCents ? (initialData.priceInCents / 100).toFixed(2) : ""
   );
@@ -75,47 +70,61 @@ export function IdeaForm({
 
   const availableSubcategories = useMemo(() => getSubcategoriesByCategory(category), [category]);
 
-  // Listing quality score (0-5)
   const qualityItems = useMemo(() => {
-    const price = parseFloat(priceStr);
-    return [
-      {
-        label: "Compelling title",
-        met: title.trim().length >= 10,
-        hint: "At least 10 characters",
-      },
-      {
-        label: "Teaser text added",
-        met: teaserText.trim().length >= 40,
-        hint: "40+ characters builds curiosity",
-      },
-      {
-        label: "Teaser image uploaded",
-        met: !!teaserImageUrl,
-        hint: "Images increase click-through by 2×",
-      },
-      {
-        label: "Substantial hidden content",
-        met: hiddenContent.trim().length >= 150,
-        hint: "150+ characters delivers real value",
-      },
-      {
-        label: "Category selected",
-        met: !!category,
-        hint: "Helps buyers discover your idea",
-      },
-      {
-        label: "Price is set",
-        met: !isNaN(price) && price >= 0.99 && price <= 1000,
-        hint: "Set a price between $0.99 and $1,000",
-      },
-    ];
-  }, [title, teaserText, teaserImageUrl, hiddenContent, category, priceStr]);
+    const parsedPrice = Math.round((parseFloat(priceStr) || 0) * 100);
+    return getIdeaQualityItems({
+      title,
+      teaserText,
+      teaserImageUrl,
+      hiddenContent,
+      category,
+      priceInCents: parsedPrice,
+      originalityConfirmed,
+      whatYoullGet,
+      bestFitFor,
+      implementationNotes,
+    });
+  }, [
+    title,
+    teaserText,
+    teaserImageUrl,
+    hiddenContent,
+    category,
+    priceStr,
+    originalityConfirmed,
+    whatYoullGet,
+    bestFitFor,
+    implementationNotes,
+  ]);
 
   const qualityScore = qualityItems.filter((i) => i.met).length;
   const qualityPercent = Math.round((qualityScore / qualityItems.length) * 100);
   const qualityColor =
     qualityScore <= 2 ? "#EF4444" : qualityScore <= 4 ? "#F59E0B" : "#10B981";
+  const publishIssues = useMemo(
+    () =>
+      getPublishValidationIssues({
+        title,
+        teaserText,
+        hiddenContent,
+        category,
+        originalityConfirmed,
+        whatYoullGet,
+        bestFitFor,
+        implementationNotes,
+      }),
+    [
+      title,
+      teaserText,
+      hiddenContent,
+      category,
+      originalityConfirmed,
+      whatYoullGet,
+      bestFitFor,
+      implementationNotes,
+    ]
+  );
+  const canPublish = publishIssues.length === 0;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -131,11 +140,15 @@ export function IdeaForm({
             .filter(Boolean)
         : [];
 
-      const data = ideaFormSchema.parse({
+      const data = createIdeaSchema.parse({
         title,
         teaserText: teaserText || undefined,
         teaserImageUrl: teaserImageUrl || undefined,
         hiddenContent,
+        originalityConfirmed,
+        whatYoullGet: whatYoullGet || undefined,
+        bestFitFor: bestFitFor || undefined,
+        implementationNotes: implementationNotes || undefined,
         priceInCents,
         unlockType,
         maxUnlocks:
@@ -246,6 +259,16 @@ export function IdeaForm({
             </li>
           ))}
         </ul>
+        {publishIssues.length > 0 && (
+          <div className="mt-4 rounded-[8px] border border-amber-500/20 bg-amber-500/5 px-3 py-2">
+            <p className="text-[12px] font-semibold text-foreground">
+              Publish checklist
+            </p>
+            <p className="mt-1 text-[12px] text-muted-foreground">
+              Complete the essentials below before this idea can go live.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Title */}
@@ -289,7 +312,7 @@ export function IdeaForm({
         <div className="flex items-start justify-between gap-2">
           <p className="text-[12px] text-muted-foreground/70">
             <AlertCircle className="mb-0.5 mr-1 inline h-3 w-3" />
-            Great teasers create curiosity without revealing the answer
+            Lead with the problem, outcome, and why it matters — keep the exact method locked
           </p>
           <p className="shrink-0 text-[12px] text-muted-foreground/70">
             {teaserText.length}/500
@@ -367,8 +390,67 @@ export function IdeaForm({
               Add {150 - hiddenContent.length} more characters for a quality listing ·{" "}
             </span>
           )}
-          {hiddenContent.length} characters
+          {hiddenContent.length} characters · include the full insight, specifics, and what makes it usable
         </p>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-2">
+          <Label htmlFor="whatYoullGet" className="text-[14px] font-semibold text-foreground">
+            What you&apos;ll get
+          </Label>
+          <textarea
+            id="whatYoullGet"
+            value={whatYoullGet}
+            onChange={(e) => setWhatYoullGet(e.target.value)}
+            placeholder="Examples: market angle, positioning, execution plan, prompts, templates."
+            rows={4}
+            maxLength={400}
+            className={textareaClasses}
+          />
+          <p className="text-[12px] text-muted-foreground/70">
+            Public preview. Keep it specific enough to build confidence.
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="bestFitFor" className="text-[14px] font-semibold text-foreground">
+            Best fit for
+          </Label>
+          <textarea
+            id="bestFitFor"
+            value={bestFitFor}
+            onChange={(e) => setBestFitFor(e.target.value)}
+            placeholder="Who should buy this: founder stage, team type, channel, or use case."
+            rows={4}
+            maxLength={280}
+            className={textareaClasses}
+          />
+          <p className="text-[12px] text-muted-foreground/70">
+            Helps the right buyers self-select faster.
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="implementationNotes"
+            className="text-[14px] font-semibold text-foreground"
+          >
+            Risks / notes
+          </Label>
+          <textarea
+            id="implementationNotes"
+            value={implementationNotes}
+            onChange={(e) => setImplementationNotes(e.target.value)}
+            placeholder="Call out dependencies, effort level, or assumptions before someone buys."
+            rows={4}
+            maxLength={400}
+            className={textareaClasses}
+          />
+          <p className="text-[12px] text-muted-foreground/70">
+            Concise expectation-setting builds trust and reduces refund requests.
+          </p>
+        </div>
       </div>
 
       {/* Price */}
@@ -398,7 +480,7 @@ export function IdeaForm({
         </div>
         <p className="text-[12px] text-muted-foreground/70">
           Minimum $0.99 · Maximum $1,000.00 ·{" "}
-          <span className="text-primary">$5–$49 converts best for most ideas</span>
+          <span className="text-primary">Price for the clarity and usefulness of the full write-up</span>
         </p>
       </div>
 
@@ -457,6 +539,9 @@ export function IdeaForm({
             </div>
           </label>
         </div>
+        <p className="text-[12px] text-muted-foreground/70">
+          Exclusive closes the listing after a successful unlock. Multi-unlock keeps the idea available to multiple buyers.
+        </p>
         {unlockType === "MULTI" && (
           <div className="mt-2 space-y-2">
             <Label
@@ -487,7 +572,7 @@ export function IdeaForm({
           htmlFor="category"
           className="text-[14px] font-semibold text-foreground"
         >
-          Category
+          Category <span className="text-red-500">*</span>
         </Label>
         <div className="relative">
           <select
@@ -520,6 +605,9 @@ export function IdeaForm({
             />
           </svg>
         </div>
+        <p className="text-[12px] text-muted-foreground/70">
+          Pick the closest category so related ideas and buyer recommendations stay relevant.
+        </p>
       </div>
 
       {/* Subcategory — only shown when a category with subcategories is selected */}
@@ -562,6 +650,9 @@ export function IdeaForm({
               />
             </svg>
           </div>
+          <p className="text-[12px] text-muted-foreground/70">
+            Choose the narrowest fit when available for better discovery quality.
+          </p>
         </div>
       )}
 
@@ -624,6 +715,29 @@ export function IdeaForm({
           placeholder="e.g. startup, growth, SaaS"
           className={inputClasses}
         />
+        <p className="text-[12px] text-muted-foreground/70">
+          Use 3–5 buyer-facing keywords rather than internal jargon.
+        </p>
+      </div>
+
+      <div className="rounded-[8px] border border-border bg-muted p-4">
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={originalityConfirmed}
+            onChange={(e) => setOriginalityConfirmed(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded accent-[#3A5FCD]"
+          />
+          <div>
+            <p className="text-[14px] font-semibold text-foreground">
+              Originality attestation <span className="text-red-500">*</span>
+            </p>
+            <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
+              I confirm this listing is my original work or that I have the right to share it here.
+              MysteryMarket can show a small public trust signal based on this attestation. This is not a legal guarantee.
+            </p>
+          </div>
+        </label>
       </div>
 
       {/* Publish toggle — only shown in create mode */}
@@ -655,6 +769,11 @@ export function IdeaForm({
                   ? "Your idea will be visible in the marketplace right away."
                   : "Your idea will be saved privately. You can publish it later from Creator Studio."}
               </p>
+              {publishNow && !canPublish && (
+                <p className="mt-2 text-[12px] text-amber-500">
+                  Finish the publish checklist above before you can go live.
+                </p>
+              )}
             </div>
           </label>
         </div>
@@ -676,7 +795,7 @@ export function IdeaForm({
           type="submit"
           size="lg"
           className="h-12 text-[16px] sm:flex-1"
-          disabled={isSubmitting}
+          disabled={isSubmitting || (isCreateMode && publishNow && !canPublish)}
         >
           {isSubmitting
             ? "Saving..."

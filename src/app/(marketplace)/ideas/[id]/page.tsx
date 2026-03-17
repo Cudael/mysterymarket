@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Lock, Calendar, Users, ShieldCheck, RefreshCw, Wallet, Star, CheckCircle2, FileText, Lightbulb } from "lucide-react";
+import { ArrowLeft, BadgeCheck, CheckCircle2, Calendar, FileText, Lightbulb, Lock, RefreshCw, ShieldCheck, Star, Wallet, Users } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,10 @@ import { ReviewForm } from "@/features/reviews/components/review-form";
 import { ReportDialog } from "@/features/reports/components/report-dialog";
 import prisma from "@/lib/prisma";
 import { cn, formatPrice } from "@/lib/utils";
-import { CATEGORY_META } from "@/lib/constants";
+import { CATEGORY_META, IDEA_MATURITY_LEVELS } from "@/lib/constants";
 import { getIdeaById } from "@/features/ideas/actions";
 import { trackEvent } from "@/lib/analytics";
+import { getRelatedIdeas, getRisingIdeas } from "@/features/ideas/lib/discovery";
 
 export async function generateMetadata({
   params,
@@ -45,7 +46,15 @@ export default async function IdeaDetailPage({
   const idea = await prisma.idea.findUnique({
     where: { id },
     include: {
-      creator: { select: { id: true, name: true, avatarUrl: true, createdAt: true } },
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          avatarUrl: true,
+          createdAt: true,
+          stripeOnboarded: true,
+        },
+      },
       _count: { select: { purchases: true, reviews: true } },
     },
   });
@@ -94,7 +103,8 @@ export default async function IdeaDetailPage({
     creatorTotalSales,
     reviewAggregate,
     wallet,
-    similarIdeas,
+    relatedIdeas,
+    risingIdeas,
   ] = await Promise.all([
     prisma.idea.count({ where: { creatorId: idea.creatorId, published: true } }),
     prisma.purchase.count({ where: { idea: { creatorId: idea.creatorId }, status: "COMPLETED" } }),
@@ -105,27 +115,61 @@ export default async function IdeaDetailPage({
           select: { balanceInCents: true },
         })
       : Promise.resolve(null),
-    prisma.idea.findMany({
-      where: {
-        published: true,
-        id: { not: id },
-        ...(idea.category ? { category: idea.category } : {}),
-      },
-      select: {
-        id: true,
-        title: true,
-        priceInCents: true,
-        category: true,
-        creator: { select: { name: true } },
-        _count: { select: { purchases: true } },
-      },
-      orderBy: { purchases: { _count: "desc" } },
-      take: 3,
+    getRelatedIdeas({
+      ideaId: id,
+      category: idea.category,
+      subcategoryId: idea.subcategoryId,
+      tags: idea.tags,
     }),
+    getRisingIdeas({ excludeIds: [id], take: 3, category: idea.category }),
   ]);
 
   const walletBalance = wallet?.balanceInCents ?? null;
   const avgRating = reviewAggregate._avg.rating;
+  const maturityConfig = IDEA_MATURITY_LEVELS.find((level) => level.value === idea.maturityLevel);
+  const rightsSummary =
+    idea.unlockType === "EXCLUSIVE"
+      ? {
+          label: "Exclusive unlock",
+          copy:
+            "One buyer can unlock this listing on MysteryMarket. We mark it as claimed after purchase, but this does not by itself assign legal IP rights.",
+          deliverable: "Instant access to the creator's full private write-up and supporting notes.",
+        }
+      : {
+          label: "Multi-unlock access",
+          copy:
+            "Multiple buyers can unlock this listing. Your purchase gives you access to the creator's full write-up inside your library.",
+          deliverable: "Instant access to the full write-up with lifetime re-reading on MysteryMarket.",
+        };
+  const previewSections = [
+    idea.whatYoullGet
+      ? {
+          title: "What you'll get",
+          body: idea.whatYoullGet,
+        }
+      : {
+          title: "What you'll get",
+          body: rightsSummary.deliverable,
+        },
+    idea.bestFitFor
+      ? {
+          title: "Best fit for",
+          body: idea.bestFitFor,
+        }
+      : null,
+    maturityConfig
+      ? {
+          title: "Readiness",
+          body: `${maturityConfig.label} — ${maturityConfig.description}`,
+        }
+      : null,
+    idea.implementationNotes
+      ? {
+          title: "Risks / notes",
+          body: idea.implementationNotes,
+        }
+      : null,
+  ].filter((section): section is { title: string; body: string } => Boolean(section));
 
   const showContent = isOwner || isPurchased;
   const exclusiveSpotsLeft = idea.unlockType === "EXCLUSIVE" && idea.maxUnlocks
@@ -179,6 +223,15 @@ export default async function IdeaDetailPage({
               {idea.category && (
                 <Badge variant="outline">{idea.category}</Badge>
               )}
+              {idea.originalityConfirmed && (
+                <Badge
+                  variant="outline"
+                  className="border-emerald-500/25 bg-emerald-500/10 text-emerald-400"
+                >
+                  <BadgeCheck className="mr-1 h-3 w-3" />
+                  Originality attested
+                </Badge>
+              )}
             </div>
 
             <h1 className="text-3xl font-bold text-foreground">{idea.title}</h1>
@@ -228,35 +281,49 @@ export default async function IdeaDetailPage({
               </span>
             </div>
 
-            {/* What you'll get — shown only to non-purchasers, non-owners */}
-            {!showContent && !exclusiveClaimed && (
-              <div className="mt-8 rounded-xl border border-border bg-card p-5">
-                <h2 className="mb-3 flex items-center gap-2 text-base font-semibold text-foreground">
-                  <Lightbulb className="h-4 w-4 text-primary" />
-                  What you&apos;ll get
-                </h2>
-                <ul className="space-y-2">
+            <div className="mt-8 rounded-xl border border-border bg-card p-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
+                    <Lightbulb className="h-4 w-4 text-primary" />
+                    Preview before you unlock
+                  </h2>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Clear framing helps buyers understand the value before the full idea is revealed.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border bg-muted px-3 py-2 text-xs text-muted-foreground">
+                  <p className="font-medium text-foreground">{rightsSummary.label}</p>
+                  <p className="mt-1 max-w-[240px]">{rightsSummary.copy}</p>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {previewSections.map((section) => (
+                  <div key={section.title} className="rounded-lg border border-border bg-muted p-4">
+                    <p className="text-sm font-semibold text-foreground">{section.title}</p>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{section.body}</p>
+                  </div>
+                ))}
+              </div>
+
+              {!showContent && !exclusiveClaimed && (
+                <ul className="mt-5 space-y-2 border-t border-border pt-5">
                   <li className="flex items-start gap-2 text-sm text-muted-foreground">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
-                    <span>Full access to the complete hidden idea — revealed instantly after unlock</span>
+                    <span>{rightsSummary.deliverable}</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm text-muted-foreground">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
-                    <span>Lifetime access — revisit this idea any time from your dashboard</span>
+                    <span>Lifetime access in your library after purchase.</span>
                   </li>
-                  {idea.unlockType === "EXCLUSIVE" && (
-                    <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
-                      <span>Exclusive rights — only one buyer ever gets this idea</span>
-                    </li>
-                  )}
                   <li className="flex items-start gap-2 text-sm text-muted-foreground">
                     <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <span>Option to leave a review and share your experience with others</span>
+                    <span>Refund requests are reviewed for listings that feel materially misleading.</span>
                   </li>
                 </ul>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Hidden content section */}
             <div className="mt-8">
@@ -296,22 +363,19 @@ export default async function IdeaDetailPage({
               )}
             </div>
 
-            {/* Similar ideas — shown to all visitors */}
-            {similarIdeas.length > 0 && (
+            {relatedIdeas.length > 0 && (
               <div className="mt-8 rounded-[28px] border border-white/[0.08] bg-white/[0.025] p-6 backdrop-blur-sm">
                 <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(var(--gold))]/70">
-                  Discover more
+                  Related ideas
                 </p>
                 <h2 className="mb-1 text-base font-semibold text-white/85">
-                  {isPurchased
-                    ? (idea.category ? `More ${idea.category} insights` : "You might also like")
-                    : (idea.category ? `More ${idea.category} ideas` : "You might also like")}
+                  {idea.category ? `More in ${idea.category}` : "You might also like"}
                 </h2>
                 <p className="mb-4 text-xs text-white/45">
-                  {isPurchased ? "Keep exploring ideas in this category" : "Explore more hidden ideas in this space"}
+                  Ranked by shared category, subcategory, and tags.
                 </p>
                 <div className="flex flex-col gap-3">
-                  {similarIdeas.map((sim) => (
+                  {relatedIdeas.map((sim) => (
                     <Link
                       key={sim.id}
                       href={`/ideas/${sim.id}`}
@@ -322,7 +386,10 @@ export default async function IdeaDetailPage({
                           {sim.title}
                         </p>
                         {sim.creator.name && (
-                          <p className="mt-0.5 text-xs text-white/45 truncate">by {sim.creator.name}</p>
+                          <p className="mt-0.5 text-xs text-white/45 truncate">
+                            by {sim.creator.name}
+                            {sim.originalityConfirmed ? " · attested" : ""}
+                          </p>
                         )}
                       </div>
                       <span className="ml-3 shrink-0 text-sm font-bold text-[hsl(var(--gold))]">{formatPrice(sim.priceInCents)}</span>
@@ -336,6 +403,37 @@ export default async function IdeaDetailPage({
                   >
                     Browse all {idea.category ? `${idea.category} ` : ""}ideas →
                   </Link>
+                </div>
+              </div>
+            )}
+
+            {risingIdeas.length > 0 && (
+              <div className="mt-8 rounded-xl border border-border bg-card p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary/70">
+                  Rising now
+                </p>
+                <h2 className="mt-1 text-base font-semibold text-foreground">
+                  Fresh listings buyers are already unlocking
+                </h2>
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  {risingIdeas.map((rising) => (
+                    <Link
+                      key={rising.id}
+                      href={`/ideas/${rising.id}`}
+                      className="rounded-lg border border-border bg-muted p-4 transition-colors hover:border-primary/30 hover:bg-card"
+                    >
+                      <p className="line-clamp-2 text-sm font-semibold text-foreground">
+                        {rising.title}
+                      </p>
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        {rising._count.purchases} unlock{rising._count.purchases !== 1 ? "s" : ""}
+                        {rising.originalityConfirmed ? " · attested" : ""}
+                      </p>
+                      <p className="mt-3 text-sm font-semibold text-[hsl(var(--gold))]">
+                        {formatPrice(rising.priceInCents)}
+                      </p>
+                    </Link>
+                  ))}
                 </div>
               </div>
             )}
@@ -356,11 +454,19 @@ export default async function IdeaDetailPage({
                 <span className="text-3xl font-bold text-[hsl(var(--gold))]">
                   {formatPrice(idea.priceInCents)}
                 </span>
-                {idea.unlockType === "EXCLUSIVE" ? (
-                  <p className="mt-1 text-xs text-muted-foreground">One-time exclusive unlock</p>
-                ) : (
-                  <p className="mt-1 text-xs text-muted-foreground">One-time purchase · lifetime access</p>
-                )}
+                <p className="mt-1 text-xs text-muted-foreground">{rightsSummary.label}</p>
+              </div>
+
+              <div className="mt-4 rounded-lg border border-border bg-muted p-4 text-left">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary/70">
+                  Purchase summary
+                </p>
+                <p className="mt-2 text-sm font-medium text-foreground">
+                  {rightsSummary.deliverable}
+                </p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  {rightsSummary.copy}
+                </p>
               </div>
 
               {/* Rating summary near CTA */}
@@ -416,6 +522,12 @@ export default async function IdeaDetailPage({
               {/* Reassurance cues */}
               {!isOwner && !isPurchased && !exclusiveClaimed && (
                 <div className="mt-4 space-y-2 border-t border-border pt-4">
+                  {idea.originalityConfirmed && (
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                      Creator attested this listing is original or properly owned
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-green-500" />
                     Secure checkout powered by Stripe
@@ -426,7 +538,7 @@ export default async function IdeaDetailPage({
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <RefreshCw className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-                    Not satisfied? Refund requests accepted
+                    Refund requests are reviewed when the delivered write-up feels materially misleading
                   </div>
                 </div>
               )}
@@ -459,10 +571,30 @@ export default async function IdeaDetailPage({
                     <p className="font-medium text-foreground">
                       {idea.creator.name ?? "Anonymous"}
                     </p>
-                    <p className="text-xs text-muted-foreground">View profile →</p>
+                    <p className="text-xs text-muted-foreground">
+                      View profile →
+                      {idea.originalityConfirmed ? " · originality attested" : ""}
+                    </p>
                   </div>
                 </Link>
               </div>
+
+              {(idea.originalityConfirmed || idea.creator.stripeOnboarded) && (
+                <div className="mt-4 rounded-lg border border-border bg-muted p-3 text-xs text-muted-foreground">
+                  {idea.originalityConfirmed && (
+                    <p className="flex items-center gap-2">
+                      <BadgeCheck className="h-3.5 w-3.5 text-emerald-400" />
+                      Public trust signal: originality attested by the creator
+                    </p>
+                  )}
+                  {idea.creator.stripeOnboarded && (
+                    <p className={cn("flex items-center gap-2", idea.originalityConfirmed && "mt-2")}>
+                      <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                      Creator has completed payout onboarding
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* Creator stats */}
               <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4">

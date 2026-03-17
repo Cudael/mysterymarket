@@ -16,6 +16,7 @@ import {
   normalizeMarketplaceSearchParams,
   resolveSubcategory,
 } from "@/features/ideas/lib/marketplace-data";
+import { getRisingIdeas } from "@/features/ideas/lib/discovery";
 
 export const metadata: Metadata = {
   title: "Explore Ideas - MysteryMarket",
@@ -50,12 +51,15 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
     resolvedSubcategory: activeSubcategory,
   });
 
-  const [listing, bookmarkedIdeaIds] = await Promise.all([
+  const [listing, bookmarkedIdeaIds, risingIdeas] = await Promise.all([
     getMarketplaceIdeas({ filters, where }),
     getBookmarkedIdeaIds(clerkId),
+    getRisingIdeas({ take: 4, category: filters.category || undefined }),
   ]);
 
-  const ratingMap = await getIdeaRatings(listing.ideas.map((idea) => idea.id));
+  const ratingMap = await getIdeaRatings([
+    ...new Set([...listing.ideas.map((idea) => idea.id), ...risingIdeas.map((idea) => idea.id)]),
+  ]);
   const trendingIds = new Set(
     [...listing.ideas]
       .sort((a, b) => b._count.purchases - a._count.purchases)
@@ -105,6 +109,52 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
         </Suspense>
 
         <section id="marketplace-results" className="scroll-mt-20 pb-16 pt-8">
+          {risingIdeas.length > 0 && !filters.search && filters.page === 1 && (
+            <div className="mb-8 rounded-2xl border border-white/[0.08] bg-[hsl(252,28%,6%)] p-5">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary/70">
+                    Rising now
+                  </p>
+                  <h2 className="mt-2 text-[20px] font-bold tracking-[-0.03em] text-white/85">
+                    Fresh ideas getting real unlock momentum
+                  </h2>
+                  <p className="mt-1 text-[13px] text-white/40">
+                    Ranked with a lightweight mix of recency, unlocks, and reviews.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {risingIdeas.map((idea) => (
+                  <IdeaCard
+                    key={idea.id}
+                    id={idea.id}
+                    title={idea.title}
+                    teaserText={idea.teaserText}
+                    teaserImageUrl={idea.teaserImageUrl}
+                    priceInCents={idea.priceInCents}
+                    unlockType={idea.unlockType}
+                    category={idea.category}
+                    maturityLevel={idea.maturityLevel}
+                    creatorId={idea.creator.id}
+                    creatorName={idea.creator.name}
+                    creatorAvatarUrl={idea.creator.avatarUrl}
+                    isCreatorVerified={idea.creator.stripeOnboarded}
+                    purchaseCount={idea._count.purchases}
+                    reviewCount={idea._count.reviews}
+                    averageRating={ratingMap.get(idea.id)}
+                    tags={idea.tags}
+                    initialBookmarked={bookmarkedIdeaIds.has(idea.id)}
+                    isAuthenticated={!!clerkId}
+                    isTrending
+                    maxUnlocks={idea.maxUnlocks}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
           {listing.ideas.length === 0 ? (
             <div className="mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-[hsl(252,28%,6%)] px-6 py-20 text-center">
               <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.03]">
