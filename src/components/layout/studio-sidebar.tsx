@@ -14,6 +14,7 @@ import {
   ShoppingBag,
   Shield,
   ArrowLeftRight,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getIsAdmin } from "@/features/admin/actions";
@@ -22,6 +23,7 @@ const STUDIO_LINKS = [
   { href: "/studio", label: "Overview", icon: LayoutDashboard, exact: true },
   { href: "/studio/analytics", label: "Analytics", icon: BarChart3, exact: false },
   { href: "/studio/wallet", label: "Wallet", icon: Wallet2, exact: false },
+  { href: "/studio/feedback", label: "Feedback", icon: MessageSquare, exact: false },
   { href: "/studio/ideas/new", label: "New Idea", icon: PlusCircle, exact: true },
   { href: "/studio/payouts", label: "Payouts", icon: CreditCard, exact: false },
 ];

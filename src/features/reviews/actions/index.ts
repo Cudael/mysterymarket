@@ -68,6 +68,7 @@ export async function createReview(
   });
 
   revalidatePath(`/ideas/${ideaId}`);
+  revalidatePath("/studio/feedback");
 }
 
 export async function getReviewsForIdea(ideaId: string) {
@@ -138,4 +139,35 @@ export async function getPurchasesWithoutReviews() {
     orderBy: { createdAt: "desc" },
     take: 5,
   });
+}
+
+export async function getReviewsForCreator() {
+  const user = await getAuthenticatedPrismaUser();
+
+  return prisma.review.findMany({
+    where: { idea: { creatorId: user.id } },
+    include: {
+      buyer: { select: { name: true, avatarUrl: true } },
+      idea: { select: { id: true, title: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getCreatorReviewStats() {
+  const user = await getAuthenticatedPrismaUser();
+
+  const reviews = await prisma.review.findMany({
+    where: { idea: { creatorId: user.id } },
+    select: { rating: true },
+  });
+
+  const total = reviews.length;
+  const average = total > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / total : 0;
+  const breakdown = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: reviews.filter((r) => r.rating === star).length,
+  }));
+
+  return { average, total, breakdown };
 }

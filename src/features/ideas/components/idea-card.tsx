@@ -226,7 +226,7 @@ export function IdeaCard({
         {(creatorId || creatorName) && (
           <div className="mb-3 flex items-center gap-2.5">
             <Link
-              href={creatorId ? `/creators/${creatorId}` : "#"}
+              href={creatorId ? `/profile/${creatorId}` : "#"}
               onClick={(e) => !creatorId && e.preventDefault()}
               className="shrink-0"
             >
@@ -237,7 +237,7 @@ export function IdeaCard({
             </Link>
             <div className="min-w-0 flex-1">
               <Link
-                href={creatorId ? `/creators/${creatorId}` : "#"}
+                href={creatorId ? `/profile/${creatorId}` : "#"}
                 onClick={(e) => !creatorId && e.preventDefault()}
                 className="block truncate text-[13px] font-semibold text-white/85 hover:text-primary transition-colors"
               >

@@ -551,7 +551,7 @@ export default async function IdeaDetailPage({
               </h3>
               <div className="rounded-xl bg-muted p-4">
                 <Link
-                  href={`/creators/${idea.creator.id}`}
+                  href={`/profile/${idea.creator.id}`}
                   className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                 >
                   {idea.creator.avatarUrl ? (
