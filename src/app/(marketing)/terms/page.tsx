@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - MysteryIdea",
+  title: "Terms of Service - IdeaVex",
   description:
-    "Read the MysteryIdea Terms of Service to understand the rules and guidelines for using our marketplace.",
+    "Read the IdeaVex Terms of Service to understand the rules and guidelines for using our marketplace.",
 };
 
 export default function TermsPage() {
@@ -16,7 +16,7 @@ export default function TermsPage() {
         </p>
 
         <p className="mt-6 text-muted-foreground leading-relaxed">
-          Welcome to MysteryIdea. By accessing or using our platform, you agree
+          Welcome to IdeaVex. By accessing or using our platform, you agree
           to be bound by these Terms of Service. Please read them carefully.
         </p>
 
@@ -26,7 +26,7 @@ export default function TermsPage() {
             1. Platform Description
           </h2>
         <p className="mt-3 text-muted-foreground leading-relaxed">
-            MysteryIdea is a premium marketplace that allows creators to list
+            IdeaVex is a premium marketplace that allows creators to list
             hidden ideas with teaser text and buyers to unlock those ideas upon
             payment. All transactions are processed via Stripe. The platform
             charges a service fee on each transaction as disclosed at checkout.
@@ -39,7 +39,7 @@ export default function TermsPage() {
             2. Acceptable Use
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            You may use MysteryIdea only for lawful purposes and in accordance
+            You may use IdeaVex only for lawful purposes and in accordance
             with these Terms. You agree not to:
           </p>
           <ul className="mt-3 list-disc pl-6 space-y-1 text-muted-foreground">
@@ -57,7 +57,7 @@ export default function TermsPage() {
             3. Creator Responsibilities
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            As a creator on MysteryIdea, you are solely responsible for the
+            As a creator on IdeaVex, you are solely responsible for the
             content you post. You agree to:
           </p>
           <ul className="mt-3 list-disc pl-6 space-y-1 text-muted-foreground">
@@ -108,7 +108,7 @@ export default function TermsPage() {
           </h2>
         <p className="mt-3 text-muted-foreground leading-relaxed">
             All payments are processed securely through Stripe. Prices are set
-            by creators and displayed in USD. MysteryIdea charges a platform fee
+            by creators and displayed in USD. IdeaVex charges a platform fee
             (currently 15%) on each transaction; the remainder is credited to
             the creator&apos;s in-app wallet. Creators can withdraw their wallet
             balance to their bank account at any time via Stripe. Buyers may
@@ -119,7 +119,7 @@ export default function TermsPage() {
           <p className="mt-3 text-muted-foreground leading-relaxed">
             Refunds are handled on a case-by-case basis. Buyers may submit a
             refund request within 7 days of purchase through the platform.
-            Refunds are not guaranteed and are issued at MysteryIdea&apos;s
+            Refunds are not guaranteed and are issued at IdeaVex&apos;s
             sole discretion.
           </p>
         </section>
@@ -131,7 +131,7 @@ export default function TermsPage() {
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
             Creators retain full ownership of their ideas and content. By
-            posting on MysteryIdea, creators grant the platform a non-exclusive,
+            posting on IdeaVex, creators grant the platform a non-exclusive,
             worldwide, royalty-free license to display and market their teaser
             content for the purpose of facilitating sales. This license does not
             extend to the hidden content, which is only accessible to purchasers.
@@ -144,11 +144,11 @@ export default function TermsPage() {
             7. Limitation of Liability
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            To the maximum extent permitted by law, MysteryIdea shall not be
+            To the maximum extent permitted by law, IdeaVex shall not be
             liable for any indirect, incidental, special, consequential, or
             punitive damages arising from your use of the platform. Our total
             liability to you for any claims arising under these Terms shall not
-            exceed the amount you paid to MysteryIdea in the 12 months prior to
+            exceed the amount you paid to IdeaVex in the 12 months prior to
             the claim.
           </p>
         </section>
@@ -159,7 +159,7 @@ export default function TermsPage() {
             8. Account Termination
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            MysteryIdea reserves the right to suspend or terminate your account
+            IdeaVex reserves the right to suspend or terminate your account
             at any time for violations of these Terms, fraudulent activity,
             chargebacks, or any other conduct deemed harmful to the platform or
             its users. Creators found to be posting plagiarized or misleading
@@ -175,7 +175,7 @@ export default function TermsPage() {
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
             These Terms are governed by and construed in accordance with the
-            laws of the jurisdiction in which MysteryIdea operates
+            laws of the jurisdiction in which IdeaVex operates
             (&ldquo;Governing Jurisdiction&rdquo;). Any disputes arising under
             these Terms shall be subject to the exclusive jurisdiction of the
             courts in that jurisdiction.

@@ -1,8 +1,8 @@
-# MysteryIdea 💡
+# IdeaVex 💡
 
 ![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![Next.js](https://img.shields.io/badge/Next.js-15-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue)
 
-**MysteryIdea** is a premium idea marketplace where creators post hidden ideas with optional teaser text and images, set their own prices, and buyers unlock ideas for a fee. Revenue is split automatically via Stripe Connect.
+**IdeaVex** is a premium idea marketplace where creators post hidden ideas with optional teaser text and images, set their own prices, and buyers unlock ideas for a fee. Revenue is split automatically via Stripe Connect.
 
 ---
 

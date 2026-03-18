@@ -2,7 +2,7 @@
 
 ## Connection Pooling
 
-MysteryIdea uses **Neon PostgreSQL** with Prisma ORM.
+IdeaVex uses **Neon PostgreSQL** with Prisma ORM.
 
 ### For Vercel Serverless
 

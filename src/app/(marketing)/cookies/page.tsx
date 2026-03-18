@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy - MysteryIdea",
+  title: "Cookie Policy - IdeaVex",
   description:
-    "Learn how MysteryIdea uses cookies and similar tracking technologies.",
+    "Learn how IdeaVex uses cookies and similar tracking technologies.",
 };
 
 export default function CookiesPage() {
@@ -16,10 +16,10 @@ export default function CookiesPage() {
         </p>
 
         <p className="mt-6 text-muted-foreground leading-relaxed">
-          This Cookie Policy explains how MysteryIdea (&ldquo;we,&rdquo;
+          This Cookie Policy explains how IdeaVex (&ldquo;we,&rdquo;
           &ldquo;us,&rdquo; or &ldquo;our&rdquo;) uses cookies and similar
           tracking technologies when you visit our platform. By using
-          MysteryIdea, you consent to our use of cookies as described in this
+          IdeaVex, you consent to our use of cookies as described in this
           policy.
         </p>
 

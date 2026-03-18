@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Lightbulb, Users, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About - MysteryIdea",
-  description: "Learn about the MysteryIdea premium idea marketplace.",
+  title: "About - IdeaVex",
+  description: "Learn about the IdeaVex premium idea marketplace.",
 };
 
 export default function AboutPage() {
@@ -11,7 +11,7 @@ export default function AboutPage() {
     <div className="container mx-auto px-4 py-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mx-auto max-w-3xl">
         <h1 className="text-4xl font-bold tracking-[-0.03em] text-foreground">
-          About MysteryIdea
+          About IdeaVex
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
           A marketplace where the best ideas stay hidden — until the right
@@ -25,7 +25,7 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <p className="mt-3 leading-relaxed text-muted-foreground">
-            Great ideas deserve to be compensated. We built MysteryIdea to
+            Great ideas deserve to be compensated. We built IdeaVex to
             bridge the gap between creators with valuable knowledge and buyers
             who want to act on it. Every idea is priced by its creator and
             unlocked on demand — no subscriptions, no gatekeeping.
@@ -80,7 +80,7 @@ export default function AboutPage() {
             The Team
           </h2>
           <p className="mt-3 leading-relaxed text-muted-foreground">
-            MysteryIdea is built by a small team passionate about the creator
+            IdeaVex is built by a small team passionate about the creator
             economy. We&apos;re building in public and welcome feedback from
             our community.
           </p>

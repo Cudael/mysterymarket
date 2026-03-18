@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/my", "/studio", "/account", "/dashboard", "/creator", "/settings", "/api/"],
     },
-    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://mysteryidea.com"}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://ideavex.com"}/sitemap.xml`,
   };
 }

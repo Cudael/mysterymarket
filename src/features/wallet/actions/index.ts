@@ -193,7 +193,7 @@ export async function createDepositSession(amountInCents: number) {
       {
         price_data: {
           currency: "usd",
-          product_data: { name: "Wallet Deposit - MysteryIdea" },
+          product_data: { name: "Wallet Deposit - IdeaVex" },
           unit_amount: amountInCents,
         },
         quantity: 1,

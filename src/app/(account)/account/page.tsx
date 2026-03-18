@@ -459,7 +459,7 @@ export default function AccountPage() {
                     className="bg-transparent border border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-400"
                     variant="destructive"
                   >
-                    <a href="mailto:support@mysteryidea.com">Contact Support</a>
+                    <a href="mailto:support@ideavex.com">Contact Support</a>
                   </Button>
                 </div>
               </div>

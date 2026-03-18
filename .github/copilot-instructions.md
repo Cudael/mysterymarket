@@ -1,7 +1,7 @@
-# MysteryIdea — Copilot Agent Instructions
+# IdeaVex — Copilot Agent Instructions
 
 ## Project Overview
-MysteryIdea is a premium idea marketplace built with Next.js 15 (App Router), Prisma, PostgreSQL, Stripe Connect, Clerk Auth, and Uploadthing. Creators post hidden ideas with teaser text, buyers pay to unlock them.
+IdeaVex is a premium idea marketplace built with Next.js 15 (App Router), Prisma, PostgreSQL, Stripe Connect, Clerk Auth, and Uploadthing. Creators post hidden ideas with teaser text, buyers pay to unlock them.
 
 ## Tech Stack
 - **Framework**: Next.js 15 with App Router and TypeScript
