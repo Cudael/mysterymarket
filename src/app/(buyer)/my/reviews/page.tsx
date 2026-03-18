@@ -162,7 +162,7 @@ export default async function ReviewsPage() {
                       )}
                       {review.idea.creator.name && (
                         <Link
-                          href={`/creators/${review.idea.creator.id}`}
+                          href={`/profile/${review.idea.creator.id}`}
                           className="text-[12px] text-muted-foreground transition-colors hover:text-primary"
                         >
                           by {review.idea.creator.name}
