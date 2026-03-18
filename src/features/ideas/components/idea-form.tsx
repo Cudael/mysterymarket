@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
-import { ImagePlus, Lock, Eye, EyeOff, Wallet, CheckCircle2, Circle, AlertCircle } from "lucide-react";
+import { ImagePlus, Link2, Lock, Eye, EyeOff, FileText as FileTextIcon, Type, Upload, Wallet, CheckCircle2, Circle, AlertCircle } from "lucide-react";
 import { CATEGORIES, IDEA_MATURITY_LEVELS, getSubcategoriesByCategory } from "@/lib/constants";
 import { createIdeaSchema } from "@/features/ideas/schemas";
 import { getIdeaQualityItems, getPublishValidationIssues } from "@/features/ideas/lib/quality";
@@ -39,6 +39,11 @@ export function IdeaForm({
   const [hiddenContent, setHiddenContent] = useState(
     initialData?.hiddenContent ?? ""
   );
+  const [hiddenContentType, setHiddenContentType] = useState<"TEXT" | "FILE" | "LINK">(
+    (initialData?.hiddenContentType as "TEXT" | "FILE" | "LINK") ?? "TEXT"
+  );
+  const [hiddenFileUrl, setHiddenFileUrl] = useState(initialData?.hiddenFileUrl ?? "");
+  const [hiddenLinkUrl, setHiddenLinkUrl] = useState(initialData?.hiddenLinkUrl ?? "");
   const [originalityConfirmed, setOriginalityConfirmed] = useState(
     initialData?.originalityConfirmed ?? false
   );
@@ -77,6 +82,9 @@ export function IdeaForm({
       teaserText,
       teaserImageUrl,
       hiddenContent,
+      hiddenContentType,
+      hiddenFileUrl,
+      hiddenLinkUrl,
       category,
       priceInCents: parsedPrice,
       originalityConfirmed,
@@ -89,6 +97,9 @@ export function IdeaForm({
     teaserText,
     teaserImageUrl,
     hiddenContent,
+    hiddenContentType,
+    hiddenFileUrl,
+    hiddenLinkUrl,
     category,
     priceStr,
     originalityConfirmed,
@@ -107,6 +118,9 @@ export function IdeaForm({
         title,
         teaserText,
         hiddenContent,
+        hiddenContentType,
+        hiddenFileUrl,
+        hiddenLinkUrl,
         category,
         originalityConfirmed,
         whatYoullGet,
@@ -117,6 +131,9 @@ export function IdeaForm({
       title,
       teaserText,
       hiddenContent,
+      hiddenContentType,
+      hiddenFileUrl,
+      hiddenLinkUrl,
       category,
       originalityConfirmed,
       whatYoullGet,
@@ -144,7 +161,10 @@ export function IdeaForm({
         title,
         teaserText: teaserText || undefined,
         teaserImageUrl: teaserImageUrl || undefined,
-        hiddenContent,
+        hiddenContentType,
+        hiddenContent: hiddenContentType === "TEXT" ? hiddenContent : (hiddenContent || undefined),
+        hiddenFileUrl: hiddenFileUrl || undefined,
+        hiddenLinkUrl: hiddenLinkUrl || undefined,
         originalityConfirmed,
         whatYoullGet: whatYoullGet || undefined,
         bestFitFor: bestFitFor || undefined,
@@ -364,7 +384,7 @@ export function IdeaForm({
       {/* Hidden Content */}
       <div className="space-y-2">
         <Label
-          htmlFor="hiddenContent"
+          htmlFor={hiddenContentType === "TEXT" ? "hiddenContent" : hiddenContentType === "LINK" ? "hiddenLinkUrl" : undefined}
           className="text-[14px] font-semibold text-foreground"
         >
           <span className="inline-flex items-center gap-1.5">
@@ -375,23 +395,133 @@ export function IdeaForm({
             — only visible after purchase
           </span>
         </Label>
-        <textarea
-          id="hiddenContent"
-          value={hiddenContent}
-          onChange={(e) => setHiddenContent(e.target.value)}
-          placeholder="Share your full insight, methodology, or secret here. Be specific and actionable — buyers pay for results, not vague advice. The more concrete and original, the better."
-          rows={8}
-          required
-          className={textareaClasses}
-        />
-        <p className="text-[12px] text-muted-foreground/70">
-          {hiddenContent.length < 150 && (
-            <span className="text-amber-500">
-              Add {150 - hiddenContent.length} more characters for a quality listing ·{" "}
-            </span>
-          )}
-          {hiddenContent.length} characters · include the full insight, specifics, and what makes it usable
-        </p>
+
+        {/* Mode switcher */}
+        <div className="flex gap-1 rounded-[8px] border border-border bg-muted p-1">
+          {(
+            [
+              { value: "TEXT", icon: Type, label: "Text" },
+              { value: "FILE", icon: Upload, label: "File" },
+              { value: "LINK", icon: Link2, label: "Link" },
+            ] as const
+          ).map(({ value, icon: Icon, label }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setHiddenContentType(value)}
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-[6px] px-3 py-2 text-[13px] font-medium transition-all ${
+                hiddenContentType === value
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Text mode */}
+        {hiddenContentType === "TEXT" && (
+          <>
+            <textarea
+              id="hiddenContent"
+              value={hiddenContent}
+              onChange={(e) => setHiddenContent(e.target.value)}
+              placeholder="Share your full insight, methodology, or secret here. Be specific and actionable — buyers pay for results, not vague advice. The more concrete and original, the better."
+              rows={8}
+              className={textareaClasses}
+            />
+            <p className="text-[12px] text-muted-foreground/70">
+              {hiddenContent.length < 150 && (
+                <span className="text-amber-500">
+                  Add {150 - hiddenContent.length} more characters for a quality listing ·{" "}
+                </span>
+              )}
+              {hiddenContent.length} characters · include the full insight, specifics, and what makes it usable
+            </p>
+          </>
+        )}
+
+        {/* File mode */}
+        {hiddenContentType === "FILE" && (
+          <div className="space-y-3">
+            {hiddenFileUrl ? (
+              <div className="flex items-center justify-between rounded-[8px] border border-border bg-muted px-4 py-3">
+                <div className="flex items-center gap-2 min-w-0">
+                  <FileTextIcon className="h-4 w-4 shrink-0 text-primary" />
+                  <span className="truncate text-[13px] text-foreground">
+                    {hiddenFileUrl.split("/").pop() ?? "Uploaded file"}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setHiddenFileUrl("")}
+                  className="ml-3 shrink-0 rounded-[6px] border border-border bg-card/90 px-3 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center rounded-[8px] border-2 border-dashed border-border bg-muted p-8">
+                <div className="text-center">
+                  <Upload className="mx-auto mb-3 h-8 w-8 text-foreground/20" />
+                  <UploadButton
+                    endpoint="hiddenFileUploader"
+                    onClientUploadComplete={(res) => {
+                      if (res?.[0]?.url) setHiddenFileUrl(res[0].url);
+                    }}
+                    onUploadError={(err) => { toast.error(err.message); }}
+                  />
+                </div>
+              </div>
+            )}
+            <p className="text-[12px] text-muted-foreground/70">
+              Supported: PDF, images, ZIP, DOCX · Max 32 MB · 1 file
+            </p>
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-medium text-foreground/70">
+                Optional note to buyer
+              </label>
+              <textarea
+                value={hiddenContent}
+                onChange={(e) => setHiddenContent(e.target.value)}
+                placeholder="Add any instructions or context for the buyer — e.g. 'Open in Adobe Acrobat for best results.'"
+                rows={3}
+                className={textareaClasses}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Link mode */}
+        {hiddenContentType === "LINK" && (
+          <div className="space-y-3">
+            <input
+              id="hiddenLinkUrl"
+              type="url"
+              value={hiddenLinkUrl}
+              onChange={(e) => setHiddenLinkUrl(e.target.value)}
+              placeholder="e.g. https://www.notion.so/your-page or a private Google Doc link"
+              className={inputClasses}
+            />
+            <p className="text-[12px] text-muted-foreground/70">
+              Make sure the link is accessible to the buyer — test it in an incognito window.
+            </p>
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-medium text-foreground/70">
+                Optional note to buyer
+              </label>
+              <textarea
+                value={hiddenContent}
+                onChange={(e) => setHiddenContent(e.target.value)}
+                placeholder="Add any context — e.g. 'Request access with your purchase email.'"
+                rows={3}
+                className={textareaClasses}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

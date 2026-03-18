@@ -81,12 +81,15 @@ model Subcategory {
 }
 
 model Idea {
-  id             String       @id @default(cuid())
-  title          String
-  teaserText     String?
-  teaserImageUrl String?
-  hiddenContent  String
-  originalityConfirmed Boolean @default(false)
+  id                  String       @id @default(cuid())
+  title               String
+  teaserText          String?
+  teaserImageUrl      String?
+  hiddenContent       String
+  hiddenContentType   String       @default("TEXT")
+  hiddenFileUrl       String?
+  hiddenLinkUrl       String?
+  originalityConfirmed Boolean     @default(false)
   whatYoullGet   String?
   bestFitFor     String?
   implementationNotes String?

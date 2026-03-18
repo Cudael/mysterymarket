@@ -131,6 +131,9 @@ export async function getPurchasesByUser() {
           title: true,
           teaserText: true,
           hiddenContent: true,
+          hiddenContentType: true,
+          hiddenFileUrl: true,
+          hiddenLinkUrl: true,
           priceInCents: true,
           creator: { select: { name: true, avatarUrl: true } },
           reviews: {

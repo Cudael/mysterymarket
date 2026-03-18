@@ -16,7 +16,7 @@ function sanitizeIdeaText(input: Partial<z.infer<typeof createIdeaSchema>>) {
     ...(input.teaserText !== undefined && {
       teaserText: input.teaserText ? sanitizeHtml(input.teaserText) : input.teaserText,
     }),
-    ...(input.hiddenContent !== undefined && {
+    ...(input.hiddenContent !== undefined && input.hiddenContentType !== "FILE" && input.hiddenContentType !== "LINK" && {
       hiddenContent: sanitizeHtml(input.hiddenContent),
     }),
     ...(input.whatYoullGet !== undefined && {
@@ -67,7 +67,10 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
       title: sanitized.title ?? validated.title,
       teaserText: sanitized.teaserText,
       teaserImageUrl: sanitized.teaserImageUrl || null,
-      hiddenContent: sanitized.hiddenContent ?? validated.hiddenContent,
+      hiddenContent: sanitized.hiddenContent ?? validated.hiddenContent ?? "",
+      hiddenContentType: validated.hiddenContentType ?? "TEXT",
+      hiddenFileUrl: validated.hiddenFileUrl || null,
+      hiddenLinkUrl: validated.hiddenLinkUrl || null,
       originalityConfirmed:
         sanitized.originalityConfirmed ?? validated.originalityConfirmed,
       whatYoullGet: sanitized.whatYoullGet,
@@ -145,6 +148,8 @@ export async function updateIdea(
     data: {
       ...restInput,
       teaserImageUrl: restInput.teaserImageUrl !== undefined ? (restInput.teaserImageUrl || null) : undefined,
+      hiddenFileUrl: restInput.hiddenFileUrl !== undefined ? (restInput.hiddenFileUrl || null) : undefined,
+      hiddenLinkUrl: restInput.hiddenLinkUrl !== undefined ? (restInput.hiddenLinkUrl || null) : undefined,
       ...(subcategoryId !== undefined && { subcategoryId }),
       ...(maturityLevel !== undefined && { maturityLevel }),
     },

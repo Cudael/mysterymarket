@@ -9,6 +9,9 @@ export interface PurchaseWithIdea {
     title: string;
     teaserText: string | null;
     hiddenContent: string;
+    hiddenContentType: string;
+    hiddenFileUrl: string | null;
+    hiddenLinkUrl: string | null;
     creator: {
       name: string | null;
     };

@@ -1,13 +1,14 @@
 import { z } from "zod";
 import { getPublishValidationIssues } from "@/features/ideas/lib/quality";
 
-export const baseIdeaSchema = z.object({
+export const baseIdeaObjectSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(200),
   teaserText: z.string().max(500).optional(),
   teaserImageUrl: z.string().url().optional().or(z.literal("")),
-  hiddenContent: z
-    .string()
-    .min(10, "Hidden content must be at least 10 characters"),
+  hiddenContentType: z.enum(["TEXT", "FILE", "LINK"]).default("TEXT"),
+  hiddenContent: z.string().optional().default(""),
+  hiddenFileUrl: z.string().url().optional().or(z.literal("")),
+  hiddenLinkUrl: z.string().url().optional().or(z.literal("")),
   originalityConfirmed: z
     .boolean()
     .refine((value) => value, "Please confirm this listing is your original work."),
@@ -24,7 +25,43 @@ export const baseIdeaSchema = z.object({
   published: z.boolean().optional(),
 });
 
-export const createIdeaSchema = baseIdeaSchema.superRefine((input, ctx) => {
+function validateHiddenContentType(
+  input: { hiddenContentType?: string | null; hiddenContent?: string | null; hiddenFileUrl?: string | null; hiddenLinkUrl?: string | null },
+  ctx: z.RefinementCtx
+) {
+  const type = input.hiddenContentType ?? "TEXT";
+  if (type === "TEXT") {
+    if ((input.hiddenContent?.length ?? 0) < 10) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["hiddenContent"],
+        message: "Hidden content must be at least 10 characters",
+      });
+    }
+  } else if (type === "FILE") {
+    if (!input.hiddenFileUrl) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["hiddenFileUrl"],
+        message: "Please upload a file for the hidden content.",
+      });
+    }
+  } else if (type === "LINK") {
+    if (!input.hiddenLinkUrl) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["hiddenLinkUrl"],
+        message: "Please provide a URL for the hidden content.",
+      });
+    }
+  }
+}
+
+export const baseIdeaSchema = baseIdeaObjectSchema;
+
+export const createIdeaSchema = baseIdeaObjectSchema.superRefine((input, ctx) => {
+  validateHiddenContentType(input, ctx);
+
   if (!input.published) return;
 
   for (const issue of getPublishValidationIssues(input)) {

@@ -8,6 +8,9 @@ export interface IdeaQualityInput {
   teaserText?: string | null;
   teaserImageUrl?: string | null;
   hiddenContent?: string | null;
+  hiddenContentType?: string | null;
+  hiddenFileUrl?: string | null;
+  hiddenLinkUrl?: string | null;
   category?: string | null;
   priceInCents?: number | null;
   originalityConfirmed?: boolean | null;
@@ -21,6 +24,8 @@ export interface IdeaValidationIssue {
     | "title"
     | "teaserText"
     | "hiddenContent"
+    | "hiddenFileUrl"
+    | "hiddenLinkUrl"
     | "category"
     | "originalityConfirmed"
     | "whatYoullGet"
@@ -34,6 +39,13 @@ export function hasStructuredPreview(input: IdeaQualityInput) {
   return [input.whatYoullGet, input.bestFitFor, input.implementationNotes].some(
     (value) => (value?.trim().length ?? 0) >= IDEA_STRUCTURED_PREVIEW_MIN
   );
+}
+
+function hasHiddenContent(input: IdeaQualityInput): boolean {
+  const type = input.hiddenContentType ?? "TEXT";
+  if (type === "FILE") return !!input.hiddenFileUrl;
+  if (type === "LINK") return !!input.hiddenLinkUrl;
+  return (input.hiddenContent?.trim().length ?? 0) >= IDEA_HIDDEN_CONTENT_PUBLISH_MIN;
 }
 
 export function getIdeaQualityItems(input: IdeaQualityInput) {
@@ -57,8 +69,8 @@ export function getIdeaQualityItems(input: IdeaQualityInput) {
     },
     {
       label: "Buyer gets enough detail",
-      met: (input.hiddenContent?.trim().length ?? 0) >= IDEA_HIDDEN_CONTENT_PUBLISH_MIN,
-      hint: `At least ${IDEA_HIDDEN_CONTENT_PUBLISH_MIN} characters for publish-ready depth`,
+      met: hasHiddenContent(input),
+      hint: `Add text (${IDEA_HIDDEN_CONTENT_PUBLISH_MIN}+ chars), upload a file, or provide a link`,
     },
     {
       label: "Category selected",
@@ -102,11 +114,28 @@ export function getPublishValidationIssues(
     });
   }
 
-  if ((input.hiddenContent?.trim().length ?? 0) < IDEA_HIDDEN_CONTENT_PUBLISH_MIN) {
-    issues.push({
-      path: ["hiddenContent"],
-      message: `Add more substance to the hidden content before publishing (${IDEA_HIDDEN_CONTENT_PUBLISH_MIN}+ characters).`,
-    });
+  const type = input.hiddenContentType ?? "TEXT";
+  if (type === "FILE") {
+    if (!input.hiddenFileUrl) {
+      issues.push({
+        path: ["hiddenFileUrl"],
+        message: "Upload a file for the hidden content before publishing.",
+      });
+    }
+  } else if (type === "LINK") {
+    if (!input.hiddenLinkUrl) {
+      issues.push({
+        path: ["hiddenLinkUrl"],
+        message: "Provide a valid URL for the hidden content before publishing.",
+      });
+    }
+  } else {
+    if ((input.hiddenContent?.trim().length ?? 0) < IDEA_HIDDEN_CONTENT_PUBLISH_MIN) {
+      issues.push({
+        path: ["hiddenContent"],
+        message: `Add more substance to the hidden content before publishing (${IDEA_HIDDEN_CONTENT_PUBLISH_MIN}+ characters).`,
+      });
+    }
   }
 
   if (!input.category?.trim()) {
