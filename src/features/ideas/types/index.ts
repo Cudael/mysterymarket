@@ -36,6 +36,9 @@ export interface IdeaWithCreator {
   teaserText: string | null;
   teaserImageUrl: string | null;
   hiddenContent: string;
+  hiddenContentType: string;
+  hiddenFileUrl: string | null;
+  hiddenLinkUrl: string | null;
   originalityConfirmed: boolean;
   whatYoullGet: string | null;
   bestFitFor: string | null;

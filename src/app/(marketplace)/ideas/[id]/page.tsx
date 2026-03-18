@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, BadgeCheck, CheckCircle2, Calendar, FileText, Lightbulb, Lock, RefreshCw, ShieldCheck, Star, Wallet, Users } from "lucide-react";
+import { ArrowLeft, BadgeCheck, CheckCircle2, Calendar, Download, ExternalLink, FileText, Lightbulb, Lock, RefreshCw, ShieldCheck, Star, Wallet, Users } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -333,9 +333,65 @@ export default async function IdeaDetailPage({
 
               {showContent ? (
                 <div className="rounded-xl border border-border bg-card p-6">
-                  <p className="whitespace-pre-wrap text-foreground leading-relaxed">
-                    {idea.hiddenContent}
-                  </p>
+                  {(idea.hiddenContentType ?? "TEXT") === "FILE" ? (
+                    <div className="flex flex-col items-center gap-4 py-4 text-center">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
+                        <Download className="h-8 w-8 text-primary" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        Your file is ready to download.
+                      </p>
+                      {idea.hiddenFileUrl ? (
+                        <a
+                          href={idea.hiddenFileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 rounded-[8px] bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                        >
+                          <Download className="h-4 w-4" />
+                          Download File
+                        </a>
+                      ) : (
+                        <p className="text-sm text-destructive">File unavailable — contact support.</p>
+                      )}
+                      {idea.hiddenContent && (
+                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                          {idea.hiddenContent}
+                        </p>
+                      )}
+                    </div>
+                  ) : (idea.hiddenContentType ?? "TEXT") === "LINK" ? (
+                    <div className="flex flex-col items-center gap-4 py-4 text-center">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
+                        <ExternalLink className="h-8 w-8 text-primary" />
+                      </div>
+                      {idea.hiddenLinkUrl ? (
+                        <a
+                          href={idea.hiddenLinkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 rounded-[8px] bg-primary px-5 py-2.5 text-[14px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          View Resource →
+                        </a>
+                      ) : (
+                        <p className="text-sm text-destructive">Link unavailable — contact support.</p>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        This link was provided by the creator. Open in a new tab.
+                      </p>
+                      {idea.hiddenContent && (
+                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                          {idea.hiddenContent}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="whitespace-pre-wrap text-foreground leading-relaxed">
+                      {idea.hiddenContent}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="rounded-2xl border border-border bg-card p-8 text-center">

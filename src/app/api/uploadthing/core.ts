@@ -15,6 +15,20 @@ export const ourFileRouter = {
       logger.info("Upload complete", { userId: metadata.userId, url: file.ufsUrl });
       return { uploadedBy: metadata.userId, url: file.ufsUrl };
     }),
+  hiddenFileUploader: f({
+    pdf: { maxFileSize: "32MB", maxFileCount: 1 },
+    image: { maxFileSize: "32MB", maxFileCount: 1 },
+    blob: { maxFileSize: "32MB", maxFileCount: 1 },
+  })
+    .middleware(async () => {
+      const { userId } = await auth();
+      if (!userId) throw new Error("Unauthorized");
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      logger.info("Hidden file upload complete", { userId: metadata.userId, url: file.ufsUrl });
+      return { uploadedBy: metadata.userId, url: file.ufsUrl };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
