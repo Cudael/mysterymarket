@@ -10,6 +10,7 @@ import {
   Lightbulb,
   Shield,
   ArrowLeft,
+  Banknote,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ const ADMIN_NAV_LINKS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/reports", label: "Reports", icon: Flag, exact: false },
   { href: "/admin/refunds", label: "Refunds", icon: DollarSign, exact: false },
+  { href: "/admin/withdrawals", label: "Withdrawals", icon: Banknote, exact: false },
   { href: "/admin/users", label: "Users", icon: Users, exact: false },
   { href: "/admin/ideas", label: "Ideas", icon: Lightbulb, exact: false },
 ];

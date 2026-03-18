@@ -3,6 +3,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
+import { logger } from "@/lib/logger";
 import { ReportStatus, ReportReason, Role, Prisma } from "@prisma/client";
 
 export async function requireAdmin() {
@@ -366,4 +368,156 @@ export async function toggleIdeaPublished(ideaId: string, published: boolean) {
   revalidatePath(`/ideas/${ideaId}`);
   revalidatePath("/ideas");
   revalidatePath("/admin/ideas");
+}
+
+export async function adminGetWithdrawals(status?: string) {
+  await requireAdmin();
+
+  const where =
+    status && status !== "ALL"
+      ? { status: status as "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED" }
+      : undefined;
+
+  return prisma.withdrawalRequest.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    take: 100,
+    include: {
+      wallet: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              stripeAccountId: true,
+              stripeOnboarded: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function adminApproveWithdrawal(withdrawalId: string) {
+  await requireAdmin();
+
+  const withdrawal = await prisma.withdrawalRequest.findUnique({
+    where: { id: withdrawalId },
+    include: {
+      wallet: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              stripeAccountId: true,
+              stripeOnboarded: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!withdrawal) throw new Error("Withdrawal request not found");
+  if (withdrawal.status !== "PENDING") throw new Error("Withdrawal is not pending");
+
+  const user = withdrawal.wallet.user;
+  if (!user.stripeAccountId) {
+    throw new Error("Creator does not have a connected Stripe account");
+  }
+
+  await prisma.withdrawalRequest.update({
+    where: { id: withdrawalId },
+    data: { status: "PROCESSING" },
+  });
+
+  try {
+    const transfer = await stripe.transfers.create({
+      amount: withdrawal.amountInCents,
+      currency: "usd", // Platform currency; extend if multi-currency support is added
+      destination: user.stripeAccountId,
+    });
+
+    await prisma.withdrawalRequest.update({
+      where: { id: withdrawalId },
+      data: {
+        status: "COMPLETED",
+        stripePayoutId: transfer.id,
+        processedAt: new Date(),
+      },
+    });
+
+    logger.info("Withdrawal approved and Stripe transfer created", {
+      withdrawalId,
+      transferId: transfer.id,
+      userId: user.id,
+    });
+  } catch (err) {
+    logger.error("Stripe transfer failed – reverting withdrawal to PENDING", err, {
+      withdrawalId,
+    });
+
+    await prisma.$transaction([
+      prisma.withdrawalRequest.update({
+        where: { id: withdrawalId },
+        data: { status: "PENDING" },
+      }),
+      prisma.wallet.update({
+        where: { id: withdrawal.walletId },
+        data: {
+          balanceInCents: { increment: withdrawal.amountInCents },
+          totalWithdrawnInCents: { decrement: withdrawal.amountInCents },
+        },
+      }),
+    ]);
+
+    throw new Error(
+      err instanceof Error ? err.message : "Stripe transfer failed. Withdrawal reverted to pending."
+    );
+  }
+
+  revalidatePath("/admin/withdrawals");
+}
+
+export async function adminRejectWithdrawal(withdrawalId: string) {
+  await requireAdmin();
+
+  const withdrawal = await prisma.withdrawalRequest.findUnique({
+    where: { id: withdrawalId },
+    include: { wallet: true },
+  });
+
+  if (!withdrawal) throw new Error("Withdrawal request not found");
+  if (withdrawal.status !== "PENDING") throw new Error("Withdrawal is not pending");
+
+  await prisma.$transaction([
+    prisma.withdrawalRequest.update({
+      where: { id: withdrawalId },
+      data: { status: "FAILED", processedAt: new Date() },
+    }),
+    prisma.wallet.update({
+      where: { id: withdrawal.walletId },
+      data: {
+        balanceInCents: { increment: withdrawal.amountInCents },
+        totalWithdrawnInCents: { decrement: withdrawal.amountInCents },
+      },
+    }),
+    prisma.walletTransaction.create({
+      data: {
+        walletId: withdrawal.walletId,
+        type: "EARNING",
+        amountInCents: withdrawal.amountInCents,
+        description: "Withdrawal rejected – funds returned",
+        referenceId: withdrawal.id,
+      },
+    }),
+  ]);
+
+  logger.info("Withdrawal rejected and funds returned to wallet", { withdrawalId });
+
+  revalidatePath("/admin/withdrawals");
 }

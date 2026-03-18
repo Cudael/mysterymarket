@@ -103,6 +103,9 @@ export async function debitWalletForRefund(
 }
 
 const MINIMUM_WITHDRAWAL_CENTS = 1000;
+const MAXIMUM_WITHDRAWAL_CENTS = 100_000; // $1,000 per request
+const WITHDRAWAL_DAILY_LIMIT = 2;         // max 2 requests per 24 hours
+const HOLDING_PERIOD_DAYS = 7;
 
 export async function requestWithdrawal(amountInCents: number) {
   const { userId } = await auth();
@@ -123,11 +126,38 @@ export async function requestWithdrawal(amountInCents: number) {
     );
   }
 
+  if (amountInCents > MAXIMUM_WITHDRAWAL_CENTS) {
+    throw new Error(
+      `Maximum single withdrawal is $${(MAXIMUM_WITHDRAWAL_CENTS / 100).toFixed(2)}`
+    );
+  }
+
+  checkRateLimit(`withdrawal:${userId}`, { interval: 86_400_000, maxRequests: WITHDRAWAL_DAILY_LIMIT });
+
   const wallet = await prisma.wallet.findUnique({ where: { userId: user.id } });
   if (!wallet) throw new Error("Wallet not found");
 
-  if (wallet.balanceInCents < amountInCents) {
-    throw new Error("Insufficient balance");
+  const recentEarnings = await prisma.walletTransaction.aggregate({
+    where: {
+      walletId: wallet.id,
+      type: "EARNING",
+      createdAt: {
+        gte: new Date(Date.now() - HOLDING_PERIOD_DAYS * 24 * 60 * 60 * 1000),
+      },
+    },
+    _sum: { amountInCents: true },
+  });
+
+  const lockedAmount = recentEarnings._sum.amountInCents ?? 0;
+  const withdrawableBalance = wallet.balanceInCents - lockedAmount;
+
+  if (withdrawableBalance < amountInCents) {
+    const lockedDollars = (lockedAmount / 100).toFixed(2);
+    const withdrawableDollars = (withdrawableBalance / 100).toFixed(2);
+    throw new Error(
+      `$${lockedDollars} of your balance is held for ${HOLDING_PERIOD_DAYS} days after earning. ` +
+      `Available to withdraw: $${withdrawableDollars}.`
+    );
   }
 
   const pendingWithdrawal = await prisma.withdrawalRequest.findFirst({
