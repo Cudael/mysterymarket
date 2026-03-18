@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - MysteryIdea",
+  title: "Privacy Policy - IdeaVex",
   description:
-    "Learn how MysteryIdea collects, uses, and protects your personal data.",
+    "Learn how IdeaVex collects, uses, and protects your personal data.",
 };
 
 export default function PrivacyPage() {
@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         </p>
 
         <p className="mt-6 text-muted-foreground leading-relaxed">
-          MysteryIdea (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
+          IdeaVex (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
           is committed to protecting your privacy. This Privacy Policy explains
           how we collect, use, share, and safeguard your personal information
           when you use our platform.

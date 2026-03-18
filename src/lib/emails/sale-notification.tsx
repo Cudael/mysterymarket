@@ -1,6 +1,6 @@
 import { resend } from "@/lib/resend";
 
-const FROM = process.env.RESEND_FROM_EMAIL || "MysteryIdea <noreply@mysteryidea.com>";
+const FROM = process.env.RESEND_FROM_EMAIL || "IdeaVex <noreply@ideavex.com>";
 
 export async function sendSaleNotificationEmail(
   to: string,
@@ -10,7 +10,7 @@ export async function sendSaleNotificationEmail(
   platformFeeInCents: number,
   ideaId: string
 ) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mysteryidea.com";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://ideavex.com";
   const gross = (amountInCents / 100).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
@@ -51,7 +51,7 @@ export async function sendSaleNotificationEmail(
         </tr>
       </table>
       <a href="${appUrl}/creator/ideas/${ideaId}" style="display: inline-block; background: #7c3aed; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">View in Dashboard</a>
-      <p style="margin-top: 32px; color: #71717a; font-size: 12px;">MysteryIdea — Premium Idea Marketplace</p>
+      <p style="margin-top: 32px; color: #71717a; font-size: 12px;">IdeaVex — Premium Idea Marketplace</p>
     </div>
   `;
 

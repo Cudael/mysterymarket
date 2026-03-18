@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This repository contains **MysteryIdea**, a Next.js 15 marketplace where creators sell hidden ideas and buyers unlock them for a fee. Agents working here should preserve the existing App Router structure, Prisma data model, and feature-based organization while making the smallest safe change that satisfies the task.
+This repository contains **IdeaVex**, a Next.js 15 marketplace where creators sell hidden ideas and buyers unlock them for a fee. Agents working here should preserve the existing App Router structure, Prisma data model, and feature-based organization while making the smallest safe change that satisfies the task.
 
 ## Tech Stack
 

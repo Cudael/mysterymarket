@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Mail, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Contact - MysteryIdea",
-  description: "Get in touch with the MysteryIdea team.",
+  title: "Contact - IdeaVex",
+  description: "Get in touch with the IdeaVex team.",
 };
 
 export default function ContactPage() {
@@ -31,10 +31,10 @@ export default function ContactPage() {
               out directly.
             </p>
             <a
-              href="mailto:support@mysteryidea.com"
+              href="mailto:support@ideavex.com"
               className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
             >
-              support@mysteryidea.com
+              support@ideavex.com
             </a>
           </section>
 

@@ -8,11 +8,11 @@ async function main() {
 
   // Create demo creator user
   const creator = await prisma.user.upsert({
-    where: { email: 'demo-creator@mysteryidea.com' },
+    where: { email: 'demo-creator@ideavex.com' },
     update: {},
     create: {
       clerkId: 'demo_clerk_creator_001',
-      email: 'demo-creator@mysteryidea.com',
+      email: 'demo-creator@ideavex.com',
       name: 'Demo Creator',
       bio: 'I share innovative ideas across tech, business, and creative domains.',
       role: 'CREATOR',
@@ -23,11 +23,11 @@ async function main() {
 
   // Create demo buyer user
   const buyer = await prisma.user.upsert({
-    where: { email: 'demo-buyer@mysteryidea.com' },
+    where: { email: 'demo-buyer@ideavex.com' },
     update: {},
     create: {
       clerkId: 'demo_clerk_buyer_001',
-      email: 'demo-buyer@mysteryidea.com',
+      email: 'demo-buyer@ideavex.com',
       name: 'Demo Buyer',
       role: 'USER',
     },

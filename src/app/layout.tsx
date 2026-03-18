@@ -7,16 +7,16 @@ const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 export const metadata: Metadata = {
   title: {
-    default: "MysteryIdea — Premium Idea Marketplace",
-    template: "%s | MysteryIdea",
+    default: "IdeaVex — Premium Idea Marketplace",
+    template: "%s | IdeaVex",
   },
   description:
     "Discover and unlock premium hidden ideas from top creators. Buy exclusive concepts or multi-unlock ideas at your own price.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://mysteryidea.com"
+    process.env.NEXT_PUBLIC_APP_URL || "https://ideavex.com"
   ),
   openGraph: {
-    title: "MysteryIdea — Premium Idea Marketplace",
+    title: "IdeaVex — Premium Idea Marketplace",
     description:
       "Discover and unlock premium hidden ideas from top creators.",
     type: "website",
