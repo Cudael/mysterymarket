@@ -97,10 +97,10 @@ export function Navbar() {
               My Library
             </Link>
             <Link
-              href="/studio"
+              href="/creator"
               className={cn(
                 "flex items-center gap-1.5 text-[14px] font-medium transition-all duration-200 hover:-translate-y-[1px]",
-                pathname.startsWith("/studio") ? "text-white" : "text-white/45 hover:text-white/80"
+                pathname.startsWith("/creator") ? "text-white" : "text-white/45 hover:text-white/80"
               )}
             >
               <Lightbulb className="h-4 w-4 shrink-0" />
@@ -220,7 +220,7 @@ export function Navbar() {
 
                     {/* Creator Studio */}
                     <Link
-                      href="/studio"
+                      href="/creator"
                       className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[15px] font-medium text-white/50 hover:bg-white/[0.04] hover:text-white/80 transition-colors"
                     >
                       <Lightbulb className="h-4 w-4 shrink-0" />

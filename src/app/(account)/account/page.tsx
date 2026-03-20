@@ -507,7 +507,7 @@ export default function AccountPage() {
                         </p>
                         <div className="mt-4">
                           <Button asChild>
-                            <a href="/studio/payouts">
+                            <a href="/creator/payouts">
                               Connect Stripe <AlertCircle className="ml-2 h-4 w-4" />
                             </a>
                           </Button>

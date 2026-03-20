@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/my", "/studio", "/account", "/dashboard", "/creator", "/settings", "/api/"],
+      disallow: ["/my", "/creator", "/account", "/dashboard", "/settings", "/api/"],
     },
     sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://ideavex.com"}/sitemap.xml`,
   };

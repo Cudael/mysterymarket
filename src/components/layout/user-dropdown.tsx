@@ -122,7 +122,7 @@ export function UserDropdown() {
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onClick={() => router.push("/studio")}
+            onClick={() => router.push("/creator")}
             className="rounded-[10px] px-3 py-2.5 text-[13.5px] font-medium text-white/60 hover:bg-white/[0.05] hover:text-white transition-colors cursor-pointer flex items-center gap-2.5 focus:bg-white/[0.05] focus:text-white"
           >
             <Lightbulb className="h-4 w-4 text-primary/70 shrink-0" />

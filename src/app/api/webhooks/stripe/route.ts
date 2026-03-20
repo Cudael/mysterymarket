@@ -151,7 +151,7 @@ export async function POST(req: Request) {
                 type: "SALE",
                 title: "New Sale!",
                 message: `Someone just unlocked your idea '${purchase.idea.title}'`,
-                link: `/studio`,
+                link: `/creator`,
               }),
             ]);
           }

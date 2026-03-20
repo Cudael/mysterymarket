@@ -1,9 +1,9 @@
 import { Navbar } from "@/components/layout/navbar";
-import { StudioSidebar } from "@/components/layout/studio-sidebar";
+import { CreatorSidebar } from "@/components/layout/creator-sidebar";
 
 export const dynamic = "force-dynamic";
 
-export default function StudioLayout({
+export default function CreatorLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export default function StudioLayout({
       <Navbar />
 
       <div className="flex flex-1 flex-col md:flex-row">
-        <StudioSidebar />
+        <CreatorSidebar />
 
         <main className="min-w-0 flex-1 overflow-x-hidden px-4 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
           <div className="mx-auto w-full max-w-6xl">

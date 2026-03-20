@@ -331,7 +331,7 @@ export function IdeaCard({
                 size="sm"
                 className="h-9 px-5 text-xs rounded-xl border-white/10 bg-white/[0.03] text-white/50 hover:border-primary/30 hover:text-primary hover:bg-primary/5"
               >
-                <Link href={`/studio/ideas/${id}/edit`}>Edit</Link>
+                <Link href={`/creator/ideas/${id}/edit`}>Edit</Link>
               </Button>
             ) : isPurchased ? (
               <Button

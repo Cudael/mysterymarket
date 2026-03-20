@@ -19,8 +19,8 @@ export async function createConnectAccount() {
   if (user.stripeAccountId) {
     const accountLink = await stripe.accountLinks.create({
       account: user.stripeAccountId,
-      refresh_url: absoluteUrl("/studio/payouts?refresh=true"),
-      return_url: absoluteUrl("/studio/payouts?success=true"),
+      refresh_url: absoluteUrl("/creator/payouts?refresh=true"),
+      return_url: absoluteUrl("/creator/payouts?success=true"),
       type: "account_onboarding",
     });
     return { url: accountLink.url };
@@ -43,8 +43,8 @@ export async function createConnectAccount() {
 
   const accountLink = await stripe.accountLinks.create({
     account: account.id,
-    refresh_url: absoluteUrl("/studio/payouts?refresh=true"),
-    return_url: absoluteUrl("/studio/payouts?success=true"),
+    refresh_url: absoluteUrl("/creator/payouts?refresh=true"),
+    return_url: absoluteUrl("/creator/payouts?success=true"),
     type: "account_onboarding",
   });
 
@@ -93,8 +93,8 @@ export async function createAccountLink() {
 
   const accountLink = await stripe.accountLinks.create({
     account: user.stripeAccountId,
-    refresh_url: absoluteUrl("/studio/payouts?refresh=true"),
-    return_url: absoluteUrl("/studio/payouts?success=true"),
+    refresh_url: absoluteUrl("/creator/payouts?refresh=true"),
+    return_url: absoluteUrl("/creator/payouts?success=true"),
     type: "account_onboarding",
   });
 

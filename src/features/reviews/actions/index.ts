@@ -68,7 +68,7 @@ export async function createReview(
   });
 
   revalidatePath(`/ideas/${ideaId}`);
-  revalidatePath("/studio/feedback");
+  revalidatePath("/creator/feedback");
 }
 
 export async function getReviewsForIdea(ideaId: string) {
