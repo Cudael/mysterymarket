@@ -25,6 +25,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { logger } from "@/lib/logger";
 
 type Section = "profile" | "social" | "notifications" | "account" | "payouts";
 
@@ -110,7 +111,7 @@ export default function AccountPage() {
       await updateProfile({ name: name || undefined, bio: bio || undefined });
       toast.success("Profile saved successfully");
     } catch (err) {
-      console.error("[account] Profile save failed:", err);
+      logger.error("[account] Profile save failed", err);
       toast.error("Failed to save profile");
     } finally {
       setIsSaving(false);
@@ -140,7 +141,7 @@ export default function AccountPage() {
       });
       toast.success("Social links saved successfully");
     } catch (err) {
-      console.error("[account] Social links save failed:", err);
+      logger.error("[account] Social links save failed", err);
       toast.error("Failed to save social links");
     } finally {
       setIsSavingSocial(false);
