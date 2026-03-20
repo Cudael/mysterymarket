@@ -5,7 +5,6 @@ import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { debitWalletForPurchase, creditWallet } from "@/features/wallet/actions";
 import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
 import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
 import { trackEvent } from "@/lib/analytics";
@@ -78,7 +77,7 @@ export async function createCheckoutSession(ideaId: string) {
       ideaId,
       amountInCents: idea.priceInCents,
       platformFeeInCents: platformFeeAmount,
-      stripePaymentIntentId: session.payment_intent as string,
+      stripePaymentIntentId: (session.payment_intent as string) ?? session.id,
     },
   });
 
@@ -190,32 +189,63 @@ export async function purchaseWithWallet(ideaId: string) {
 
   const referenceId = `wallet_${crypto.randomUUID()}`;
 
-  // Debit buyer wallet
-  await debitWalletForPurchase(
-    user.id,
-    idea.priceInCents,
-    `Purchase: ${idea.title}`,
-    referenceId
-  );
+  // Perform all wallet and purchase operations atomically
+  const purchase = await prisma.$transaction(async (tx) => {
+    // Re-verify buyer wallet balance inside transaction to prevent race conditions
+    const buyerWallet = await tx.wallet.findUnique({ where: { userId: user.id } });
+    if (!buyerWallet || buyerWallet.balanceInCents < idea.priceInCents) {
+      throw new Error("Insufficient wallet balance");
+    }
 
-  // Credit creator wallet
-  await creditWallet(
-    idea.creatorId,
-    netEarnings,
-    `Sale: ${idea.title}`,
-    referenceId
-  );
+    // Debit buyer wallet
+    await tx.wallet.update({
+      where: { id: buyerWallet.id },
+      data: { balanceInCents: { decrement: idea.priceInCents } },
+    });
+    await tx.walletTransaction.create({
+      data: {
+        walletId: buyerWallet.id,
+        type: "PURCHASE",
+        amountInCents: idea.priceInCents,
+        description: `Purchase: ${idea.title}`,
+        referenceId,
+      },
+    });
 
-  // Create completed purchase record
-  const purchase = await prisma.purchase.create({
-    data: {
-      buyerId: user.id,
-      ideaId,
-      amountInCents: idea.priceInCents,
-      platformFeeInCents: platformFeeAmount,
-      stripePaymentIntentId: referenceId,
-      status: "COMPLETED",
-    },
+    // Upsert and credit creator wallet
+    const creatorWallet = await tx.wallet.upsert({
+      where: { userId: idea.creatorId },
+      create: { userId: idea.creatorId },
+      update: {},
+    });
+    await tx.wallet.update({
+      where: { id: creatorWallet.id },
+      data: {
+        balanceInCents: { increment: netEarnings },
+        totalEarnedInCents: { increment: netEarnings },
+      },
+    });
+    await tx.walletTransaction.create({
+      data: {
+        walletId: creatorWallet.id,
+        type: "EARNING",
+        amountInCents: netEarnings,
+        description: `Sale: ${idea.title}`,
+        referenceId,
+      },
+    });
+
+    // Create completed purchase record
+    return tx.purchase.create({
+      data: {
+        buyerId: user.id,
+        ideaId,
+        amountInCents: idea.priceInCents,
+        platformFeeInCents: platformFeeAmount,
+        stripePaymentIntentId: referenceId,
+        status: "COMPLETED",
+      },
+    });
   });
 
   trackEvent("checkout_started", {

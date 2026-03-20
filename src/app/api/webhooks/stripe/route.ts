@@ -56,6 +56,18 @@ export async function POST(req: Request) {
         });
         if (existing) break;
 
+        // If no purchase found by payment intent, try by session ID
+        // (fallback for null payment_intent at checkout session creation time)
+        const bySessionId = await prisma.purchase.findFirst({
+          where: { stripePaymentIntentId: session.id, status: "PENDING" },
+        });
+        if (bySessionId) {
+          await prisma.purchase.update({
+            where: { id: bySessionId.id },
+            data: { stripePaymentIntentId: paymentIntentId },
+          });
+        }
+
         await prisma.purchase.updateMany({
           where: { stripePaymentIntentId: paymentIntentId },
           data: { status: "COMPLETED" },
