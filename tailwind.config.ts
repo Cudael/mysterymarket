@@ -61,6 +61,13 @@ const config: Config = {
           "Arial",
           "sans-serif",
         ],
+        brand: [
+          "'Trebuchet MS'",
+          "'Segoe UI'",
+          "system-ui",
+          "-apple-system",
+          "sans-serif",
+        ],
       },
     },
   },
