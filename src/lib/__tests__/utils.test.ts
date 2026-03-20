@@ -23,6 +23,15 @@ describe('formatPrice', () => {
   it('formats large amounts', () => {
     expect(formatPrice(100000)).toBe('$1,000.00');
   });
+  it('returns $0.00 for NaN', () => {
+    expect(formatPrice(NaN)).toBe('$0.00');
+  });
+  it('returns $0.00 for Infinity', () => {
+    expect(formatPrice(Infinity)).toBe('$0.00');
+  });
+  it('returns $0.00 for negative values', () => {
+    expect(formatPrice(-100)).toBe('$0.00');
+  });
 });
 
 describe('absoluteUrl', () => {
@@ -30,5 +39,14 @@ describe('absoluteUrl', () => {
     const url = absoluteUrl('/test');
     expect(url).toContain('/test');
     expect(url).toMatch(/^https?:\/\//);
+  });
+  it('normalizes path without leading slash', () => {
+    const url = absoluteUrl('test');
+    expect(url).toContain('/test');
+    expect(url).toMatch(/^https?:\/\//);
+  });
+  it('does not double-slash a path that already starts with /', () => {
+    const url = absoluteUrl('/ideas/123');
+    expect(url).not.toContain('//ideas');
   });
 });

@@ -33,6 +33,8 @@ export async function POST(req: Request) {
     );
   }
 
+  logger.info("[stripe-webhook] Event received", { type: event.type, id: event.id });
+
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;

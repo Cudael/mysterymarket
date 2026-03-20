@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rate-limit";
 
@@ -17,6 +18,12 @@ export async function toggleFollow(creatorId: string) {
   if (!viewer) throw new Error("User not found");
   if (viewer.id === creatorId) throw new Error("You cannot follow yourself");
 
+  const creator = await prisma.user.findUnique({
+    where: { id: creatorId },
+    select: { id: true },
+  });
+  if (!creator) throw new Error("Creator not found");
+
   const existing = await prisma.follow.findUnique({
     where: { followerId_followingId: { followerId: viewer.id, followingId: creatorId } },
   });
@@ -31,10 +38,12 @@ export async function toggleFollow(creatorId: string) {
 
   const followerCount = await prisma.follow.count({ where: { followingId: creatorId } });
 
+  revalidatePath(`/creators/${creatorId}`);
+
   return { following: !existing, followerCount };
 }
 
-export async function getFollowStatus(creatorId: string) {
+export async function getFollowStatus(creatorId: string): Promise<{ isFollowing: boolean; followerCount: number }> {
   const { userId } = await auth();
 
   const followerCount = await prisma.follow.count({ where: { followingId: creatorId } });
