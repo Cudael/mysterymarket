@@ -195,7 +195,7 @@ export default async function BlogPostPage({
               variant="outline"
               className="border-white/40 text-white hover:bg-white/10 hover:text-white font-semibold px-6 h-11"
             >
-              <Link href="/studio">Become a Creator</Link>
+              <Link href="/creator">Become a Creator</Link>
             </Button>
           </div>
         </section>

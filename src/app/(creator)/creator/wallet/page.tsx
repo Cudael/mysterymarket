@@ -53,7 +53,7 @@ export default async function StudioWalletPage() {
             </div>
 
             <Button asChild variant="outline">
-              <Link href="/studio/payouts" className="gap-2">
+              <Link href="/creator/payouts" className="gap-2">
                 Open Payout Settings
                 <ArrowRight className="h-4 w-4" />
               </Link>

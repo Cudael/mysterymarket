@@ -19,20 +19,20 @@ import {
 import { cn } from "@/lib/utils";
 import { getIsAdmin } from "@/features/admin/actions";
 
-const STUDIO_LINKS = [
-  { href: "/studio", label: "Overview", icon: LayoutDashboard, exact: true },
-  { href: "/studio/analytics", label: "Analytics", icon: BarChart3, exact: false },
-  { href: "/studio/wallet", label: "Wallet", icon: Wallet2, exact: false },
-  { href: "/studio/feedback", label: "Feedback", icon: MessageSquare, exact: false },
-  { href: "/studio/ideas/new", label: "New Idea", icon: PlusCircle, exact: true },
-  { href: "/studio/payouts", label: "Payouts", icon: CreditCard, exact: false },
+const CREATOR_LINKS = [
+  { href: "/creator", label: "Overview", icon: LayoutDashboard, exact: true },
+  { href: "/creator/analytics", label: "Analytics", icon: BarChart3, exact: false },
+  { href: "/creator/wallet", label: "Wallet", icon: Wallet2, exact: false },
+  { href: "/creator/feedback", label: "Feedback", icon: MessageSquare, exact: false },
+  { href: "/creator/ideas/new", label: "New Idea", icon: PlusCircle, exact: true },
+  { href: "/creator/payouts", label: "Payouts", icon: CreditCard, exact: false },
 ];
 
 const ACCOUNT_LINKS = [
   { href: "/account", label: "Account", icon: Settings, exact: false },
 ];
 
-export function StudioSidebar() {
+export function CreatorSidebar() {
   const pathname = usePathname();
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -108,11 +108,11 @@ export function StudioSidebar() {
 
         <nav className="flex flex-1 flex-col overflow-y-auto px-4 py-3">
           <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-foreground/35">
-            Studio
+            Creator
           </p>
 
           <div className="flex flex-col gap-1">
-            {STUDIO_LINKS.map((link) => (
+            {CREATOR_LINKS.map((link) => (
               <NavLink key={link.href} {...link} />
             ))}
           </div>
@@ -173,7 +173,7 @@ export function StudioSidebar() {
       <div className="flex flex-col border-b border-border bg-card md:hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
         <div className="overflow-x-auto no-scrollbar">
           <div className="flex gap-2 px-4 py-3">
-            {STUDIO_LINKS.map(({ href, label, icon: Icon, exact }) => {
+            {CREATOR_LINKS.map(({ href, label, icon: Icon, exact }) => {
               const isActive = exact ? pathname === href : pathname.startsWith(href);
 
               return (

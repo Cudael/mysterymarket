@@ -31,25 +31,25 @@ export const metadata: Metadata = {
 
 const quickLinks = [
   {
-    href: "/studio/analytics",
+    href: "/creator/analytics",
     title: "Analytics",
     description: "Track performance, reviews, and revenue trends.",
     icon: BarChart3,
   },
   {
-    href: "/studio/wallet",
+    href: "/creator/wallet",
     title: "Wallet",
     description: "Review your balance, earnings, and transactions.",
     icon: Wallet2,
   },
   {
-    href: "/studio/payouts",
+    href: "/creator/payouts",
     title: "Payouts",
     description: "Connect Stripe and manage payout settings.",
     icon: CreditCard,
   },
   {
-    href: "/studio/ideas/new",
+    href: "/creator/ideas/new",
     title: "New Idea",
     description: "Publish a new premium insight for buyers.",
     icon: PlusCircle,
@@ -92,7 +92,7 @@ export default async function StudioPage() {
         icon={<Lightbulb className="h-6 w-6 text-white" />}
         action={
           <Button asChild>
-            <Link href="/studio/ideas/new" className="gap-2">
+            <Link href="/creator/ideas/new" className="gap-2">
               <PlusCircle className="h-4 w-4" />
               New Idea
             </Link>
@@ -148,14 +148,14 @@ export default async function StudioPage() {
 
         <div className="mt-6 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row">
           <Button asChild className="sm:w-auto">
-            <Link href="/studio/ideas/new" className="gap-2">
+            <Link href="/creator/ideas/new" className="gap-2">
               <PlusCircle className="h-4 w-4" />
               Publish New Idea
             </Link>
           </Button>
 
           <Button asChild variant="outline" className="sm:w-auto">
-            <Link href="/studio/wallet" className="gap-2">
+            <Link href="/creator/wallet" className="gap-2">
               <ReceiptText className="h-4 w-4" />
               View Wallet
             </Link>
@@ -163,7 +163,7 @@ export default async function StudioPage() {
 
           {ideas.length > 0 && (
             <Button asChild variant="outline" className="sm:w-auto">
-              <Link href="/studio/analytics" className="gap-2">
+              <Link href="/creator/analytics" className="gap-2">
                 <BarChart3 className="h-4 w-4" />
                 View Analytics
               </Link>
@@ -216,7 +216,7 @@ export default async function StudioPage() {
         action={
           ideas.length > 0 ? (
             <Button asChild size="sm" variant="outline">
-              <Link href="/studio/ideas/new" className="gap-2">
+              <Link href="/creator/ideas/new" className="gap-2">
                 <PlusCircle className="h-3.5 w-3.5" />
                 New Idea
               </Link>
@@ -237,7 +237,7 @@ export default async function StudioPage() {
               and publish when you&apos;re ready. You can always edit drafts later.
             </p>
             <Button asChild className="mt-6">
-              <Link href="/studio/ideas/new">Create Your First Idea</Link>
+              <Link href="/creator/ideas/new">Create Your First Idea</Link>
             </Button>
           </div>
         ) : (
@@ -303,7 +303,7 @@ export default async function StudioPage() {
                             published={idea.published}
                           />
                           <Button asChild size="sm" variant="outline" className="h-8">
-                            <Link href={`/studio/ideas/${idea.id}/edit`}>
+                            <Link href={`/creator/ideas/${idea.id}/edit`}>
                               <Pencil className="mr-1 h-3 w-3" />
                               Edit
                             </Link>
@@ -359,7 +359,7 @@ export default async function StudioPage() {
                       published={idea.published}
                     />
                     <Button asChild size="sm" variant="outline" className="h-8">
-                      <Link href={`/studio/ideas/${idea.id}/edit`}>
+                      <Link href={`/creator/ideas/${idea.id}/edit`}>
                         <Pencil className="mr-1 h-3 w-3" />
                         Edit
                       </Link>

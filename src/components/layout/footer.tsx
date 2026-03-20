@@ -28,7 +28,7 @@ export function Footer() {
             </h3>
             <ul className="space-y-3.5">
               <li><Link href="/ideas" className="text-[15px] font-medium text-white/50 transition-colors hover:text-[hsl(var(--gold))]">Explore Ideas</Link></li>
-              <li><Link href="/studio" className="text-[15px] font-medium text-white/50 transition-colors hover:text-[hsl(var(--gold))]">Creator Studio</Link></li>
+              <li><Link href="/creator" className="text-[15px] font-medium text-white/50 transition-colors hover:text-[hsl(var(--gold))]">Creator Studio</Link></li>
               <li><Link href="/my" className="text-[15px] font-medium text-white/50 transition-colors hover:text-[hsl(var(--gold))]">My Library</Link></li>
               <li><Link href="/my/saved" className="text-[15px] font-medium text-white/50 transition-colors hover:text-[hsl(var(--gold))]">Saved Ideas</Link></li>
               <li><Link href="/account" className="text-[15px] font-medium text-white/50 transition-colors hover:text-[hsl(var(--gold))]">Account</Link></li>

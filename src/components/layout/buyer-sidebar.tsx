@@ -77,7 +77,7 @@ export function BuyerSidebar() {
 
       <div className="mt-auto border-t border-border p-3">
         <Link
-          href="/studio"
+          href="/creator"
           className="flex items-center gap-3 rounded-[9px] px-3 py-2.5 text-[14px] font-medium text-foreground/50 transition-all duration-200 hover:bg-muted hover:text-foreground"
         >
           <Lightbulb className="h-4 w-4 shrink-0" />

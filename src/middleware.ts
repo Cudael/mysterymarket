@@ -2,12 +2,12 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isProtectedRoute = createRouteMatcher([
   "/my(.*)",
-  "/studio(.*)",
+  "/creator(.*)",
   "/account(.*)",
   "/admin(.*)",
   // Keep old routes protected during redirect period
   "/dashboard(.*)",
-  "/creator(.*)",
+  "/studio(.*)",
   "/settings(.*)",
 ]);
 
