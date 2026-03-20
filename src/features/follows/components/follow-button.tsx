@@ -32,12 +32,23 @@ export function FollowButton({
       router.push("/sign-in");
       return;
     }
+
+    // Optimistic update
+    const previousFollowing = following;
+    const previousCount = followerCount;
+    setFollowing(!following);
+    setFollowerCount(following ? followerCount - 1 : followerCount + 1);
     setLoading(true);
+
     try {
       const result = await toggleFollow(creatorId);
+      // Reconcile with server truth
       setFollowing(result.following);
       setFollowerCount(result.followerCount);
     } catch (err) {
+      // Revert on error
+      setFollowing(previousFollowing);
+      setFollowerCount(previousCount);
       logger.error("[follow-button] toggleFollow failed", err);
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -54,23 +65,23 @@ export function FollowButton({
           variant="outline"
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          aria-label={loading ? "Loading" : hovered ? "Unfollow creator" : "Following creator"}
+          aria-label={hovered ? "Unfollow creator" : "Following creator"}
           className={`h-9 min-w-[110px] rounded-[8px] border border-border text-[14px] font-medium transition-colors ${
             hovered
               ? "border-red-500/50 bg-red-500/10 text-red-400 hover:bg-red-500/10"
               : "bg-card text-foreground"
           }`}
         >
-          {loading ? "..." : hovered ? "Unfollow" : "Following"}
+          {hovered ? "Unfollow" : "Following"}
         </Button>
       ) : (
         <Button
           onClick={handleClick}
           disabled={loading}
-          aria-label={loading ? "Loading" : "Follow creator"}
+          aria-label="Follow creator"
           className="h-9 min-w-[110px] rounded-[8px] text-[14px] font-medium transition-colors"
         >
-          {loading ? "..." : "Follow"}
+          {"Follow"}
         </Button>
       )}
       <span className="flex items-center gap-1 text-[12px] text-muted-foreground">

@@ -4,6 +4,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function syncUser() {
   const user = await currentUser();
@@ -36,13 +37,12 @@ export async function syncUser() {
   });
 }
 
-export async function getUserByClerkId(clerkId?: string) {
+export async function getUserByClerkId() {
   const { userId } = await auth();
-  const id = clerkId ?? userId;
-  if (!id) return null;
+  if (!userId) return null;
 
   return await prisma.user.findUnique({
-    where: { clerkId: id },
+    where: { clerkId: userId },
     include: {
       ideas: { include: { _count: { select: { purchases: true } } } },
       purchases: true,
@@ -70,6 +70,8 @@ export async function updateProfile(
 ) {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
+
+  checkRateLimit(`updateProfile:${userId}`, { interval: 60_000, maxRequests: 10 });
 
   const validated = updateProfileSchema.parse(data);
 

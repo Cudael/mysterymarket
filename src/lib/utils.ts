@@ -16,6 +16,9 @@ export function cn(...inputs: ClassValue[]) {
  * @returns A formatted currency string, e.g. "$12.99".
  */
 export function formatPrice(priceInCents: number): string {
+  if (!Number.isFinite(priceInCents) || priceInCents < 0) {
+    return "$0.00";
+  }
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -29,5 +32,6 @@ export function formatPrice(priceInCents: number): string {
  * @returns The full absolute URL string.
  */
 export function absoluteUrl(path: string): string {
-  return `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}${path}`;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}${normalizedPath}`;
 }
