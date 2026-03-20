@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { Webhook } from "svix";
 import prisma from "@/lib/prisma";
 import { sendWelcomeEmail } from "@/lib/emails/welcome";
+import { logger } from "@/lib/logger";
 
 interface ClerkUserCreatedEvent {
   type: "user.created" | "user.updated";
@@ -70,7 +71,7 @@ export async function POST(req: Request) {
     try {
       await sendWelcomeEmail(email, name ?? "");
     } catch (emailErr) {
-      console.error("[clerk-webhook] Welcome email failed:", emailErr);
+      logger.error("[clerk-webhook] Welcome email failed", emailErr);
     }
   } else if (type === "user.updated") {
     await prisma.user.updateMany({

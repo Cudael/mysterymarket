@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { seedCategories } from './seed-categories';
+import { PLATFORM_FEE_PERCENT } from "../src/lib/constants";
 
 const prisma = new PrismaClient();
 
@@ -151,7 +152,7 @@ async function main() {
         buyerId: buyer.id,
         ideaId: firstIdea.id,
         amountInCents: firstIdea.priceInCents,
-        platformFeeInCents: Math.round(firstIdea.priceInCents * 0.1),
+        platformFeeInCents: Math.round(firstIdea.priceInCents * (PLATFORM_FEE_PERCENT / 100)),
         stripePaymentIntentId: 'pi_demo_seed_001',
         status: 'COMPLETED',
       },

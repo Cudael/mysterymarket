@@ -8,6 +8,8 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { sendPurchaseConfirmationEmail } from "@/lib/emails/purchase-confirmation";
 import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
 import { trackEvent } from "@/lib/analytics";
+import { logger } from "@/lib/logger";
+import { PLATFORM_FEE_PERCENT } from "@/lib/constants";
 
 export async function createCheckoutSession(ideaId: string) {
   const { userId: clerkId } = await auth();
@@ -40,8 +42,7 @@ export async function createCheckoutSession(ideaId: string) {
       throw new Error("This exclusive idea has already been claimed");
   }
 
-  const platformFeePercent =
-    parseInt(process.env.STRIPE_PLATFORM_FEE_PERCENT ?? "15", 10) / 100;
+  const platformFeePercent = PLATFORM_FEE_PERCENT / 100;
   const platformFeeAmount = Math.round(idea.priceInCents * platformFeePercent);
 
   const session = await stripe.checkout.sessions.create({
@@ -182,8 +183,7 @@ export async function purchaseWithWallet(ideaId: string) {
     throw new Error("Insufficient wallet balance");
   }
 
-  const platformFeePercent =
-    parseInt(process.env.STRIPE_PLATFORM_FEE_PERCENT ?? "15", 10) / 100;
+  const platformFeePercent = PLATFORM_FEE_PERCENT / 100;
   const platformFeeAmount = Math.round(idea.priceInCents * platformFeePercent);
   const netEarnings = idea.priceInCents - platformFeeAmount;
 
@@ -289,7 +289,7 @@ export async function purchaseWithWallet(ideaId: string) {
       ),
     ]);
   } catch (err) {
-    console.error("[purchaseWithWallet] Email sending failed:", err);
+    logger.error("[purchaseWithWallet] Email sending failed", err);
   }
 
   return { purchaseId: purchase.id };

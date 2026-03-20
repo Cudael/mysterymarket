@@ -7,6 +7,7 @@ import { sendSaleNotificationEmail } from "@/lib/emails/sale-notification";
 import { creditWalletForDeposit } from "@/features/wallet/actions";
 import { createNotification } from "@/features/notifications/actions";
 import { trackEvent } from "@/lib/analytics";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -118,20 +119,22 @@ export async function POST(req: Request) {
               }),
             ]);
 
-            await sendPurchaseConfirmationEmail(
-              purchase.buyer.email,
-              purchase.idea.title,
-              purchase.amountInCents,
-              purchase.ideaId
-            );
-            await sendSaleNotificationEmail(
-              purchase.idea.creator.email,
-              purchase.idea.title,
-              purchase.buyer.name ?? purchase.buyer.email,
-              purchase.amountInCents,
-              purchase.platformFeeInCents,
-              purchase.ideaId
-            );
+            await Promise.all([
+              sendPurchaseConfirmationEmail(
+                purchase.buyer.email,
+                purchase.idea.title,
+                purchase.amountInCents,
+                purchase.ideaId
+              ),
+              sendSaleNotificationEmail(
+                purchase.idea.creator.email,
+                purchase.idea.title,
+                purchase.buyer.name ?? purchase.buyer.email,
+                purchase.amountInCents,
+                purchase.platformFeeInCents,
+                purchase.ideaId
+              ),
+            ]);
 
             await Promise.all([
               createNotification({
@@ -146,12 +149,12 @@ export async function POST(req: Request) {
                 type: "SALE",
                 title: "New Sale!",
                 message: `Someone just unlocked your idea '${purchase.idea.title}'`,
-                link: `/creator`,
+                link: `/studio`,
               }),
             ]);
           }
         } catch (emailErr) {
-          console.error("[stripe-webhook] Post-purchase processing failed:", emailErr);
+          logger.error("[stripe-webhook] Post-purchase processing failed", emailErr);
         }
       }
       break;

@@ -6,6 +6,7 @@ import { Users } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { toggleFollow } from "@/features/follows/actions";
+import { logger } from "@/lib/logger";
 
 interface FollowButtonProps {
   creatorId: string;
@@ -37,7 +38,7 @@ export function FollowButton({
       setFollowing(result.following);
       setFollowerCount(result.followerCount);
     } catch (err) {
-      console.error("[follow-button] toggleFollow failed:", err);
+      logger.error("[follow-button] toggleFollow failed", err);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
