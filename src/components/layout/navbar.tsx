@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sparkles, Menu, ChevronDown, Lightbulb, ShoppingBag, PieChart, Bookmark, Wallet2, Bell, Settings } from "lucide-react";
+import { Menu, ChevronDown, Lightbulb, ShoppingBag, PieChart, Bookmark, Wallet2, Bell, Settings } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sheet";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
+import { IdeaVexLogo } from "@/components/shared/ideavex-logo";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -50,11 +51,9 @@ export function Navbar() {
         
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/20 border border-primary/30 transition-all duration-300 group-hover:bg-primary/30 group-hover:border-primary/50 group-hover:shadow-[var(--shadow-primary-glow)]">
-            <Sparkles className="h-4 w-4 text-[hsl(var(--gold))] transition-transform duration-500 group-hover:scale-110" />
-          </div>
-          <span className="text-[18px] font-bold tracking-tight text-white/90 group-hover:text-white transition-colors">
-            MysteryMarket
+          <IdeaVexLogo size={32} className="transition-transform duration-500 group-hover:scale-110" />
+          <span className="font-brand text-[18px] text-white/90 group-hover:text-white transition-colors">
+            IdeaVex
           </span>
         </Link>
 
@@ -143,10 +142,8 @@ export function Navbar() {
             <SheetContent side="right" className="w-[290px] border-l border-white/[0.07] bg-[hsl(252,32%,5%)] p-6 shadow-[-8px_0_40px_rgba(0,0,0,0.60)]">
               <SheetHeader className="border-b border-white/[0.07] pb-5 mb-5 text-left">
                 <SheetTitle className="text-[17px] font-bold text-white flex items-center gap-2">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-primary/20 border border-primary/30">
-                    <Sparkles className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />
-                  </div>
-                  MysteryMarket
+                  <IdeaVexLogo size={28} />
+                  <span className="font-brand">IdeaVex</span>
                 </SheetTitle>
               </SheetHeader>
               
