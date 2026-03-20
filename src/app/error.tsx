@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function Error({
@@ -9,6 +10,11 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    // Log error for debugging — Sentry will capture this automatically if configured
+    console.error("Unhandled error:", error);
+  }, [error]);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
       <div className="text-center">
@@ -17,8 +23,14 @@ export default function Error({
           Something went wrong
         </h1>
         <p className="mt-4 text-muted-foreground">
-          {error.message || "An unexpected error occurred."}
+          An unexpected error occurred. Please try again or contact support if
+          the problem persists.
         </p>
+        {error.digest && (
+          <p className="mt-2 text-xs text-muted-foreground/60">
+            Error ID: {error.digest}
+          </p>
+        )}
         <Button onClick={reset} className="mt-8">
           Try again
         </Button>
